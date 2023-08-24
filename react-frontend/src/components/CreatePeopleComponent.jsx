@@ -1,35 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PeopleService from '../services/PeopleService';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function CreatePeopleComponent() {
-    const { id } = useParams();
     const navigate = useNavigate();
 
     const [state, setState] = useState({
-        id: id === '_add' ? null : parseInt(id), // Convert to number for updating
         firstName: '',
         lastName: '',
         emailId: ''
     });
 
-    useEffect(() => {
-        if (id === '_add') {
-            return;
-        } else {
-            PeopleService.getPeopleById(id).then((res) => {
-                let people = res.data;
-                setState({
-                    ...state,
-                    firstName: people.firstName,
-                    lastName: people.lastName,
-                    emailId: people.emailId
-                });
-            });
-        }
-    }, [id]);
-
-    const saveOrUpdatePeople = (e) => {
+    const savePeople = (e) => {
         e.preventDefault();
         let people = {
             firstName: state.firstName,
@@ -37,23 +19,9 @@ function CreatePeopleComponent() {
             emailId: state.emailId
         };
 
-        if (state.id === null) { // Creating new person
-            PeopleService.createPeople(people).then(() => {
-                navigate('/patient');
-            });
-        } else { // Updating existing person
-            PeopleService.updatePeople(people, state.id).then(() => {
-                navigate('/patient');
-            });
-        }
-    };
-
-    const getTitle = () => {
-        return state.id === null ? (
-            <h3 className="text-center">Add Patient</h3>
-        ) : (
-            <h3 className="text-center">Add Patient</h3>
-        );
+        PeopleService.createPeople(people).then(() => {
+            navigate('/patient');
+        });
     };
 
     return (
@@ -62,7 +30,7 @@ function CreatePeopleComponent() {
             <div className="container">
                 <div className="row">
                     <div className="card col-md-6 offset-md-3 offset-md-3">
-                        {getTitle()}
+                        <h3 className="text-center">Add Patient</h3>
                         <div className="card-body">
                             <form>
                                 <div className="form-group">
@@ -113,7 +81,7 @@ function CreatePeopleComponent() {
 
                                 <button
                                     className="btn btn-success"
-                                    onClick={saveOrUpdatePeople}
+                                    onClick={savePeople}
                                 >
                                     Save
                                 </button>

@@ -17,6 +17,7 @@ function App() {
                             <Route path="/" element={<LoginComponent />} />
                             <Route path="/patient" element={<ListPeopleComponent />} />
                             <Route path="/add-patient" element={<CreatePeopleComponent />} />
+                            <Route path="/add-patient/:id" element={<CreatePeopleComponent />} />
                         </Routes>
                     </div>
                     <FooterComponent />
