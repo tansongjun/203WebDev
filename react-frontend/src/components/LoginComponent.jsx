@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./LoginComponent.css";
 
 function LoginComponent() {
+  // Initialize useNavigate
+  const navigate = useNavigate();
+
   // React States
   const [errorMessages, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // User Login info
   const database = [
@@ -24,7 +27,7 @@ function LoginComponent() {
   };
 
   const handleSubmit = (event) => {
-    //Prevent page reload
+    // Prevent page reload
     event.preventDefault();
 
     var { uname, pass } = event.target;
@@ -38,7 +41,8 @@ function LoginComponent() {
         // Invalid password
         setErrorMessages({ name: "pass", message: errors.pass });
       } else {
-        setIsSubmitted(true);
+        // On successful login, redirect to /patient
+        navigate("/patient");
       }
     } else {
       // Username not found
@@ -77,7 +81,7 @@ function LoginComponent() {
     <div className="app">
       <div className="login-form">
         <div className="title">Sign In</div>
-        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
+        {renderForm}
       </div>
     </div>
   );

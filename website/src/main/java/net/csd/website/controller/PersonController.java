@@ -20,7 +20,7 @@ import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.Person;
 import net.csd.website.repository.PersonRepository;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/")
 public class PersonController {
