@@ -5,6 +5,7 @@ import ListPeopleComponent from './components/ListPeopleComponent';
 import HeaderComponent from './components/HeaderComponent';
 import FooterComponent from './components/FooterComponent';
 import CreatePeopleComponent from './components/CreatePeopleComponent';
+import UpdatePeopleComponent from './components/UpdatePeopleComponent';
 
 function App() {
     return (
@@ -17,7 +18,7 @@ function App() {
                             <Route path="/" element={<LoginComponent />} />
                             <Route path="/patient" element={<ListPeopleComponent />} />
                             <Route path="/add-patient" element={<CreatePeopleComponent />} />
-                            <Route path="/add-patient/:id" element={<CreatePeopleComponent />} />
+                            <Route path="/update-patient/:id" element={<UpdatePeopleComponent />} />
                         </Routes>
                     </div>
                     <FooterComponent />

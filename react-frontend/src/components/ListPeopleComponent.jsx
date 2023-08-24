@@ -10,6 +10,12 @@ class ListPeopleComponentInner extends Component {
             people: []
         }
         this.addPeople = this.addPeople.bind(this);
+        this.editPeople = this.editPeople.bind(this);
+    }
+
+    editPeople(id) {
+        // Use navigate prop here
+        this.props.navigate(`/update-patient/${id}`);
     }
 
     componentDidMount() {
@@ -47,6 +53,9 @@ class ListPeopleComponentInner extends Component {
                                         <td>{people.firstName}</td>
                                         <td>{people.lastName}</td>
                                         <td>{people.emailId}</td>
+                                        <td>
+                                                 <button onClick={ () => this.editPeople(people.id)} className="btn btn-info">Update </button>
+                                        </td>         
                                     </tr> 
                                 )
                             }
