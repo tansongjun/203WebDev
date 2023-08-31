@@ -24,8 +24,38 @@
   color: white;
 }
 
+/* Overriding Bootstrap's .navbar-dark.bg-dark class for the header */
+.navbar-dark.bg-dark {
+  background-color: #f8f9fa !important; /* A light gray background, same as the footer */
+  color: #4b2e1a !important; /* A brownish color for text contrast */
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link {
+  color: #4b2e1a !important; /* Adjusting the navbar text and links to match the brownish color */
+}
+
 .App-link {
   color: #61dafb;
+}
+
+.footer {
+  padding: 20px 0;
+  background-color: #f8f9fa;  /* Light Gray */
+  border-top: 1px solid #dee2e6;  /* Slightly Darker Gray */
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer a {
+  color: #333333;  /* Dark Gray */
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 @keyframes App-logo-spin {
@@ -35,14 +65,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width:100%;
-  height: 50px;
-  background-color: black;
-  text-align: center;
-  color: white;
 }

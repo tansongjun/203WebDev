@@ -11,10 +11,20 @@ class ListPeopleComponentInner extends Component {
         }
         this.addPeople = this.addPeople.bind(this);
         this.editPeople = this.editPeople.bind(this);
+        this.deletePeople = this.deletePeople.bind(this);
+    }
+
+    deletePeople(id) {
+        PeopleService.deletePeople(id).then( res => {
+            this.setState({people: this.state.people.filter(people => people.id != id)});
+        });
+    }
+
+    viewPeople(id) {
+        this.props.navigate(`/view-patient/${id}`);
     }
 
     editPeople(id) {
-        // Use navigate prop here
         this.props.navigate(`/update-patient/${id}`);
     }
 
@@ -55,6 +65,8 @@ class ListPeopleComponentInner extends Component {
                                         <td>{people.emailId}</td>
                                         <td>
                                                  <button onClick={ () => this.editPeople(people.id)} className="btn btn-info">Update </button>
+                                                 <button style = {{marginLeft:"10px"}} onClick={ () => this.deletePeople(people.id)} className="btn btn-danger">Delete </button>
+                                                 <button style = {{marginLeft:"10px"}} onClick={ () => this.viewPeople(people.id)} className="btn btn-info">View </button>
                                         </td>         
                                     </tr> 
                                 )

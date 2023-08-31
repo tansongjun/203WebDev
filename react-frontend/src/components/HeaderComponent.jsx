@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class HeaderComponent extends Component {
     constructor(props) {
@@ -14,7 +15,10 @@ class HeaderComponent extends Component {
             <div>
                 <header>
                     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                        <div><a href="localhost:3000" className="navbar-brand">Patient Management Page</a></div>
+                        <div>
+                            {/*SONG JUN PLS CHANGE LINK TO USER SELECTION PAGE*/}
+                            <Link to="/patient" className="navbar-brand">Patient Queuing App</Link>
+                        </div>
                     </nav>
                 </header>
             </div>
@@ -22,4 +26,4 @@ class HeaderComponent extends Component {
     }
 }
 
-export default HeaderComponent
+export default HeaderComponent;

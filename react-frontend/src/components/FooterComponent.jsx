@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class FooterComponent extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            
-        }
-    }
-
     render() {
         return (
-            <div>
-                <footer className = "footer">
-                    <span className="text-muted">All Rights Reserved 2023 @CS203</span>
-                </footer>
+            <div className="footer">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6">
+                            CS203 G4-T5
+                        </div>
+                        <div className="col-md-6 text-right">
+                            © 2023 Patient Queuing App
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
