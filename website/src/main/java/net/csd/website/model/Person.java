@@ -19,14 +19,26 @@ public class Person {
     @Column(name = "email_id")
     private String emailId;
 
+    @Column(name = "person_age")
+    private int age;
+
+    @Column(name = "person_condition")
+    private String condition;
+
+    @Column(name = "person_user_type")
+    private String userType;
+
     public Person() {
         
     }
 
-    public Person(String firstName, String lastName, String emailId) {
+    public Person(String firstName, String lastName, String emailId, int age, String condition, String userType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
+        this.age = age;
+        this.condition = condition;
+        this.userType = userType;
     }
     public long getId() {
         return id;
@@ -51,5 +63,23 @@ public class Person {
     }
     public void setEmailId(String emailId) {
         this.emailId = emailId;
-    }   
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public String getCondition() {
+        return condition;
+    }
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+    public String getUserType() {
+        return userType;
+    }
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 }

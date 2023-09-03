@@ -57,6 +57,9 @@ public class PersonController {
 		person.setFirstName(personDetails.getFirstName());
 		person.setLastName(personDetails.getLastName());
 		person.setEmailId(personDetails.getEmailId());
+		person.setAge(personDetails.getAge());
+		person.setCondition(personDetails.getCondition());
+		person.setUserType(personDetails.getUserType());
 		
 		Person updatedPerson = personRepository.save(person);
 		return ResponseEntity.ok(updatedPerson);

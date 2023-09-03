@@ -31,6 +31,14 @@ function ViewPeopleComponent() {
                         <label> Patient Email ID: </label>
                         <div> {people.emailId}</div>
                     </div>
+                    <div className="row">
+                        <label> Patient Age: </label>
+                        <div> {people.age}</div>
+                    </div>
+                    <div className="row">
+                        <label> Patient Condition: </label>
+                        <div> {people.condition}</div>
+                    </div>
                 </div>
             </div>
         </div>

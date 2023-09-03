@@ -8,7 +8,9 @@ function CreatePeopleComponent() {
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
-        emailId: ''
+        emailId: '',
+        age: '',
+        condition: ''
     });
 
     const savePeople = (e) => {
@@ -16,7 +18,9 @@ function CreatePeopleComponent() {
         let people = {
             firstName: state.firstName,
             lastName: state.lastName,
-            emailId: state.emailId
+            emailId: state.emailId,
+            age: state.age,
+            condition: state.condition
         };
 
         PeopleService.createPeople(people).then(() => {
@@ -74,6 +78,36 @@ function CreatePeopleComponent() {
                                             setState({
                                                 ...state,
                                                 emailId: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Age: </label>
+                                    <input
+                                        placeholder="Age"
+                                        name="age"
+                                        className="form-control"
+                                        value={state.age}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                age: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Condition: </label>
+                                    <input
+                                        placeholder="Condition"
+                                        name="condition"
+                                        className="form-control"
+                                        value={state.condition}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                condition: e.target.value
                                             })
                                         }
                                     />

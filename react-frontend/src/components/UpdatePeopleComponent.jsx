@@ -9,7 +9,9 @@ function UpdatePeopleComponent() {
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
-        emailId: ''
+        emailId: '',
+        age: '',
+        condition: ''
     });
 
     useEffect(() => {
@@ -19,7 +21,9 @@ function UpdatePeopleComponent() {
             setState({
                 firstName: data.firstName,
                 lastName: data.lastName,
-                emailId: data.emailId
+                emailId: data.emailId,
+                age: data.age,
+                condition: data.condition
             });
         });
     }, [id]);
@@ -29,7 +33,9 @@ function UpdatePeopleComponent() {
         let people = {
             firstName: state.firstName,
             lastName: state.lastName,
-            emailId: state.emailId
+            emailId: state.emailId,
+            age: state.age,
+            condition: state.condition
         };
 
         PeopleService.updatePeople(people, id).then(() => {
@@ -87,6 +93,36 @@ function UpdatePeopleComponent() {
                                             setState({
                                                 ...state,
                                                 emailId: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Age: </label>
+                                    <input
+                                        placeholder="Age"
+                                        name="age"
+                                        className="form-control"
+                                        value={state.age}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                age: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Condition: </label>
+                                    <input
+                                        placeholder="Condition"
+                                        name="condition"
+                                        className="form-control"
+                                        value={state.condition}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                condition: e.target.value
                                             })
                                         }
                                     />
