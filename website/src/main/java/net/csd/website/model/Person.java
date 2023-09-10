@@ -1,5 +1,8 @@
 package net.csd.website.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -19,26 +22,29 @@ public class Person {
     @Column(name = "email_id")
     private String emailId;
 
+    @Column(name = "person_birthday")
+    private LocalDate birthDate;
+
     @Column(name = "person_age")
     private int age;
-
-    @Column(name = "person_condition")
-    private String condition;
-
-    @Column(name = "person_user_type")
-    private String userType;
 
     public Person() {
         
     }
 
-    public Person(String firstName, String lastName, String emailId, int age, String condition, String userType) {
+    public Person(long id, String firstName, String lastName, String emailId, int age) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.age = age;
-        this.condition = condition;
-        this.userType = userType;
+    }
+
+    public Person(String firstName, String lastName, String emailId, LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailId = emailId;
+        this.birthDate = birthDate;
     }
     public long getId() {
         return id;
@@ -64,22 +70,27 @@ public class Person {
     public void setEmailId(String emailId) {
         this.emailId = emailId;
     }
+    
     public int getAge() {
         return age;
     }
+
     public void setAge(int age) {
         this.age = age;
     }
-    public String getCondition() {
-        return condition;
-    }
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-    public String getUserType() {
-        return userType;
-    }
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
+
+    // public int getCurrentAge() {
+    //     LocalDate curDate = LocalDate.now();
+    //     LocalDate birthDate = this.birthDate;
+
+    //     return Period.between(curDate, birthDate).getYears();
+    // }
+
+    // public LocalDate getBirthDate() {
+    //     return birthDate;
+    // }
+
+    // public void setBirthDate(LocalDate birthDate) {
+    //     this.birthDate = birthDate;
+    // }
 }

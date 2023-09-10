@@ -1,0 +1,107 @@
+### Get all people
+GET http://localhost:8080/api/v1/people
+
+### Get people by id
+GET http://localhost:8080/api/v1/people/5
+
+### Delete people by id
+DELETE http://localhost:8080/api/v1/people/1
+
+### Add people
+POST http://localhost:8080/api/v1/people
+Content-Type: application/json
+
+{
+    "firstName": "firstName",
+    "lastName": "lastName",
+    "emailId": "emailId@asd.com",
+    "age": "1",
+    "condition": "state.condition"
+}
+
+### Update people by id
+PUT http://localhost:8080/api/v1/people/4
+Content-Type: application/json
+
+{
+    "firstName": "firstName",
+    "lastName": "lastName",
+    "emailId": "emailId@asd.com",
+    "age": "20",
+    "condition": "state.condition"
+}
+
+################################## Patient ########################################
+
+### Get all patients
+GET http://localhost:8080/api/v2/patients
+
+### Save patient
+POST http://localhost:8080/api/v2/patients
+Content-Type: application/json
+
+{
+    "firstName": "Mark",
+    "lastName": "lastName",
+    "emailId": "email",
+    "age": "1",
+    "condition": ["state.condition"]
+}
+
+### Update Patient by id
+PUT http://localhost:8080/api/v2/patients/7
+Content-Type: application/json
+
+{
+    "firstName": "ChangedFirsasedtname",
+    "lastName": "lastName",
+    "emailId": "email",
+    "age": "1",
+    "condition": ["state.condition"]
+}
+
+################################## Qticket ########################################
+
+### Get new QTicket no with patientId
+POST http://localhost:8080/api/v2/patients/4/getnewQ
+Content-Type: application/json
+
+{
+
+}
+
+### Get Latest Qticket by patient id
+GET  http://localhost:8080/api/v2/patients/3/getQ
+
+### Get all QTickets
+GET http://localhost:8080/api/v2/getallQ
+
+
+################################## Room ########################################
+
+### Get all rooms
+GET http://localhost:8080/api/v2/rooms
+
+### add room
+POST http://localhost:8080/api/v2/rooms
+Content-Type: application/json
+
+{
+
+}
+
+################################## DateTimeSlot ########################################
+
+### Get all DateTimeSlot 
+GET http://localhost:8080/api/v2/datetimeslot
+
+### Get DateTimeSlot by Roomid and date
+GET http://localhost:8080/api/v2/rooms/1/date/2023-09-10/timeslots
+
+### add DateTimeSlot by Roomid
+POST http://localhost:8080/api/v2/rooms/4/addslotsforDate/2023-09-10
+Content-Type: application/json
+
+{
+    
+}
