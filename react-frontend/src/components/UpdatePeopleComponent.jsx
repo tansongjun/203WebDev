@@ -23,7 +23,10 @@ function UpdatePeopleComponent() {
                 lastName: data.lastName,
                 emailId: data.emailId,
                 age: data.age,
-                condition: data.condition
+                condition: data.condition,
+                username: data.username,
+                password: data.password,
+                authorities: data.authorities
             });
         });
     }, [id]);
@@ -35,7 +38,10 @@ function UpdatePeopleComponent() {
             lastName: state.lastName,
             emailId: state.emailId,
             age: state.age,
-            condition: state.condition
+            condition: state.condition,
+            username: state.username,
+            password: state.password,
+            authorities: state.authorities
         };
 
         PeopleService.updatePeople(people, id).then(() => {
@@ -123,6 +129,51 @@ function UpdatePeopleComponent() {
                                             setState({
                                                 ...state,
                                                 condition: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Username: </label>
+                                    <input
+                                        placeholder="Username"
+                                        name="Username"
+                                        className="form-control"
+                                        value={state.username}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                username: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Password: </label>
+                                    <input
+                                        placeholder="Password"
+                                        name="Password"
+                                        className="form-control"
+                                        value={state.password}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                password: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Authorities: </label>
+                                    <input
+                                        placeholder="Authorities"
+                                        name="Authorities"
+                                        className="form-control"
+                                        value={state.authorities}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                authorities: e.target.value
                                             })
                                         }
                                     />

@@ -33,37 +33,43 @@
 // export default App;
 
 import './App.css';
-import { Route, BrowserRouter as Router , Routes } from 'react-router-dom';
-import { UserLogin,  WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome, 
-    WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent, 
-    UpdatePeopleComponent, ViewPeopleComponent} from './components';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+    HomePage, WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome,
+    WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
+    UpdatePeopleComponent, ViewPeopleComponent
+} from './components';
 
 function App() {
     return (
         <Router>
             <div>
-            <div className='user-login-page'>
-                <h1>SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</h1>
+                <div className='user-login-page'>
+                    <h1><center><img src="/favicon.ico" alt="icon"></img> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                </div>
+
+                <Routes>
+                /* Buttons */
+                    <Route path="/" element={<HomePage />} />
+
+                /* Login Pages */
+                    <Route path="/staffLogin" element={<StaffLogin />} />
+                    <Route path="/walkinLogin" element={<WalkInLogin />} />
+                    <Route path="/appointmentLogin" element={<AppointmentLogin />} />
+
+                /* Home Pages */
+                    <Route path="/appointmentHome" element={<AppointmentHome />} />
+                    <Route path="/StaffHome" element={<StaffHome />} />
+                    <Route path="/walkinHome" element={<WalkInHome />} />
+
+                /* Patient Management Page */
+                    <Route path="/patient" element={<ListPeopleComponent />} />
+                    <Route path="/add-patient" element={<CreatePeopleComponent />} />
+                    <Route path="/update-patient/:id" element={<UpdatePeopleComponent />} />
+    //            <Route path="/view-patient/:id" element={<ViewPeopleComponent />} />
+                </Routes>
             </div>
-            
-            <Routes>
-                <Route path="/" element={<UserLogin />} />
-                <Route path="/staffLogin" element={<StaffLogin />} />
-                <Route path="/walkinLogin" element={<WalkInLogin />} />
-                <Route path="/appointmentLogin" element={<AppointmentLogin />} />
-
-                <Route path="/appointmentHome" element={<AppointmentHome />} />
-                <Route path="/StaffHome" element={<StaffHome />} />
-                <Route path="/walkinHome" element={<WalkInHome />} />
-
-              <Route path="/patient" element={<ListPeopleComponent />} />
-              <Route path="/add-patient" element={<CreatePeopleComponent />} />
-              <Route path="/update-patient/:id" element={<UpdatePeopleComponent />} />
-//            <Route path="/view-patient/:id" element={<ViewPeopleComponent />} />
-            </Routes>
-        </div>
         </Router>
-        
     );
 }
 

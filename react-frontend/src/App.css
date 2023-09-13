@@ -121,7 +121,7 @@
 }
 
 .queue-button, .staff-button, .appointment-button{
-  height: 200px;
+  height: 150px;
   width: 1500px;
   cursor: pointer;
   font-weight: bold;
@@ -129,8 +129,9 @@
   border-radius: 15px;
   background-color: aqua;
   margin-top: 25px;
+  margin: 0 auto;
+  display: block;
   transition-duration: 0.4s;
-
 }
 
 .queue-button:hover,.appointment-button:hover,.staff-button:hover {

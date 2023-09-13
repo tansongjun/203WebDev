@@ -16,7 +16,7 @@ class ListPeopleComponentInner extends Component {
 
     deletePeople(id) {
         PeopleService.deletePeople(id).then( res => {
-            this.setState({people: this.state.people.filter(people => people.id != id)});
+            this.setState({people: this.state.people.filter(people => people.id !== id)});
         });
     }
 
@@ -43,16 +43,16 @@ class ListPeopleComponentInner extends Component {
             <div>
                 <h2 className="text-center">Patient List</h2>
                 <div className = "row">
-                    <button className = "btn btn-primary" onClick={this.addPeople}>Add Patient</button>
+                    <button className = "btn btn-primary" onClick={this.addPeople} style={{marginTop:"50px", marginLeft:"75px"}}>Add Patient</button>
                 </div>
                 <div className="row">
-                    <table className="table table-striped table-bordered">
+                    <table className="table table-striped table-bordered" style={{marginTop:"10px", marginLeft:"75px", width:"90%"}}>
                         <thead>
                             <tr>
-                                <th>Patient First Name</th>
-                                <th>Patient Last Name</th>
-                                <th>Patient Email id</th>
-                                <th>Actions</th>
+                                <th style={{width:"20%"}}>Patient First Name</th>
+                                <th style={{width:"20%"}}>Patient Last Name</th>
+                                <th style={{width:"25%"}}>Patient Email id</th>
+                                <th style={{width:"25%"}}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
