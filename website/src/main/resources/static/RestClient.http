@@ -4,15 +4,16 @@ Authorization: Basic admin goodpass
 
 ### Get p where id 3
 GET http://localhost:8080/api/v1/people/1
+Authorization: Basic user1 goodpass
 
 ### 2 ## Delete p where id 2
-DELETE http://localhost:8080/api/v1/people/1
-Authorization: Basic admin goodpass
+DELETE http://localhost:8080/api/v1/people/3
+Authorization: Basic user1 goodpass
 
 ### 3 ## Add people
 POST http://localhost:8080/api/v1/people
+Authorization: Basic user1 goodpass
 Content-Type: application/json
-Authorization: Basic admin goodpass111
 # password: should be at least 8 to 10 characters
 
 {
@@ -21,13 +22,13 @@ Authorization: Basic admin goodpass111
     "condition": "critical",
     "age": "40",
     "emailId": "zoo@ab.xy",
-    "username": "user1",
+    "username": "user2",
     "password": "goodpass", 
     "authorities": "ROLE_USER"
 }
 
 ### 4 ## Update p where id 1
-PUT http://localhost:8080/api/v1/people/1
+PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
 Authorization: Basic admin goodpass
 # password: should be at least 8 to 10 characters
