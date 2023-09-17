@@ -61,3 +61,9 @@ input[type="submit"]:hover {
   margin: 10px;
 }
 
+.queue-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
