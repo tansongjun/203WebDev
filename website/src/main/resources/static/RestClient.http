@@ -4,7 +4,7 @@ Authorization: Basic admin goodpass
 
 ### Get p where id 3
 GET http://localhost:8080/api/v1/people/1
-Authorization: Basic user1 goodpass
+Authorization: Basic admin goodpass
 
 ### 2 ## Delete p where id 2
 DELETE http://localhost:8080/api/v1/people/3
@@ -22,7 +22,7 @@ Content-Type: application/json
     "condition": "critical",
     "age": "40",
     "emailId": "zoo@ab.xy",
-    "username": "user2",
+    "username": "user1",
     "password": "goodpass", 
     "authorities": "ROLE_USER"
 }
