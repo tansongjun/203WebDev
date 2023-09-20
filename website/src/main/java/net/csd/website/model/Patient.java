@@ -24,8 +24,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Patient extends Person {
 
-    @Column(name = "person_condition")
-    private String[] condition;
+    @Column(name = "person_condition_temp")
+    private String[] condition_temp;
 
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
@@ -38,7 +38,9 @@ public class Patient extends Person {
         this.setLastName(patient.getLastName());
         this.setEmailId(patient.getEmailId());
         this.setAge(patient.getAge());
-        this.setCondition(patient.getCondition());
+        // this.setCondition(patient.getCondition());
+        this.setUserType(patient.getUserType());
+        this.setCondition_temp(patient.getCondition_temp());
         return this;
     }
 

@@ -1,7 +1,7 @@
 package net.csd.website.model;
 
 import java.time.LocalDate;
-import java.time.Period;
+// import java.time.Period; // for calculating age
 
 import jakarta.persistence.*;
 
@@ -27,9 +27,25 @@ public class Person {
 
     @Column(name = "person_age")
     private int age;
+    
+    @Column(name = "person_condition")
+    private String condition;
+
+    @Column(name = "person_user_type")
+    private String userType;
 
     public Person() {
         
+    }
+
+    public Person(long id, String firstName, String lastName, String emailId, int age, String condition, String userType) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailId = emailId;
+        this.age = age;
+        this.condition = condition;
+        this.userType = userType;
     }
 
     public Person(long id, String firstName, String lastName, String emailId, int age) {
@@ -77,6 +93,30 @@ public class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     // public int getCurrentAge() {
