@@ -4,11 +4,13 @@ import java.time.LocalDate;
 // import java.time.Period; // for calculating age
 import java.util.Arrays;
 import java.util.Collection;
-
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +25,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "people")
-public class Person implements UserDetails{
+public class Person implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +45,7 @@ public class Person implements UserDetails{
 
     @Column(name = "person_age")
     private int age;
-    
+
     @Column(name = "person_condition")
     private String condition;
 
@@ -52,7 +54,7 @@ public class Person implements UserDetails{
     // @Column(name = "username")
     @Column(name = "username", unique = true)
     private String username;
-    
+
     @NotNull(message = "Password should not be null")
     @Size(min = 8, message = "Password should be at least 8 characters")
     @Column(name = "password")
@@ -61,7 +63,14 @@ public class Person implements UserDetails{
     @Column(name = "authorities")
     private String authorities;
 
-    public Person(String firstName, String lastName, String emailId, int age, String condition, String username, String password, String authorities) {
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @JsonIgnore
+    // Ignore the field in both JSON serialization and deserialization
+    private List<QTicket> queueticket;
+
+    public Person(String firstName, String lastName, String emailId, 
+    int age, String condition, String username, String password, 
+    String authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
@@ -72,126 +81,130 @@ public class Person implements UserDetails{
         this.authorities = authorities;
     }
 
-    public Person(long id, String firstName, String lastName, String emailId, int age) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailId = emailId;
-        this.age = age;
-    }
-
-    public Person(String firstName, String lastName, String emailId, LocalDate birthDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailId = emailId;
-        this.birthDate = birthDate;
-    }
-    // public long getId() {
-    //     return id;
-    // }
-
-    // public void setId(long id) {
+    // public Person(long id, String firstName, String lastName, String emailId, int age) {
     //     this.id = id;
-    // }
-    // public String getFirstName() {
-    //     return firstName;
-    // }
-    // public void setFirstName(String firstName) {
     //     this.firstName = firstName;
-    // }
-    // public String getLastName() {
-    //     return lastName;
-    // }
-    // public void setLastName(String lastName) {
     //     this.lastName = lastName;
-    // }
-    // public String getEmailId() {
-    //     return emailId;
-    // }
-    // public void setEmailId(String emailId) {
     //     this.emailId = emailId;
-    // }
-    
-    // public int getAge() {
-    //     return age;
-    // }
-
-    // public void setAge(int age) {
     //     this.age = age;
     // }
 
+    // public Person(String firstName, String lastName, String emailId, LocalDate birthDate) {
+    //     this.firstName = firstName;
+    //     this.lastName = lastName;
+    //     this.emailId = emailId;
+    //     this.birthDate = birthDate;
+    // }
+    // public long getId() {
+    // return id;
+    // }
+
+    // public void setId(long id) {
+    // this.id = id;
+    // }
+    // public String getFirstName() {
+    // return firstName;
+    // }
+    // public void setFirstName(String firstName) {
+    // this.firstName = firstName;
+    // }
+    // public String getLastName() {
+    // return lastName;
+    // }
+    // public void setLastName(String lastName) {
+    // this.lastName = lastName;
+    // }
+    // public String getEmailId() {
+    // return emailId;
+    // }
+    // public void setEmailId(String emailId) {
+    // this.emailId = emailId;
+    // }
+
+    // public int getAge() {
+    // return age;
+    // }
+
+    // public void setAge(int age) {
+    // this.age = age;
+    // }
+
     // public String getCondition() {
-    //     return condition;
+    // return condition;
     // }
 
     // public void setCondition(String condition) {
-    //     this.condition = condition;
+    // this.condition = condition;
     // }
 
     // public LocalDate getBirthDate() {
-    //     return birthDate;
+    // return birthDate;
     // }
 
     // public void setBirthDate(LocalDate birthDate) {
-    //     this.birthDate = birthDate;
+    // this.birthDate = birthDate;
     // }
 
     // public String getUserType() {
-    //     return userType;
+    // return userType;
     // }
 
     // public void setUserType(String userType) {
-    //     this.userType = userType;
+    // this.userType = userType;
     // }
 
     // public int getCurrentAge() {
-    //     LocalDate curDate = LocalDate.now();
-    //     LocalDate birthDate = this.birthDate;
+    // LocalDate curDate = LocalDate.now();
+    // LocalDate birthDate = this.birthDate;
 
-    //     return Period.between(curDate, birthDate).getYears();
+    // return Period.between(curDate, birthDate).getYears();
     // }
 
     // public LocalDate getBirthDate() {
-    //     return birthDate;
+    // return birthDate;
     // }
 
     // public void setBirthDate(LocalDate birthDate) {
-    //     this.birthDate = birthDate;
+    // this.birthDate = birthDate;
     // }
     // public String getUserType() {
-    //     return authorities;
+    // return authorities;
     // }
 
     // public void setUserType(String authorities) {
-    //     this.authorities = authorities;
+    // this.authorities = authorities;
     // }
-    
-    /* Return a collection of authorities (roles) granted to the user.
-    */
+
+    /*
+     * Return a collection of authorities (roles) granted to the user.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(authorities));
     }
 
     /*
-    The various is___Expired() methods return a boolean to indicate whether
-    or not the user’s account is enabled or expired.
-    */
+     * The various is___Expired() methods return a boolean to indicate whether
+     * or not the user’s account is enabled or expired.
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;
     }
-    
+
 }

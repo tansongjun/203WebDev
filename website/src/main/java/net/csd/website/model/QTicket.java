@@ -19,8 +19,8 @@ public class QTicket {
     private long ticketno;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     // @OneToOne
     // @JoinColumn(name = "datetime_id", nullable = false)

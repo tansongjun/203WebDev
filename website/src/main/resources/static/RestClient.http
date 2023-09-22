@@ -1,73 +1,81 @@
 ### Get all people
 GET http://localhost:8080/api/v1/people
+Authorization: Basic admin goodpass
 
 ### Get people by id
-GET http://localhost:8080/api/v1/people/5
+GET http://localhost:8080/api/v1/people/1
+Authorization: Basic username password
 
 ### Delete people by id
-DELETE http://localhost:8080/api/v1/people/1
+DELETE http://localhost:8080/api/v1/people/2
+Authorization: Basic admin goodpass
 
 ### Add people
 POST http://localhost:8080/api/v1/people
 Content-Type: application/json
+Authorization: Basic admin goodpass
 
 {
     "firstName": "firstName",
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
-    "birthDate": "2021-09-10",
     "age": "1",
     "condition": "state.condition",
-    "userType": "PATIENT"
+    "username": "username",
+    "password": "password",
+    "authorities": "ROLE_PATIENT"
 }
 
 ### Update people by id
-PUT http://localhost:8080/api/v1/people/1
+PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
+Authorization: Basic admin goodpass
 
 {
     "firstName": "firstName",
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
-    "birthDate": "2022-09-10",
     "age": "20",
-    "condition": "High",
-    "userType": "PATIENT"
+    "condition": "state.condition",
+    "username": "username12",
+    "password": "password",
+    "authorities": "ROLE_ADMIN"
 }
+#################################### SCAPPED ########################################
+# ################################## Patient ########################################
 
-################################## Patient ########################################
+# ### Get all patients
+# GET http://localhost:8080/api/v2/patients
 
-### Get all patients
-GET http://localhost:8080/api/v2/patients
+# ### Save patient
+# POST http://localhost:8080/api/v2/patients
+# Content-Type: application/json
 
-### Save patient
-POST http://localhost:8080/api/v2/patients
-Content-Type: application/json
+# {
+#     "firstName": "Mark",
+#     "lastName": "lastName",
+#     "emailId": "email",
+#     "age": "1",
+#     "condition": ["state.condition"]
+# }
 
-{
-    "firstName": "Mark",
-    "lastName": "lastName",
-    "emailId": "email",
-    "age": "1",
-    "condition": ["state.condition"]
-}
+# ### Update Patient by id
+# PUT http://localhost:8080/api/v2/patients/7
+# Content-Type: application/json
 
-### Update Patient by id
-PUT http://localhost:8080/api/v2/patients/7
-Content-Type: application/json
-
-{
-    "firstName": "ChangedFirsasedtname",
-    "lastName": "lastName",
-    "emailId": "email",
-    "age": "1",
-    "condition": ["state.condition"]
-}
+# {
+#     "firstName": "ChangedFirsasedtname",
+#     "lastName": "lastName",
+#     "emailId": "email",
+#     "age": "1",
+#     "condition": ["state.condition"]
+# }
 
 ################################## Qticket ########################################
 
 ### Get new QTicket no with patientId
-POST http://localhost:8080/api/v2/patients/4/getnewQ
+POST http://localhost:8080/api/v2/patients/2/getnewQ
+Authorization: Basic username12 password
 Content-Type: application/json
 
 {
@@ -75,13 +83,15 @@ Content-Type: application/json
 }
 
 ### Get Latest Qticket by patient id
-GET  http://localhost:8080/api/v2/patients/3/getQ
+GET  http://localhost:8080/api/v2/patients/2/getQ
+Authorization: Basic admin goodpass
 
 ### Get all QTickets
 GET http://localhost:8080/api/v2/getallQ
+Authorization: Basic admin goodpass
 
 
-################################## Room ########################################
+################################## Room (For future)########################################
 
 ### Get all rooms
 GET http://localhost:8080/api/v2/rooms
@@ -94,7 +104,7 @@ Content-Type: application/json
 
 }
 
-################################## DateTimeSlot ########################################
+################################## DateTimeSlot (For future) ########################################
 
 ### Get all DateTimeSlot 
 GET http://localhost:8080/api/v2/datetimeslot
@@ -109,6 +119,8 @@ Content-Type: application/json
 {
     
 }
+
+################################ By nicholas ######################################
 ### 1 ## Get all people
 GET http://localhost:8080/api/v1/people
 Authorization: Basic admin goodpass

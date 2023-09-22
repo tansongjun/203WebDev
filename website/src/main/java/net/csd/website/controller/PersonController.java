@@ -58,7 +58,7 @@ public class PersonController {
 	
 	// API: PUT(Update) people
 	@PutMapping("/people/{id}")
-	public ResponseEntity<Person> updatePerson(@PathVariable Long id, @RequestBody Person personDetails){
+	public ResponseEntity<Person> updatePerson(@PathVariable Long id, @Valid @RequestBody Person personDetails){
 		Person person = persons.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Person don't exist with id :" + id));
 		
@@ -68,8 +68,9 @@ public class PersonController {
 		person.setBirthDate(personDetails.getBirthDate());
 		person.setAge(personDetails.getAge());
 		person.setCondition(personDetails.getCondition());
-        person.setUsername(person.getUsername());
-        person.setPassword(this.encoder.encode(person.getPassword()));
+        person.setUsername(personDetails.getUsername());
+        person.setPassword(this.encoder.encode(personDetails.getPassword()));
+		person.setAuthorities(personDetails.getAuthorities().iterator().next().toString());
 		
 		Person updatedPerson = persons.save(person);
 		return ResponseEntity.ok(updatedPerson);

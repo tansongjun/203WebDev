@@ -39,7 +39,7 @@ public class Patient extends Person {
         this.setEmailId(patient.getEmailId());
         this.setAge(patient.getAge());
         // this.setCondition(patient.getCondition());
-        this.setUserType(patient.getUserType());
+        // this.setUserType(patient.getUserType());
         this.setCondition_temp(patient.getCondition_temp());
         return this;
     }
