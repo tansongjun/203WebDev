@@ -1,5 +1,6 @@
 package net.csd.website.controller;
 
+import java.rmi.NoSuchObjectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import net.csd.website.exception.ResourceNotFoundException;
+import net.csd.website.model.LoginForm;
 import net.csd.website.model.Person;
 import net.csd.website.repository.PersonRepository;
 
@@ -54,6 +56,42 @@ public class PersonController {
 		Person person = persons.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Person don't exist with id :" + id));
 		return ResponseEntity.ok(person);
+	}
+
+	@GetMapping("/login")
+	public ResponseEntity<Person> login(@RequestBody LoginForm loginForm) {
+		Person person = persons.findByUsername(loginForm.getUsername())
+				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
+		
+		if (this.encoder.matches(loginForm.getPassword(), person.getPassword())) {
+			if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
+				return ResponseEntity.ok(person);
+			} else {
+				return ResponseEntity.status(403).build();
+			}
+			
+		} else {
+			throw new ResourceNotFoundException("Incorrect Username/Password");
+		}
+
+	}
+
+	@GetMapping("/admin/login")
+	public ResponseEntity<Person> loginAdmin(@RequestBody LoginForm loginForm) {
+		Person person = persons.findByUsername(loginForm.getUsername())
+				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
+		
+		if (this.encoder.matches(loginForm.getPassword(), person.getPassword())) {
+			if (person.getAuthorities().iterator().next().toString().equals("ROLE_ADMIN")) {
+				return ResponseEntity.ok(person);
+			} else {
+				return ResponseEntity.status(403).build();
+			}
+			
+		} else {
+			throw new ResourceNotFoundException("Incorrect Username/Password");
+		}
+
 	}
 	
 	// API: PUT(Update) people

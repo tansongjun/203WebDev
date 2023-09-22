@@ -67,8 +67,8 @@ public class SecurityConfig {
                     .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v2/getallQ")).hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/patients/{id}/getQ")).hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
                     .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/patients/{id}/getnewQ")).hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
-
-                    .anyRequest().authenticated()
+                    
+                    .anyRequest().permitAll()
             )
             .httpBasic(withDefaults()) // allow Http Basic Authentication
         ;
