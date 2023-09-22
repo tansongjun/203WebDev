@@ -30,26 +30,26 @@ import net.csd.website.repository.PersonRepository;
 public class PersonController {
 	@Autowired
 	private PersonRepository persons;
-    private BCryptPasswordEncoder encoder;
+	private BCryptPasswordEncoder encoder;
 
 	public PersonController(PersonRepository persons, BCryptPasswordEncoder encoder) {
 		this.persons = persons;
 		this.encoder = encoder;
 	}
-	
+
 	// API: GET(Read) ALL
 	@GetMapping("/people")
-	public List<Person> getAllPeople(){
+	public List<Person> getAllPeople() {
 		return persons.findAll();
 	}
-	
+
 	// API: POST(Create) people
 	@PostMapping("/people")
 	public Person createPerson(@Valid @RequestBody Person person) {
-        person.setPassword(encoder.encode(person.getPassword()));
+		person.setPassword(encoder.encode(person.getPassword()));
 		return persons.save(person);
 	}
-	
+
 	// API: GET(Read) people BY ID
 	@GetMapping("/people/{id}")
 	public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
@@ -58,68 +58,57 @@ public class PersonController {
 		return ResponseEntity.ok(person);
 	}
 
-	@GetMapping("/login/{username}/{password}")
-	public ResponseEntity<Person> login(@PathVariable String username, @PathVariable String password) {
+	@GetMapping("/login/{username}")
+	public ResponseEntity<Person> login(@PathVariable String username) {
 		Person person = persons.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
-		
-		if (this.encoder.matches(password, person.getPassword())) {
-			if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
-				return ResponseEntity.ok(person);
-			} else {
-				return ResponseEntity.status(403).build();
-			}
-			
+
+		if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
+			return ResponseEntity.ok(person);
 		} else {
-			throw new ResourceNotFoundException("Incorrect Username/Password");
+			return ResponseEntity.status(403).build();
 		}
 
 	}
 
-	@GetMapping("/admin/login/{username}/{password}")
-	public ResponseEntity<Person> loginAdmin(@PathVariable String username, @PathVariable String password) {
+	@GetMapping("/admin/login/{username}")
+	public ResponseEntity<Person> loginAdmin(@PathVariable String username) {
 		Person person = persons.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
-		
-		if (this.encoder.matches(password, person.getPassword())) {
-			if (person.getAuthorities().iterator().next().toString().equals("ROLE_ADMIN")) {
-				return ResponseEntity.ok(person);
-			} else {
-				return ResponseEntity.status(403).build();
-			}
-			
+		if (person.getAuthorities().iterator().next().toString().equals("ROLE_ADMIN")) {
+			return ResponseEntity.ok(person);
 		} else {
-			throw new ResourceNotFoundException("Incorrect Username/Password");
+			return ResponseEntity.status(403).build();
 		}
 
 	}
-	
+
 	// API: PUT(Update) people
 	@PutMapping("/people/{id}")
-	public ResponseEntity<Person> updatePerson(@PathVariable Long id, @Valid @RequestBody Person personDetails){
+	public ResponseEntity<Person> updatePerson(@PathVariable Long id, @Valid @RequestBody Person personDetails) {
 		Person person = persons.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Person don't exist with id :" + id));
-		
+
 		person.setFirstName(personDetails.getFirstName());
 		person.setLastName(personDetails.getLastName());
 		person.setEmailId(personDetails.getEmailId());
 		person.setBirthDate(personDetails.getBirthDate());
 		person.setAge(personDetails.getAge());
 		person.setCondition(personDetails.getCondition());
-        person.setUsername(personDetails.getUsername());
-        person.setPassword(this.encoder.encode(personDetails.getPassword()));
+		person.setUsername(personDetails.getUsername());
+		person.setPassword(this.encoder.encode(personDetails.getPassword()));
 		person.setAuthorities(personDetails.getAuthorities().iterator().next().toString());
-		
+
 		Person updatedPerson = persons.save(person);
 		return ResponseEntity.ok(updatedPerson);
 	}
-	
+
 	// API: DELETE people
 	@DeleteMapping("/people/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
+	public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) {
 		Person person = persons.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Person don't exist with id :" + id));
-		
+
 		persons.delete(person);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
