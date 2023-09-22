@@ -58,12 +58,12 @@ public class PersonController {
 		return ResponseEntity.ok(person);
 	}
 
-	@GetMapping("/login")
-	public ResponseEntity<Person> login(@RequestBody LoginForm loginForm) {
-		Person person = persons.findByUsername(loginForm.getUsername())
+	@GetMapping("/login/{username}/{password}")
+	public ResponseEntity<Person> login(@PathVariable String username, @PathVariable String password) {
+		Person person = persons.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
 		
-		if (this.encoder.matches(loginForm.getPassword(), person.getPassword())) {
+		if (this.encoder.matches(password, person.getPassword())) {
 			if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
 				return ResponseEntity.ok(person);
 			} else {
@@ -76,12 +76,12 @@ public class PersonController {
 
 	}
 
-	@GetMapping("/admin/login")
-	public ResponseEntity<Person> loginAdmin(@RequestBody LoginForm loginForm) {
-		Person person = persons.findByUsername(loginForm.getUsername())
+	@GetMapping("/admin/login/{username}/{password}")
+	public ResponseEntity<Person> loginAdmin(@PathVariable String username, @PathVariable String password) {
+		Person person = persons.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
 		
-		if (this.encoder.matches(loginForm.getPassword(), person.getPassword())) {
+		if (this.encoder.matches(password, person.getPassword())) {
 			if (person.getAuthorities().iterator().next().toString().equals("ROLE_ADMIN")) {
 				return ResponseEntity.ok(person);
 			} else {
