@@ -43,7 +43,6 @@
     background-color: aqua;
     margin-top: 25px;
     transition-duration: 0.4s;
-
   }
   
   .queue-button:hover,.appointment-button:hover,.staff-button:hover {

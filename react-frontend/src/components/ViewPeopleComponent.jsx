@@ -13,6 +13,7 @@ function ViewPeopleComponent() {
         });
     }, [id]);
 
+
     return (
         <div>
             <br />
@@ -38,6 +39,18 @@ function ViewPeopleComponent() {
                     <div className="row">
                         <label> Patient Condition: </label>
                         <div> {people.condition}</div>
+                    </div>
+                    <div className="row">
+                        <label> Username: </label>
+                        <div> {people.username}</div>
+                    </div>
+                    <div className="row">
+                        <label> Password: </label>
+                        <div> {people.password}</div>
+                    </div>
+                    <div className="row">
+                        <label> Authorities: </label>
+                        <div> {people.authorities}</div>
                     </div>
                 </div>
             </div>

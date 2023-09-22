@@ -1,5 +1,5 @@
 export { default as LoginComponent } from './LoginComponent/LoginComponent';
-export { default as UserLogin } from './UserLogin/UserLogin';
+export { default as HomePage } from './HomePage/HomePage';
 export { default as HeaderComponent } from './HeaderComponent';
 export { default as FooterComponent } from './FooterComponent';
 export { default as ListPeopleComponent } from './ListPeopleComponent';
