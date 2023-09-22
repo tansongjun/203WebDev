@@ -60,7 +60,7 @@ public class SecurityConfig {
             // // .requestMatchers(new AntPathRequestMatcher("/api/v1/people", "POST"))
             // );
             .authorizeHttpRequests((authz) -> authz
-                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAnyAuthority("ROLE_ADMIN")
                     .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/people/**") ).hasAuthority("ROLE_ADMIN")
                     .requestMatchers(mvc.pattern(HttpMethod.PUT, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
                     .requestMatchers(mvc.pattern(HttpMethod.DELETE, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")

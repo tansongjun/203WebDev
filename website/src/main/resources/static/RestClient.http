@@ -1,16 +1,17 @@
-### Get all people
+################################ People Management ########################################
+### Get all people (admin only)
 GET http://localhost:8080/api/v1/people
 Authorization: Basic admin goodpass
 
-### Get people by id
+### Get people by id (admin only)
 GET http://localhost:8080/api/v1/people/1
 Authorization: Basic username password
 
-### Delete people by id
+### Delete people by id (admin only)
 DELETE http://localhost:8080/api/v1/people/2
 Authorization: Basic admin goodpass
 
-### Add people
+### Add people (admin only)
 POST http://localhost:8080/api/v1/people
 Content-Type: application/json
 Authorization: Basic admin goodpass
@@ -26,7 +27,7 @@ Authorization: Basic admin goodpass
     "authorities": "ROLE_PATIENT"
 }
 
-### Update people by id
+### Update people by id (admin only)
 PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
 Authorization: Basic admin goodpass
@@ -42,9 +43,10 @@ Authorization: Basic admin goodpass
     "authorities": "ROLE_ADMIN"
 }
 
-### login (patient)
+### login (patient only)
 ### if 404 error, incorrect username or password
 ### if 403 error, user is not a patient
+### Rmb to keep username, password and id in localstorage/cookies of the frontend
 
 GET http://localhost:8080/api/v1/login
 Content-Type: application/json
@@ -54,9 +56,10 @@ Content-Type: application/json
     "password": "passwod"
 }
 
-### login (admin)
+### login (admin only)
 ### if 404 error, incorrect username or password
 ### if 403 error, user is not a admin
+### Rmb to keep username, password and id in localstorage/cookies of the frontend
 GET http://localhost:8080/api/v1/admin/login
 Content-Type: application/json
 
@@ -65,39 +68,10 @@ Content-Type: application/json
     "password": "password"
 }
 
-#################################### SCAPPED ########################################
-# ################################## Patient ########################################
-
-# ### Get all patients
-# GET http://localhost:8080/api/v2/patients
-
-# ### Save patient
-# POST http://localhost:8080/api/v2/patients
-# Content-Type: application/json
-
-# {
-#     "firstName": "Mark",
-#     "lastName": "lastName",
-#     "emailId": "email",
-#     "age": "1",
-#     "condition": ["state.condition"]
-# }
-
-# ### Update Patient by id
-# PUT http://localhost:8080/api/v2/patients/7
-# Content-Type: application/json
-
-# {
-#     "firstName": "ChangedFirsasedtname",
-#     "lastName": "lastName",
-#     "emailId": "email",
-#     "age": "1",
-#     "condition": ["state.condition"]
-# }
-
 ################################## Qticket ########################################
 
-### Get new QTicket no with patientId
+### Get new QTicket no with patientId (Patient /or admin)
+### (get patient id when during login.) 
 POST http://localhost:8080/api/v2/patients/2/getnewQ
 Authorization: Basic username12 password
 Content-Type: application/json
@@ -106,13 +80,24 @@ Content-Type: application/json
 
 }
 
-### Get Latest Qticket by patient id
+### Get Latest Qticket by patient id (Patient /or admin) 
+### get patient id when during login. 
 GET  http://localhost:8080/api/v2/patients/2/getQ
 Authorization: Basic admin goodpass
 
-### Get all QTickets
+### Get all QTickets (admin only)
 GET http://localhost:8080/api/v2/getallQ
 Authorization: Basic admin goodpass
+
+
+
+
+
+
+
+
+
+
 
 
 ################################## Room (For future)########################################
@@ -192,3 +177,33 @@ Authorization: Basic admin goodpass
 }
 
 ###########################################################
+
+#################################### SCAPPED ########################################
+# ################################## Patient ########################################
+
+# ### Get all patients
+# GET http://localhost:8080/api/v2/patients
+
+# ### Save patient
+# POST http://localhost:8080/api/v2/patients
+# Content-Type: application/json
+
+# {
+#     "firstName": "Mark",
+#     "lastName": "lastName",
+#     "emailId": "email",
+#     "age": "1",
+#     "condition": ["state.condition"]
+# }
+
+# ### Update Patient by id
+# PUT http://localhost:8080/api/v2/patients/7
+# Content-Type: application/json
+
+# {
+#     "firstName": "ChangedFirsasedtname",
+#     "lastName": "lastName",
+#     "emailId": "email",
+#     "age": "1",
+#     "condition": ["state.condition"]
+# }
