@@ -10,7 +10,10 @@ function CreatePeopleComponent() {
         lastName: '',
         emailId: '',
         age: '',
-        condition: ''
+        condition: '',
+        username: '',
+        password: '',
+        authorities: ''
     });
 
     const savePeople = (e) => {

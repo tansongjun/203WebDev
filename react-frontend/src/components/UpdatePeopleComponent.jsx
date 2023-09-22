@@ -11,7 +11,10 @@ function UpdatePeopleComponent() {
         lastName: '',
         emailId: '',
         age: '',
-        condition: ''
+        condition: '',
+        username: '',
+        password: '',
+        authorities: ''
     });
 
     useEffect(() => {

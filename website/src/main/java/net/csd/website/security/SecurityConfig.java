@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -48,29 +50,43 @@ public class SecurityConfig {
         return new MvcRequestMatcher.Builder(introspector);
     }
 
+    // to return http error messages
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http
-            .cors(cors -> cors.disable())
-            .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser-based attacks
-            .formLogin(fg -> fg.disable())
-            .authenticationProvider(authenticationProvider()) // specifies the authentication provider for
-                                                                // HttpSecurity
-            // security
-            // // .requestMatchers(new AntPathRequestMatcher("/api/v1/people", "POST"))
-            // );
-            .authorizeHttpRequests((authz) -> authz
-                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAnyAuthority("ROLE_ADMIN")
-                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/people/**") ).hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(mvc.pattern(HttpMethod.PUT, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(mvc.pattern(HttpMethod.DELETE, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v2/getallQ")).hasAnyAuthority("ROLE_ADMIN")
-                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/patients/{id}/getQ")).hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
-                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/patients/{id}/getnewQ")).hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
-                    
-                    .anyRequest().permitAll()
-            )
-            .httpBasic(withDefaults()) // allow Http Basic Authentication
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser-based attacks
+                .formLogin(fg -> fg.disable())
+                .authenticationProvider(authenticationProvider()) // specifies the authentication provider for
+                                                                  // HttpSecurity
+                // security
+                // // .requestMatchers(new AntPathRequestMatcher("/api/v1/people", "POST"))
+                // );
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.PUT, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.DELETE, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v2/getallQ")).hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/patients/{id}/getQ"))
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
+                        .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/patients/{id}/getnewQ"))
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/login/{username}")).hasAuthority("ROLE_PATIENT")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/admin/login/{username}")).hasAuthority("ROLE_ADMIN")
+
+                        .anyRequest().permitAll())
+                .httpBasic(withDefaults()) // allow Http Basic Authentication
         ;
         return http.build();
     }

@@ -44,19 +44,20 @@ Authorization: Basic admin goodpass
 }
 
 ### login (patient only)
+### GET http://localhost:8080/api/v1/login/{username}
 ### if 401/404 error, incorrect username or password
 ### if 403 error, user is not a patient
-
 ### Rmb to keep username, password and id in localstorage/cookies of the frontend
 
 GET http://localhost:8080/api/v1/login/username
 Authorization: Basic username password
 
 ### login (admin only)
+### GET http://localhost:8080/api/v1/admin/login/{username}
 ### if 401/404 error, incorrect username or password
 ### if 403 error, user is not a admin
 ### Rmb to keep username, password and id in localstorage/cookies of the frontend
-GET http://localhost:8080/api/v1/admin/login/username
+GET http://localhost:8080/api/v1/admin/login/admin
 Authorization: Basic admin goodpass
 
 ################################## Qticket ########################################

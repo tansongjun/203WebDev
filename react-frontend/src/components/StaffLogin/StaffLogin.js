@@ -4,7 +4,7 @@ function StaffLogin() {
     return (
         <div>
             <h1>STAFF LOGIN</h1>
-            <LoginComponent/>
+            <LoginComponent handleNavigation={"/StaffHome"} userType={"ROLE_ADMIN"}/>
         </div>
     );
 }

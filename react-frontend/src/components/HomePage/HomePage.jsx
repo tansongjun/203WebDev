@@ -28,11 +28,11 @@ function HomePage() {
                 <button className="staff-button" onClick={handleStaffButtonClick}>Staff</button>
             </Link>
             <br/>
-            <Link to="/appointmentLogin">
+            {/* <Link to="/appointmentLogin">
                 <button className="appointment-button" onClick={handleAppointmentButtonClick}>
                   Make appointments
                 </button>
-            </Link>
+            </Link> */}
         </div>
     );
 }

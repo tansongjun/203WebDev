@@ -68,7 +68,6 @@ public class PersonController {
 		} else {
 			return ResponseEntity.status(403).build();
 		}
-
 	}
 
 	@GetMapping("/admin/login/{username}")

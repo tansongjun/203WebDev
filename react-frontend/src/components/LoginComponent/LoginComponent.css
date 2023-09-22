@@ -60,3 +60,19 @@ input[type="submit"]:hover {
   gap: 8px;
   margin: 10px;
 }
+
+.cetn_btn {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.cetn_sgn{
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
