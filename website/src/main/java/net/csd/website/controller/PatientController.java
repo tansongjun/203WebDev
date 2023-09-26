@@ -9,7 +9,7 @@ import net.csd.website.repository.PatientRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v2/")
+@RequestMapping("/api/v1/")
 public class PatientController {
     @Autowired
     private PatientRepository patientRepository;

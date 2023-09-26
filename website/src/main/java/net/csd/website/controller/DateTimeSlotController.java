@@ -13,7 +13,7 @@ import net.csd.website.repository.RoomRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v2/")
+@RequestMapping("/api/v1/")
 public class DateTimeSlotController {
     private RoomRepository roomRepository;
     private DateTimeSlotRepository dateTimeSlotRepository;

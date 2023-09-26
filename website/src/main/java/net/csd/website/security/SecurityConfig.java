@@ -73,11 +73,11 @@ public class SecurityConfig {
                 // // .requestMatchers(new AntPathRequestMatcher("/api/v1/people", "POST"))
                 // );
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(mvc.pattern(HttpMethod.PUT, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(mvc.pattern(HttpMethod.DELETE, "/api/v1/people/**")).hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v2/getallQ")).hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/getallQ")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/patients/{id}/getQ"))
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/patients/{id}/getnewQ"))
