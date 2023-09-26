@@ -1,28 +1,65 @@
 import axios from 'axios';
+import { useState } from 'react';
 
-const PEOPLE_API_BASE_URL = "http://localhost:8080/api/v1/people";
 
-class PeopleService {
+function PeopleService() {
+    const PEOPLE_API_BASE_URL = "http://localhost:8080/api/v1/people";
 
-    getPeople() {
-        return axios.get(PEOPLE_API_BASE_URL)
+    const getPeople = (auth) => {
+        console.log(auth.user, auth.pwd);
+        
+        return axios.get(
+            PEOPLE_API_BASE_URL,
+            {
+              auth: {
+                username: `${auth.user}`,
+                password: `${auth.pwd}`
+              }
+            })
     }
 
-    createPeople(people) {
-        return axios.post(PEOPLE_API_BASE_URL, people)
+    const createPeople = (people, auth) => {
+        return axios.post(PEOPLE_API_BASE_URL, people, {
+            auth: {
+                username: `${auth.user}`,
+                password: `${auth.pwd}`
+              }
+        })
     }
 
-    getPeopleById(peopleId) {
-        return axios.get(PEOPLE_API_BASE_URL + '/' + peopleId)
+    const getPeopleById = (peopleId, auth) => {
+        return axios.get(PEOPLE_API_BASE_URL + '/' + peopleId, {
+            auth: {
+                username: `${auth.user}`,
+                password: `${auth.pwd}`
+              }
+        })
     }
 
-    updatePeople(people, peopleId){
-        return axios.put(PEOPLE_API_BASE_URL + '/' + peopleId, people)
+    const updatePeople = (people, peopleId, auth) =>{
+        return axios.put(PEOPLE_API_BASE_URL + '/' + peopleId, people, {
+            auth: {
+                username: `${auth.user}`,
+                password: `${auth.pwd}`
+              }
+        })
     }
     
-    deletePeople(peopleId){
-        return axios.delete(PEOPLE_API_BASE_URL + '/' + peopleId)
+    const deletePeople = (peopleId, auth) =>{
+        return axios.delete(PEOPLE_API_BASE_URL + '/' + peopleId,   {
+            auth: {
+                username: `${auth.user}`,
+                password: `${auth.pwd}`
+              }
+        })
     }
+    return {
+        getPeople: getPeople,
+        createPeople: createPeople,
+        getPeopleById: getPeopleById,
+        updatePeople: updatePeople,
+        deletePeople: deletePeople
+    };
 }
 
-export default new PeopleService();
+export default PeopleService();

@@ -46,6 +46,11 @@ public class PersonController {
 	// API: POST(Create) people
 	@PostMapping("/people")
 	public Person createPerson(@Valid @RequestBody Person person) {
+		boolean checkUser = persons.findByUsername(person.getUsername()).isEmpty();
+		if (!checkUser) {
+			throw new ResourceNotFoundException("Username already exists");
+		}
+
 		person.setPassword(encoder.encode(person.getPassword()));
 		return persons.save(person);
 	}
@@ -94,9 +99,9 @@ public class PersonController {
 		person.setBirthDate(personDetails.getBirthDate());
 		person.setAge(personDetails.getAge());
 		person.setCondition(personDetails.getCondition());
-		person.setUsername(personDetails.getUsername());
-		person.setPassword(this.encoder.encode(personDetails.getPassword()));
-		person.setAuthorities(personDetails.getAuthorities().iterator().next().toString());
+		// person.setUsername(personDetails.getUsername());
+		// person.setPassword(this.encoder.encode(personDetails.getPassword()));
+		// person.setAuthorities(personDetails.getAuthorities().iterator().next().toString());
 
 		Person updatedPerson = persons.save(person);
 		return ResponseEntity.ok(updatedPerson);

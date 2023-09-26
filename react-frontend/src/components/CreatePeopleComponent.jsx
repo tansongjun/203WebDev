@@ -13,8 +13,13 @@ function CreatePeopleComponent() {
         condition: '',
         username: '',
         password: '',
-        authorities: ''
+        authorities: 'ROLE_PATIENT'
     });
+    const [auth, setAuth] = React.useState({
+        user: sessionStorage.getItem('user'),
+        pwd: sessionStorage.getItem('pwd'),
+        personId: sessionStorage.getItem('person_id')
+    })
 
     const savePeople = (e) => {
         e.preventDefault();
@@ -23,11 +28,22 @@ function CreatePeopleComponent() {
             lastName: state.lastName,
             emailId: state.emailId,
             age: state.age,
-            condition: state.condition
+            condition: state.condition,
+            username: state.username,
+            password: state.password,
+            authorities: state.authorities
         };
 
-        PeopleService.createPeople(people).then(() => {
-            navigate('/patient');
+        PeopleService.createPeople(people,auth).then((res) => {
+            if (res.status === 200) {
+                alert('Patient added successfully.');
+                navigate('/patient');
+
+            }
+        }).catch(err => {
+            console.log(err.response.data);
+            alert(err.response.data.message);
+            console.log(err.response.data.errors);
         });
     };
 
@@ -96,6 +112,37 @@ function CreatePeopleComponent() {
                                             setState({
                                                 ...state,
                                                 age: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Username: </label>
+                                    <input
+                                        placeholder="Username"
+                                        name="username"
+                                        className="form-control"
+                                        value={state.username}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                username: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> Password: </label>
+                                    <input
+                                        type='password'
+                                        placeholder="Password"
+                                        name="password"
+                                        className="form-control"
+                                        value={state.password}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                password: e.target.value
                                             })
                                         }
                                     />

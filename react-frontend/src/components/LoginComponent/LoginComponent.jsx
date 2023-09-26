@@ -47,25 +47,36 @@ function LoginComponent({handleNavigation, userType}) {
         }).then(function (response) {
           if (response.status === 200) {
             const authi = response?.data?.authorities[0]?.authority;
-            // console.log(authi);
+            
+            sessionStorage.setItem('user', user);
+            sessionStorage.setItem('pwd', pwd);
+            sessionStorage.setItem('person_id', response?.data?.id);
+
+            console.log(authi);
+            console.log(response.data);
+
+
             // setUser(user);
             // setPwd(pwd);
             window.location.replace('/walkinHome')
           } else {
             console.log(response.status);
           }
-        }).catch(function (error) {
+        }).catch(async function (error) {
           if (error.response) {
             // The request was made and the server responded with a status code that falls out of the range of 2xx
             console.log('error.data', error.response.data);
             // console.log('error.headers', error.response.headers);
             console.log('error.status:', error.response.status, error.response.data.message);
-            if (error.response.status === 401) {
-              setErrorMessages('Error: Wrong username or password!');
-            } else if (error.response.status === 403) {
-              setErrorMessages('Error: You are not allowed to access patient records!');
-            }
+            let errorMessages = {
+              401: 'Error: Wrong username or password!',
+              403: 'Error: You are not allowed to access patient records!'
+            };  
+            setErrorMessages(errorMessages[error.response.status])
+
             errRef.current.focus();
+            await window.alert(errorMessages[error.response.status]);
+
           } else if (error.request) {
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -87,6 +98,9 @@ function LoginComponent({handleNavigation, userType}) {
         }).then(function (response) {
           if (response.status === 200) {
             const authi = response?.data?.authorities[0]?.authority;
+            sessionStorage.setItem('user', user);
+            sessionStorage.setItem('pwd', pwd);
+            sessionStorage.setItem('person_id', response?.data?.id);
             // console.log(authi);
             // setUser(user);
             // setPwd(pwd);
@@ -100,11 +114,12 @@ function LoginComponent({handleNavigation, userType}) {
             console.log('error.data', error.response.data);
             // console.log('error.headers', error.response.headers);
             console.log('error.status:', error.response.status, error.response.data.message);
-            if (error.response.status === 401) {
-              setErrorMessages('Error: Wrong username or password');
-            } else if (error.response.status === 403) {
-              setErrorMessages('Error: You are not allowed to access!');
-            }
+            let errorMessages = {
+              401: 'Error: Wrong username or password!',
+              403: 'Error: You are not allowed to access!'
+            };
+            setErrorMessages(errorMessages[error.response.status])
+
             errRef.current.focus();
           } else if (error.request) {
             // The request was made but no response was received

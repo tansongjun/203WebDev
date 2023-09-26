@@ -16,10 +16,15 @@ function UpdatePeopleComponent() {
         password: '',
         authorities: ''
     });
+    const [auth, setAuth] = React.useState({
+        user: sessionStorage.getItem('user'),
+        pwd: sessionStorage.getItem('pwd'),
+        personId: sessionStorage.getItem('person_id')
+    })
 
     useEffect(() => {
         // Fetch the data for the patient using the given ID
-        PeopleService.getPeopleById(id).then(res => {
+        PeopleService.getPeopleById(id, auth).then(res => {
             const data = res.data;
             setState({
                 firstName: data.firstName,
@@ -27,9 +32,6 @@ function UpdatePeopleComponent() {
                 emailId: data.emailId,
                 age: data.age,
                 condition: data.condition,
-                username: data.username,
-                password: data.password,
-                authorities: data.authorities
             });
         });
     }, [id]);
@@ -42,14 +44,22 @@ function UpdatePeopleComponent() {
             emailId: state.emailId,
             age: state.age,
             condition: state.condition,
-            username: state.username,
-            password: state.password,
-            authorities: state.authorities
+            username: 'Somefield',
+            password: 'SomeField',
+            authorities: 'ROLE_PATIENT'
         };
 
-        PeopleService.updatePeople(people, id).then(() => {
-            navigate('/patient');
-        });
+        PeopleService.updatePeople(people, id, auth).then((res) => {
+            if (res.status === 200) {
+                navigate('/patient');
+            }
+        }).catch(
+            err => {
+                console.log(err.response.data);
+                alert(err.response.data.message);
+                console.log(err.response.data.errors);
+            }
+        );
     };
 
     return (
@@ -136,51 +146,8 @@ function UpdatePeopleComponent() {
                                         }
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label> Username: </label>
-                                    <input
-                                        placeholder="Username"
-                                        name="Username"
-                                        className="form-control"
-                                        value={state.username}
-                                        onChange={(e) =>
-                                            setState({
-                                                ...state,
-                                                username: e.target.value
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label> Password: </label>
-                                    <input
-                                        placeholder="Password"
-                                        name="Password"
-                                        className="form-control"
-                                        value={state.password}
-                                        onChange={(e) =>
-                                            setState({
-                                                ...state,
-                                                password: e.target.value
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label> Authorities: </label>
-                                    <input
-                                        placeholder="Authorities"
-                                        name="Authorities"
-                                        className="form-control"
-                                        value={state.authorities}
-                                        onChange={(e) =>
-                                            setState({
-                                                ...state,
-                                                authorities: e.target.value
-                                            })
-                                        }
-                                    />
-                                </div>
+
+
 
                                 <button
                                     className="btn btn-success"
