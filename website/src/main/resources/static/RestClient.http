@@ -81,7 +81,7 @@ GET  http://localhost:8080/api/v1/patients/2/getQ
 Authorization: Basic admin goodpass
 
 ### Get all QTickets (admin only)
-GET http://localhost:8080/api/v2/getallQ
+GET http://localhost:8080/api/v1/getallQ
 Authorization: Basic admin goodpass
 
 
