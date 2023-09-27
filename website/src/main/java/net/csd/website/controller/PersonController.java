@@ -4,6 +4,7 @@ import java.rmi.NoSuchObjectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,14 +66,23 @@ public class PersonController {
 
 	@GetMapping("/login/{username}")
 	public ResponseEntity<Person> login(@PathVariable String username) {
-		Person person = persons.findByUsername(username)
-				.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
+		// Person person = persons.findByUsername(username)
+		// 		.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
 
-		if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
-			return ResponseEntity.ok(person);
-		} else {
-			return ResponseEntity.status(403).build();
+		// if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
+		// 	return ResponseEntity.ok(person);
+		// } else {
+		// 	return ResponseEntity.status(403).build();
+		// }
+
+		Optional<Person> person = persons.findByUsername(username);
+		if (!person.isPresent()) {
+			throw new ResourceNotFoundException("Not Found! Contact Admin");
+		}else{
+			return ResponseEntity.ok(person.get());
 		}
+
+		
 	}
 
 	@GetMapping("/admin/login/{username}")
