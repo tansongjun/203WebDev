@@ -120,7 +120,7 @@
   display: grid;
 }
 
-.queue-button, .staff-button, .appointment-button{
+.queue-button, .staff-button, .appointment-button, .payment-button{
   height: 150px;
   width: 1500px;
   cursor: pointer;
@@ -134,7 +134,7 @@
   transition-duration: 0.4s;
 }
 
-.queue-button:hover,.appointment-button:hover,.staff-button:hover {
+.queue-button:hover,.appointment-button:hover,.staff-button:hover,.payment-button:hover {
   background-color: rgb(10, 30, 181);
   color: white;
 }

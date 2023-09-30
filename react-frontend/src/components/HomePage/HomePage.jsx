@@ -20,19 +20,21 @@ function HomePage() {
             <br/>
             <Link to="/walkinLogin">
                 <button className="queue-button" onClick={handleQueueButtonClick}>
-                    Get Queue number
+                    Walk In Kiosk 
                 </button>
             </Link>
             <br/>
             <Link to="/staffLogin">
-                <button className="staff-button" onClick={handleStaffButtonClick}>Staff</button>
+                <button className="staff-button" onClick={handleStaffButtonClick}>
+                    Staff
+                </button>
             </Link>
             <br/>
-            {/* <Link to="/appointmentLogin">
+            <Link to="/appointmentLogin">
                 <button className="appointment-button" onClick={handleAppointmentButtonClick}>
-                  Make appointments
+                  Remote Appointment Making
                 </button>
-            </Link> */}
+            </Link>
         </div>
     );
 }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import PeopleService from '../services/PeopleService';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import PeopleService from '../../services/PeopleService';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function CreatePeopleComponent() {
+function UpdatePeopleComponent() {
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const [state, setState] = useState({
         firstName: '',
@@ -13,7 +14,7 @@ function CreatePeopleComponent() {
         condition: '',
         username: '',
         password: '',
-        authorities: 'ROLE_PATIENT'
+        authorities: ''
     });
     const [auth, setAuth] = React.useState({
         user: sessionStorage.getItem('user'),
@@ -21,7 +22,21 @@ function CreatePeopleComponent() {
         personId: sessionStorage.getItem('person_id')
     })
 
-    const savePeople = (e) => {
+    useEffect(() => {
+        // Fetch the data for the patient using the given ID
+        PeopleService.getPeopleById(id, auth).then(res => {
+            const data = res.data;
+            setState({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                emailId: data.emailId,
+                age: data.age,
+                condition: data.condition,
+            });
+        });
+    }, [id]);
+
+    const updatePeople = (e) => {
         e.preventDefault();
         let people = {
             firstName: state.firstName,
@@ -29,22 +44,22 @@ function CreatePeopleComponent() {
             emailId: state.emailId,
             age: state.age,
             condition: state.condition,
-            username: state.username,
-            password: state.password,
-            authorities: state.authorities
+            username: 'Somefield',
+            password: 'SomeField',
+            authorities: 'ROLE_PATIENT'
         };
 
-        PeopleService.createPeople(people,auth).then((res) => {
+        PeopleService.updatePeople(people, id, auth).then((res) => {
             if (res.status === 200) {
-                alert('Patient added successfully.');
                 navigate('/patient');
-
             }
-        }).catch(err => {
-            console.log(err.response.data);
-            alert(err.response.data.message);
-            console.log(err.response.data.errors);
-        });
+        }).catch(
+            err => {
+                console.log(err.response.data);
+                alert(err.response.data.message);
+                console.log(err.response.data.errors);
+            }
+        );
     };
 
     return (
@@ -53,7 +68,7 @@ function CreatePeopleComponent() {
             <div className="container">
                 <div className="row">
                     <div className="card col-md-6 offset-md-3 offset-md-3">
-                        <h3 className="text-center">Add Patient</h3>
+                        <h3 className="text-center">Update Patient</h3>
                         <div className="card-body">
                             <form>
                                 <div className="form-group">
@@ -117,37 +132,6 @@ function CreatePeopleComponent() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label> Username: </label>
-                                    <input
-                                        placeholder="Username"
-                                        name="username"
-                                        className="form-control"
-                                        value={state.username}
-                                        onChange={(e) =>
-                                            setState({
-                                                ...state,
-                                                username: e.target.value
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label> Password: </label>
-                                    <input
-                                        type='password'
-                                        placeholder="Password"
-                                        name="password"
-                                        className="form-control"
-                                        value={state.password}
-                                        onChange={(e) =>
-                                            setState({
-                                                ...state,
-                                                password: e.target.value
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="form-group">
                                     <label> Condition: </label>
                                     <input
                                         placeholder="Condition"
@@ -163,9 +147,11 @@ function CreatePeopleComponent() {
                                     />
                                 </div>
 
+
+
                                 <button
                                     className="btn btn-success"
-                                    onClick={savePeople}
+                                    onClick={updatePeople}
                                 >
                                     Save
                                 </button>
@@ -185,4 +171,4 @@ function CreatePeopleComponent() {
     );
 }
 
-export default CreatePeopleComponent;
+export default UpdatePeopleComponent;

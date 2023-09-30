@@ -39,16 +39,18 @@ import {
     WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
     UpdatePeopleComponent, ViewPeopleComponent
 } from './components';
+import ApptDB from './components/ApptDB/ApptDB';
 
 function App() {
     return (
         <Router>
             <div>
                 <div className='user-login-page'>
-                    <h1><center><img src="/favicon.ico" alt="icon"></img> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                    <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
                 </div>
 
                 <Routes>
+                
                 /* Buttons */
                     <Route path="/" element={<HomePage />} />
 
@@ -66,7 +68,13 @@ function App() {
                     <Route path="/patient" element={<ListPeopleComponent />} />
                     <Route path="/add-patient" element={<CreatePeopleComponent />} />
                     <Route path="/update-patient/:id" element={<UpdatePeopleComponent />} />
-    //            <Route path="/view-patient/:id" element={<ViewPeopleComponent />} />
+                    <Route path="/view-patient/:id" element={<ViewPeopleComponent />} />
+
+                /* Appointment Management Page */
+                    <Route path="/Appointments" element={<ApptDB/>} />
+                    <Route path="/add-appointment" element={<CreatePeopleComponent />} />
+                    <Route path="/update-appointment/:id" element={<UpdatePeopleComponent />} />
+                    <Route path="/view-appointment/:id" element={<ViewPeopleComponent />} />              
                 </Routes>
             </div>
         </Router>

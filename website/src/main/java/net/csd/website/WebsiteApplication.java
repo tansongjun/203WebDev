@@ -15,7 +15,6 @@ public class WebsiteApplication {
 
 	public static void main(String[] args) {
 		// SpringApplication.run(WebsiteApplication.class, args);
-
         // JPA user repository init
 		ApplicationContext ctx = SpringApplication.run(WebsiteApplication.class, args);
         PersonRepository users = ctx.getBean(PersonRepository.class);

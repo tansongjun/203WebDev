@@ -1,4 +1,3 @@
-import ApptDB from "../ApptDB/ApptDB";
 import ListPeopleComponent from "../PatientManagement/ListPeopleComponent";
 
 function StaffHome() {
@@ -6,9 +5,8 @@ function StaffHome() {
         <div>
             <h1>STAFF HOME</h1>
             <ListPeopleComponent/>
-            <ApptDB></ApptDB>
+            
         </div>
-        
     );
 }
 

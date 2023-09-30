@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react';
-import PeopleService from '../services/PeopleService';
+import PeopleService from '../../services/PeopleService';
 import { useNavigate } from 'react-router-dom';
 
 const ListPeopleComponentInner = () => {

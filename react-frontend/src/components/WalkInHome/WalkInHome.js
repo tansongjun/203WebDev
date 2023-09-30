@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 
 function WalkInHome() {
 
@@ -15,6 +16,14 @@ function WalkInHome() {
   const [errorMessages, setErrorMessages] = useState('');
 
   const LOGIN_URL = 'http://localhost:8080/api/v1';
+
+  const navigate = useNavigate();
+  const handleAppointmentButtonClick = () => {
+    navigate(1);
+  };
+  // const handlePaymentButtonClick = () => {
+  //   navigate(1);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,36 +63,31 @@ function WalkInHome() {
 
   }
 
-  const generateRandomNumber = () => {
-    let newNumber;
-    do {
-      newNumber = Math.floor(Math.random() * (4000 - 2000 + 1)) + 2000;
-    } while (generatedNumbers.includes(newNumber));
-
-    setRandomNumber(newNumber);
-    setGeneratedNumbers((previouslyGeneratedNumber) => [
-      ...previouslyGeneratedNumber,
-      newNumber,
-    ]);
-
-    setButtonDisabled(true);
-  };
-
   return (
     <div>
       <h1>WALK IN HOME</h1>
       <div style={{ textAlign: "center", fontSize: "50px", marginTop: "20px" }}>
         {randomNumber !== null
           ? "Your Queue Number: " + randomNumber
-          : "Register here"}
+          : "Welcome"}
       </div>
-      {!buttonDisabled ?<button
+      <button
         className="queue-button"
-        onClick={handleSubmit}
-        disabled={buttonDisabled} // Set the disabled attribute based on buttonDisabled state
-      >
+        onClick={handleSubmit}>
         Get Queue Number
-      </button>:null}
+      </button>
+      <br></br>
+      <Link to="/appointmentHome">
+        <button className="appointment-button" onClick={handleAppointmentButtonClick}>
+          Book an Appointment 
+        </button>
+      </Link>
+      <br></br>
+      {/* <Link to="/appointmentHome"> */}
+        <button className="payment-button">
+          Payment
+        </button>
+      {/* </Link> */}
     </div>
   );
 }
