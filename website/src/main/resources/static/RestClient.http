@@ -4,11 +4,11 @@ GET http://localhost:8080/api/v1/people
 Authorization: Basic admin goodpass
 
 ### Get people by id (admin only)
-GET http://localhost:8080/api/v1/people/1
+GET http://localhost:8080/api/v1/people/3
 Authorization: Basic admin password
 
 ### Delete people by id (admin only)
-DELETE http://localhost:8080/api/v1/people/2
+DELETE http://localhost:8080/api/v1/people/3
 Authorization: Basic admin goodpass
 
 ### Add people (admin only)
@@ -22,13 +22,13 @@ Authorization: Basic admin goodpass
     "emailId": "emailId@asd.com",
     "age": "1",
     "condition": "state.condition",
-    "username": "username",
+    "username": "userddname",
     "password": "password",
     "authorities": "ROLE_PATIENT"
 }
 
 ### Update people by id (admin only)
-PUT http://localhost:8080/api/v1/people/2
+PUT http://localhost:8080/api/v1/people/4
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
@@ -66,9 +66,9 @@ Authorization: Basic admin goodpass
 ################################## Qticket ########################################
 
 ### Get new QTicket no with patientId (Patient /or admin)
-### (get patient id when during login.) 
+### (get patient id when during login.)
 POST http://localhost:8080/api/v1/patients/2/getnewQ
-Authorization: Basic username password
+Authorization: Basic admin goodpass
 Content-Type: application/json
 
 {
@@ -77,11 +77,11 @@ Content-Type: application/json
 
 ### Get Latest Qticket by patient id (Patient /or admin) 
 ### get patient id when during login. 
-GET  http://localhost:8080/api/v1/patients/2/getQ
+GET  http://localhost:8080/api/v1/patients/1/getQ
 Authorization: Basic admin goodpass
 
 ### Get all QTickets (admin only)
-GET http://localhost:8080/api/v1/getallQ
+GET http://localhost:8080/api/v1/getAllQ
 Authorization: Basic admin goodpass
 
 
@@ -98,10 +98,12 @@ Authorization: Basic admin goodpass
 ################################## Room (For future)########################################
 
 ### Get all rooms
-GET http://localhost:8080/api/v2/rooms
+GET http://localhost:8080/api/v1/rooms
+Authorization: Basic admin goodpass
 
 ### add room
-POST http://localhost:8080/api/v2/rooms
+POST http://localhost:8080/api/v1/rooms
+Authorization: Basic admin goodpass
 Content-Type: application/json
 
 {
@@ -111,13 +113,13 @@ Content-Type: application/json
 ################################## DateTimeSlot (For future) ########################################
 
 ### Get all DateTimeSlot 
-GET http://localhost:8080/api/v2/datetimeslot
+GET http://localhost:8080/api/v1/datetimeslot
 
 ### Get DateTimeSlot by Roomid and date
-GET http://localhost:8080/api/v2/rooms/1/date/2023-09-10/timeslots
+GET http://localhost:8080/api/v1/rooms/1/date/2023-09-10/timeslots
 
 ### add DateTimeSlot by Roomid
-POST http://localhost:8080/api/v2/rooms/4/addslotsforDate/2023-09-10
+POST http://localhost:8080/api/v1/rooms/4/addslotsforDate/2023-09-10
 Content-Type: application/json
 
 {

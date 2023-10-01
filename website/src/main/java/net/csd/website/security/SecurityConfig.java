@@ -82,6 +82,10 @@ public class SecurityConfig {
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/patients/{id}/getnewQ"))
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
+
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/rooms")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/rooms")).hasAuthority("ROLE_ADMIN")
+
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/login/{username}")).hasAuthority("ROLE_PATIENT")
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/admin/login/{username}")).hasAuthority("ROLE_ADMIN")
 

@@ -1,4 +1,5 @@
 package net.csd.website.model;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +16,12 @@ import lombok.*;
 public class Room {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long roomid;
+    private long roomNumber;
+
+    // @Column(name = "room_number")
+    // private long roomNumber;
+
+    private LocalDate creationDate;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
