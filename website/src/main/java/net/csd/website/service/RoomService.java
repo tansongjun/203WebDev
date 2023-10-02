@@ -12,20 +12,18 @@ import net.csd.website.model.Room;
 import net.csd.website.repository.RoomRepository;
 
 import java.time.Duration;
-import net.csd.website.service.DateTimeSlotService;
 import net.csd.website.repository.DateTimeSlotRepository; // If you have a DateTimeSlotRepository for database operations
-import java.util.List; 
 
 @Service
 public class RoomService {
 
     private final RoomRepository roomRepository;
-    private final DateTimeSlotService dateTimeSlotService;
+    private final DateTimeSlotRepository dateTimeSlotRepository;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository, DateTimeSlotService dateTimeSlotService) {
+    public RoomService(RoomRepository roomRepository, DateTimeSlotRepository dateTimeSlotRepository) {
         this.roomRepository = roomRepository;
-        this.dateTimeSlotService = dateTimeSlotService;
+        this.dateTimeSlotRepository = dateTimeSlotRepository;
     }
 
     public Room createRoom(Room room) {
@@ -56,7 +54,8 @@ public class RoomService {
             dateTimeSlot.setRoom(savedRoom);
 
             // Save the DateTimeSlot
-            dateTimeSlotService.saveDateTimeSlot(dateTimeSlot);
+            // dateTimeSlotService.saveDateTimeSlot(dateTimeSlot);
+            dateTimeSlotRepository.save(dateTimeSlot);
 
             // Move to the next time slot
             currentDateTime = currentDateTime.plus(slotDuration);

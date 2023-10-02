@@ -3,9 +3,13 @@ package net.csd.website.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +26,7 @@ import net.csd.website.repository.QTicketRepository;
 import net.csd.website.repository.RoomRepository;
 import net.csd.website.service.QueueService;
 
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/")
@@ -29,54 +34,31 @@ public class QTicketController {
     private QTicketRepository qTicketRepository;
     private PersonRepository personRepository;
     private QueueService queueService;
+    private RoomRepository roomRepository;
+    private DateTimeSlotRepository dateTimeSlotRepository;
 
     public QTicketController( QTicketRepository qTicketRepository, PersonRepository PersonRepository, QueueService queueService, RoomRepository roomRepository, DateTimeSlotRepository dateTimeSlotRepository) {
         this.qTicketRepository = qTicketRepository;
         this.personRepository = PersonRepository;
         this.queueService = queueService;
+        this.roomRepository = roomRepository;
+        this.dateTimeSlotRepository = dateTimeSlotRepository;
     }
 
-    // @GetMapping("/getallQ")
-    // public List<QTicket> getAllQ() {
-    //     return qTicketRepository.findAll();
-    // }
-
+    // problem with this method/api
     @GetMapping("/getAllQ")
     public List<QTicket> getLatestQTickets() {
-        return qTicketRepository.findLatestQTicketsForAllPatients();
+        return qTicketRepository.findAll();
     }
 
+    // problem with this method/api
     @GetMapping("/patients/{id}/getQ")
-    public QTicket getQ(@PathVariable Long id) {
+    public QTicket getLatestQTicket(@PathVariable Long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
 
-        QTicket returnedqTicket = null;
-        long qTicketNo = 0;
-        for (QTicket qTicket : qTicketRepository.findByPerson(person)) {
-            if (qTicket.getTicketno() > qTicketNo) {
-                returnedqTicket = qTicket;
-                qTicketNo = qTicket.getTicketno();
-            }
-        }
-        if (returnedqTicket == null) {
-            throw new ResourceNotFoundException("No Queue ticket found for Patient id: " + id);
-        }
-
-        return returnedqTicket;
+        return queueService.findLatestTicketByPersonId(id);
     }
-
-    // @PostMapping("/patients/{id}/getnewQ")
-    // public QTicket getnewQ(@PathVariable Long id) {
-    //     Person patient = personRepository.findById(id)
-    //             .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + id));
-
-    //     QTicket qTicket = new QTicket();
-
-    //     qTicket.setPerson(patient);
-
-    //     return qTicketRepository.save(qTicket);
-    // }
 
     @PostMapping("/patients/{id}/getnewQ")
     public QTicket getnewQ(@PathVariable Long id) {
@@ -95,42 +77,56 @@ public class QTicketController {
         return qTicketRepository.save(qTicket);
     }
 
-//     @PostMapping("/patients/{id}/getnewQ")
-// public QTicket getnewQ(@PathVariable Long id) {
-//     Person patient = personRepository.findById(id)
-//             .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + id));
+    @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
+    public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
+        // Retrieve all available rooms
+        List<Room> rooms = roomRepository.findAll();
 
-//     // Check if a QTicket already exists for this Person
-//     Optional<QTicket> existingQTicketOptional = qTicketRepository.findById(id);
+        // Retrieve all time slots
+        List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
 
-//     if (existingQTicketOptional.isPresent()) {
-//         // If a QTicket already exists, return it or update it if needed
-//         QTicket existingQTicket = existingQTicketOptional.get();
-//         existingQTicket.setCreatedAt(LocalDateTime.now()); // Update creation timestamp if necessary
-//         return qTicketRepository.save(existingQTicket);
-//     } else {
-//         // If no existing QTicket, create a new one
-//         QTicket qTicket = new QTicket();
-//         qTicket.setPerson(patient);
+        // Filter time slots for the specified date
+        List<DateTimeSlot> availableDateTimeSlots = allDateTimeSlots.stream()
+                .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
+                        && dateTimeSlot.getQTicket() == null)
+                .collect(Collectors.toList());
 
-//         // Call the queueService to find the appropriate room and time slot
-//         DateTimeSlot dateTimeSlot = queueService.findEarliestTimeSlot();
-//         Room room = queueService.findLowestRoom();
+        // Sort available time slots by start time (optional step)
+        availableDateTimeSlots.sort(Comparator.comparing(DateTimeSlot::getStartDateTime));
 
-//         if (dateTimeSlot != null && room != null) {
-//             qTicket.setDatetimeSlot(dateTimeSlot);
-//             // qTicket.setRoom(room);
+        // Limit the number of results (optional step)
+        // availableDateTimeSlots = availableDateTimeSlots.stream().limit(10).collect(Collectors.toList());
 
-//             // Save the queue ticket to the database
-//             return qTicketRepository.save(qTicket);
-//         } else {
-//             // Handle the case where no suitable room or time slot is found
-//             throw new ResourceNotFoundException("No suitable room or time slot found for patient id: " + id);
-//         }
-//     }
-// }
+        return availableDateTimeSlots;
+    }
 
+    @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
+    public ResponseEntity<QTicket> bookNewAppointment(
+            @PathVariable long patientId,
+            @PathVariable long dateTimeSlotId) {
 
+        Person patient = personRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + patientId));
 
+        DateTimeSlot dateTimeSlot = dateTimeSlotRepository.findById(dateTimeSlotId)
+                .orElseThrow(() -> new ResourceNotFoundException("DateTimeSlot not found for id: " + dateTimeSlotId));
+
+        // Check if the DateTimeSlot is available (i.e., not occupied)
+        if (dateTimeSlot.getQTicket() != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        // Create a new QTicket and set the patient and DateTimeSlot
+        QTicket qTicket = new QTicket();
+        qTicket.setPerson(patient);
+        qTicket.setDatetimeSlot(dateTimeSlot);
+        qTicket.setCreatedAt(LocalDateTime.now());
+
+        // Save the QTicket in the database
+        QTicket savedTicket = qTicketRepository.save(qTicket);
+
+        // Return the saved QTicket in the response entity
+        return ResponseEntity.status(HttpStatus.OK).body(savedTicket);
+    }
     
 }

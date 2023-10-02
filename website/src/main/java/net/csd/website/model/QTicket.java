@@ -30,10 +30,6 @@ public class QTicket {
     @JoinColumn(name = "datetime_slot_id", nullable = true)
     private DateTimeSlot datetimeSlot;
 
-    // @OneToOne
-    // @JoinColumn(name = "datetime_id", nullable = false)
-    // private DateTimeSlot datetimeSlot;
-
     
 
 }

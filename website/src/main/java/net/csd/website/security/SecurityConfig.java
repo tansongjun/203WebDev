@@ -85,6 +85,11 @@ public class SecurityConfig {
 
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/rooms")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/v1/rooms")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/datetimeslot")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/appointment/queryAvailableTimeSlot/{date}"))
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
+                        .requestMatchers(mvc.pattern(HttpMethod.POST, "/appointment/bookNewAppointment"))
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
 
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/login/{username}")).hasAuthority("ROLE_PATIENT")
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/admin/login/{username}")).hasAuthority("ROLE_ADMIN")

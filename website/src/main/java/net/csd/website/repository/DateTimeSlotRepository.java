@@ -16,10 +16,6 @@ import net.csd.website.model.Room;
 @Repository
 public interface DateTimeSlotRepository extends JpaRepository<DateTimeSlot, Long> {
     List<DateTimeSlot> findByRoom(Room room);
-    // List<DateTimeSlot> findByRoomAndDate(Room room, LocalDate date);
-    // List<DateTimeSlot> findByDateAndRoomOrderByStartDateTimeAsc(LocalDate date, Room room);
-    Optional<DateTimeSlot> findFirstByOrderByStartDateTimeAsc();
-
    
 }
 

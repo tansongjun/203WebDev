@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import net.csd.website.model.Room;
 import net.csd.website.repository.RoomRepository;
-import net.csd.website.service.DateTimeSlotService;
 import net.csd.website.service.RoomService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -18,13 +17,11 @@ import net.csd.website.service.RoomService;
 @RequestMapping("/api/v1/")
 public class RoomController {
 
-    private final DateTimeSlotService dateTimeSlotService;
     private final RoomRepository roomRepository;
     private final RoomService roomService;
 
     @Autowired
-    public RoomController(DateTimeSlotService dateTimeSlotService, RoomRepository roomRepository, RoomService roomService) {
-        this.dateTimeSlotService = dateTimeSlotService;
+    public RoomController(RoomRepository roomRepository, RoomService roomService) {
         this.roomRepository = roomRepository;
         this.roomService = roomService;
     }
@@ -33,25 +30,6 @@ public class RoomController {
     public Iterable<Room> getAllRooms() {
         return roomRepository.findAll();
     }
-
-    // @PostMapping("/rooms")
-    // public Room createRoom(@RequestBody Room room) {
-    //     return roomRepository.save(room);
-    // }
-
-    // @PostMapping("/rooms/{id}")
-    // public ResponseEntity<Room> createRoom(@PathVariable Long id, @RequestBody Room room) {
-    //     // Set the room ID and room number
-    //     room.setRoomNumber(id); // Assuming room number is stored as a string
-
-    //     // Save the room in the database
-    //     Room savedRoom = roomRepository.save(room);
-
-    //     // Generate and save time slots for the newly created room
-    //     dateTimeSlotService.generateAndSaveTimeSlots(LocalDate.now(), savedRoom);
-
-    //     return ResponseEntity.ok(savedRoom);
-    // }
 
      @PostMapping("/rooms")
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {

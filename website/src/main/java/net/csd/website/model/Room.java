@@ -18,9 +18,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long roomNumber;
 
-    // @Column(name = "room_number")
-    // private long roomNumber;
-
     private LocalDate creationDate;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

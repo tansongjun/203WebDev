@@ -1,5 +1,6 @@
 ################################ People Management ########################################
 ### Get all people (admin only)
+
 GET http://localhost:8080/api/v1/people
 Authorization: Basic admin goodpass
 
@@ -22,13 +23,13 @@ Authorization: Basic admin goodpass
     "emailId": "emailId@asd.com",
     "age": "1",
     "condition": "state.condition",
-    "username": "userddname",
+    "username": "username",
     "password": "password",
     "authorities": "ROLE_PATIENT"
 }
 
 ### Update people by id (admin only)
-PUT http://localhost:8080/api/v1/people/4
+PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
@@ -77,18 +78,12 @@ Content-Type: application/json
 
 ### Get Latest Qticket by patient id (Patient /or admin) 
 ### get patient id when during login. 
-GET  http://localhost:8080/api/v1/patients/1/getQ
+GET  http://localhost:8080/api/v1/patients/2/getQ
 Authorization: Basic admin goodpass
 
 ### Get all QTickets (admin only)
 GET http://localhost:8080/api/v1/getAllQ
 Authorization: Basic admin goodpass
-
-
-
-
-
-
 
 
 
@@ -112,8 +107,23 @@ Content-Type: application/json
 
 ################################## DateTimeSlot (For future) ########################################
 
+### Book new appointment by patientid and datetimeslotid
+POST http://localhost:8080/api/v1/appointment/bookNewAppointment/1/5
+Content-Type: application/json
+Authorization: Basic admin goodpass
+
+{
+    "patientId": 1,
+    "dateTimeSlotId": 5
+}
+
+### Query all available TimeSlot by date
+GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-03
+Authorization: Basic admin goodpass
+
 ### Get all DateTimeSlot 
 GET http://localhost:8080/api/v1/datetimeslot
+Authorization: Basic admin goodpass
 
 ### Get DateTimeSlot by Roomid and date
 GET http://localhost:8080/api/v1/rooms/1/date/2023-09-10/timeslots

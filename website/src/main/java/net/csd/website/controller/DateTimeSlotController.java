@@ -1,7 +1,7 @@
 package net.csd.website.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,44 +24,24 @@ public class DateTimeSlotController {
     }
 
     @GetMapping("/datetimeslot")
-    public Iterable<DateTimeSlot> getDateTimeSlot(){
+    public List<DateTimeSlot> getDateTimeSlot(){
         
+        // There is error with this method
+        // Doesn't work when datetimeslots that are occupied
         return dateTimeSlotRepository.findAll();
+
+        // When u uncomment below code, this api will work
+        // Works only for datetimeslots that are unoccupied
+
+        // // Retrieve all time slots
+        // List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
+
+        // // Retrieve occupied time slots
+        // List<DateTimeSlot> unoccupiedDateTimeSlots = allDateTimeSlots.stream()
+        //         .filter(dateTimeSlot -> dateTimeSlot.getQTicket() != null)
+        //         .collect(Collectors.toList());
+
+        // return unoccupiedDateTimeSlots;
     }
-
-    // @GetMapping("/rooms/{id}/date/{date}/timeslots")
-    // public Iterable<DateTimeSlot> getAllTimeslotForRoom(@PathVariable Long id, @PathVariable LocalDate date) {
-    //     Room room = roomRepository.findById(id)
-    //     .orElseThrow(() -> new RuntimeException("Room not found for id: " + id));
-
-    //     return dateTimeSlotRepository.findByRoomAndDate(room, date);
-
-    // }
-
-    // IMPORTANT: rmb to uncomment later
-
-    // @PostMapping("/rooms/{id}/addslotsforDate/{date}")
-    // public ResponseEntity<Room> addDateAndTimeforRoom(@PathVariable Long id, @PathVariable LocalDate date){
-    //     Room room = roomRepository.findById(id)
-    //     .orElseThrow(() -> new RuntimeException("Room not found for id: " + id));        
-    //     for (int i = 8; i < 17; i++){
-    //         for (int j = 0; j < 60; j += 20){
-    //             LocalTime currentTime = LocalTime.of(i, j);
-    //             //Todo: check if there is no such date and time in the room.
-    //             // if not available, return error message
-
-    //             DateTimeSlot dateTimeSlot = new DateTimeSlot();
-    //             dateTimeSlot.setDate(date);
-    //             dateTimeSlot.setRoom(room);
-    //             dateTimeSlot.setFixedTime(currentTime);
-    //             dateTimeSlotRepository.save(dateTimeSlot);
-    //         }
-    //     }
-
-    //     Room updatedRoom = roomRepository.save(room);
-    //     return ResponseEntity.ok(updatedRoom);
-    // }
-
-
 
 }

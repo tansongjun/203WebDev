@@ -33,7 +33,9 @@ public class DateTimeSlot {
     @OneToOne(mappedBy = "datetimeSlot", cascade = CascadeType.ALL)
     private QTicket qTicket;
 
-    // @OneToOne(mappedBy = "datetimeSlot", cascade = CascadeType.ALL)
-    // private QTicket queueticket;
+    // Constructors
+    public DateTimeSlot(long id) {
+        this.id = id;
+    }
 
 }
