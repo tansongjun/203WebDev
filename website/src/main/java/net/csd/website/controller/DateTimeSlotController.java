@@ -26,22 +26,7 @@ public class DateTimeSlotController {
     @GetMapping("/datetimeslot")
     public List<DateTimeSlot> getDateTimeSlot(){
         
-        // There is error with this method
-        // Doesn't work when datetimeslots that are occupied
-        return dateTimeSlotRepository.findAll();
-
-        // When u uncomment below code, this api will work
-        // Works only for datetimeslots that are unoccupied
-
-        // // Retrieve all time slots
-        // List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
-
-        // // Retrieve occupied time slots
-        // List<DateTimeSlot> unoccupiedDateTimeSlots = allDateTimeSlots.stream()
-        //         .filter(dateTimeSlot -> dateTimeSlot.getQTicket() != null)
-        //         .collect(Collectors.toList());
-
-        // return unoccupiedDateTimeSlots;
+       return dateTimeSlotRepository.findAll();
     }
 
 }

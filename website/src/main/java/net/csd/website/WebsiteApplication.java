@@ -7,8 +7,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import net.csd.website.repository.PatientRepository;
 import net.csd.website.repository.PersonRepository;
+import net.csd.website.service.RoomService;
 import net.csd.website.model.Patient;
 import net.csd.website.model.Person;
+import net.csd.website.model.Room;
 
 @SpringBootApplication
 public class WebsiteApplication {
@@ -24,5 +26,7 @@ public class WebsiteApplication {
             "eml@my.eml", 60, "extreme", "admin", 
             encoder.encode("goodpass"), "ROLE_ADMIN")).getUsername()
         );
+        RoomService room = ctx.getBean(RoomService.class);
+        System.out.println("[Room created]:" + room.createRoom(new Room()));
 	}
 }

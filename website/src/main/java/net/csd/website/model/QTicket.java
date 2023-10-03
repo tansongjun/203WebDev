@@ -3,6 +3,8 @@ package net.csd.website.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +29,7 @@ public class QTicket {
     private Person person;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "datetime_slot_id", nullable = true)
     private DateTimeSlot datetimeSlot;
 

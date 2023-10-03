@@ -125,17 +125,6 @@ Authorization: Basic admin goodpass
 GET http://localhost:8080/api/v1/datetimeslot
 Authorization: Basic admin goodpass
 
-### Get DateTimeSlot by Roomid and date
-GET http://localhost:8080/api/v1/rooms/1/date/2023-09-10/timeslots
-
-### add DateTimeSlot by Roomid
-POST http://localhost:8080/api/v1/rooms/4/addslotsforDate/2023-09-10
-Content-Type: application/json
-
-{
-    
-}
-
 ################################ By nicholas ######################################
 ### 1 ## Get all people
 GET http://localhost:8080/api/v1/people
