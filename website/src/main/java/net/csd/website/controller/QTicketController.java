@@ -88,39 +88,6 @@ public class QTicketController {
         return ResponseEntity.ok(queueResponse);
     }
 
-    // @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
-    // public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
-
-    //     // Calculate the date 3 days from today
-    //     LocalDate threeDaysLater = LocalDate.now().plusDays(3);
-
-    //     // Ensure the provided date is within the next 3 days from today
-    //     if (date.isAfter(threeDaysLater)) {
-    //         // Handle the case where the provided date is more than 3 days from today
-    //         throw new InvalidDateException("Invalid date. Please provide a date within the next 3 days from today.");
-    //     }
-
-    //     // Retrieve all available rooms
-    //     List<Room> rooms = roomRepository.findAll();
-
-    //     // Retrieve all time slots
-    //     List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
-
-    //     // Filter time slots for the specified date
-    //     List<DateTimeSlot> availableDateTimeSlots = allDateTimeSlots.stream()
-    //             .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
-    //                     && dateTimeSlot.getQTicket() == null)
-    //             .collect(Collectors.toList());
-
-    //     // Sort available time slots by start time (optional step)
-    //     availableDateTimeSlots.sort(Comparator.comparing(DateTimeSlot::getStartDateTime));
-
-    //     // Limit the number of results (optional step)
-    //     // availableDateTimeSlots = availableDateTimeSlots.stream().limit(10).collect(Collectors.toList());
-
-    //     return availableDateTimeSlots;
-    // }
-
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
     public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
         // Calculate the date 3 days from today
@@ -164,40 +131,6 @@ public class QTicketController {
 
         return resultSlots;
     }
-
-
-
-    // @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
-    // public ResponseEntity<QueueResponse> bookNewAppointment(
-    //         @PathVariable long patientId,
-    //         @PathVariable long dateTimeSlotId) {
-
-    //     Person patient = personRepository.findById(patientId)
-    //             .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + patientId));
-
-    //     DateTimeSlot dateTimeSlot = dateTimeSlotRepository.findById(dateTimeSlotId)
-    //             .orElseThrow(() -> new ResourceNotFoundException("DateTimeSlot not found for id: " + dateTimeSlotId));
-
-    //     // Check if the DateTimeSlot is available (i.e., not occupied)
-    //     if (dateTimeSlot.getQTicket() != null) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     }
-
-    //     // Create a new QTicket and set the patient and DateTimeSlot
-    //     QTicket qTicket = new QTicket();
-    //     qTicket.setPerson(patient);
-    //     qTicket.setDatetimeSlot(dateTimeSlot);
-    //     qTicket.setCreatedAt(LocalDateTime.now());
-
-    //     // Save the QTicket in the database
-    //     qTicketRepository.save(qTicket);
-
-    //     // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
-    //     QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
-
-    //     // Return the QueueResponse object in the response entity
-    //     return ResponseEntity.ok(queueResponse);
-    // }
 
     @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
     public ResponseEntity<QueueResponse> bookNewAppointment(
