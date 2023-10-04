@@ -7,30 +7,32 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.exception.InvalidDateException;
+import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.DateTimeSlot;
-import net.csd.website.model.Patient;
 import net.csd.website.model.Person;
 import net.csd.website.model.QTicket;
 import net.csd.website.model.Room;
+import net.csd.website.model.WaitingQticket;
 import net.csd.website.repository.DateTimeSlotRepository;
-import net.csd.website.repository.PatientRepository;
 import net.csd.website.repository.PersonRepository;
 import net.csd.website.repository.QTicketRepository;
 import net.csd.website.repository.RoomRepository;
 import net.csd.website.response.QueueResponse;
 import net.csd.website.service.QueueService;
-
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -42,7 +44,8 @@ public class QTicketController {
     private RoomRepository roomRepository;
     private DateTimeSlotRepository dateTimeSlotRepository;
 
-    public QTicketController( QTicketRepository qTicketRepository, PersonRepository PersonRepository, QueueService queueService, RoomRepository roomRepository, DateTimeSlotRepository dateTimeSlotRepository) {
+    public QTicketController(QTicketRepository qTicketRepository, PersonRepository PersonRepository,
+            QueueService queueService, RoomRepository roomRepository, DateTimeSlotRepository dateTimeSlotRepository) {
         this.qTicketRepository = qTicketRepository;
         this.personRepository = PersonRepository;
         this.queueService = queueService;
@@ -52,20 +55,45 @@ public class QTicketController {
 
     // problem with this method/api
     @GetMapping("/getAllQ")
-    public List<QTicket> getLatestQTickets() {
-        return qTicketRepository.findAll();
+    public List<QueueResponse> getLatestQTickets() {
+        List<QueueResponse> queueResponses = new ArrayList<>();
+
+        List<QTicket> qTickets = qTicketRepository.findAll();
+        for (QTicket qTicket : qTickets) {
+            QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
+            queueResponses.add(queueResponse);
+        }
+        return queueResponses;
     }
 
     // problem with this method/api
     @GetMapping("/patients/{id}/getQ")
-    public DateTimeSlot getLatestQTicket(@PathVariable Long id) {
+    public QueueResponse getLatestQTicket(@PathVariable Long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
-
-        return queueService.findLatestTicketByPersonId(id).getDatetimeSlot();
+        QueueResponse queueResponse = new QueueResponse(
+            queueService.findLatestTicketByPersonId(id) , 
+            queueService.findLatestTicketByPersonId(id).getDatetimeSlot()
+        );
+        return queueResponse;
     }
 
+    @GetMapping("/getWaitingList")
+    public List<QueueResponse> getWaitingList() {
+        List<QueueResponse> waitingList = new ArrayList<>();
+        List<QTicket> qTickets = qTicketRepository.findAll();
+        for (QTicket qTicket : qTickets) {
+            if (qTicket instanceof WaitingQticket) {
+                QueueResponse queueResponse = new QueueResponse((WaitingQticket) qTicket, qTicket.getDatetimeSlot());
+                waitingList.add(queueResponse);
+            }
+        }
+        return waitingList;
+    }
+
+    // For Walk in patients, to register for a new queue ticket
     @PostMapping("/patients/{id}/getnewQ")
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<QueueResponse> getNewQ(@PathVariable Long id) {
         Person patient = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + id));
@@ -81,7 +109,8 @@ public class QTicketController {
         // Save the queue ticket to the database
         qTicket = qTicketRepository.save(qTicket);
 
-        // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
+        // Construct the QueueResponse object with the newly created QTicket and
+        // associated DateTimeSlot
         QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
 
         // Return the QueueResponse object in the response entity
@@ -89,47 +118,10 @@ public class QTicketController {
     }
 
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
-    public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
-        // Calculate the date 3 days from today
-        LocalDate threeDaysLater = LocalDate.now().plusDays(3);
+    public List<DateTimeSlot> queryAvailableTimeSlotController(@PathVariable LocalDate date) {
+        // Shifted to QueueService
 
-        // Ensure the provided date is within the next 3 days from today
-        if (date.isAfter(threeDaysLater)) {
-            // Handle the case where the provided date is more than 3 days from today
-            throw new InvalidDateException("Invalid date. Please provide a date within the next 3 days from today.");
-        }
-
-        // Retrieve all available rooms
-        List<Room> rooms = roomRepository.findAll();
-
-        // Retrieve all time slots
-        List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
-
-        // Filter time slots for the specified date and available slots
-        List<DateTimeSlot> availableDateTimeSlots = allDateTimeSlots.stream()
-                .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
-                        && dateTimeSlot.getQTicket() == null)
-                .collect(Collectors.toList());
-
-        // Create a Map to store the selected slots by LocalTime
-        Map<LocalTime, DateTimeSlot> selectedSlots = new HashMap<>();
-
-        // Iterate through the available slots and select the earliest room number for each start time
-        for (DateTimeSlot slot : availableDateTimeSlots) {
-            LocalTime startTime = slot.getStartDateTime().toLocalTime();
-            if (!selectedSlots.containsKey(startTime) ||
-                    slot.getRoom().getRoomNumber() < selectedSlots.get(startTime).getRoom().getRoomNumber()) {
-                selectedSlots.put(startTime, slot);
-            }
-        }
-
-        // Convert the selected slots Map to a List
-        List<DateTimeSlot> resultSlots = new ArrayList<>(selectedSlots.values());
-
-        // Sort the result slots by start time (optional step)
-        resultSlots.sort(Comparator.comparing(slot -> slot.getStartDateTime().toLocalTime()));
-
-        return resultSlots;
+        return queueService.queryAvailableTimeSlot(date);
     }
 
     @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
@@ -163,12 +155,12 @@ public class QTicketController {
         // Save the QTicket in the database
         qTicketRepository.save(qTicket);
 
-        // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
+        // Construct the QueueResponse object with the newly created QTicket and
+        // associated DateTimeSlot
         QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
 
         // Return the QueueResponse object in the response entity
         return ResponseEntity.ok(queueResponse);
     }
 
-    
 }

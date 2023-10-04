@@ -27,7 +27,7 @@ public class DateTimeSlot {
     @JoinColumn(name = "room_id", nullable = false) 
     private Room room;
 
-    @OneToOne(mappedBy = "datetimeSlot", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "datetimeSlot")
     private QTicket qTicket;
 
     // Constructors

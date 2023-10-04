@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.Builder.Default;
 
 @Entity
 @Getter
@@ -26,6 +27,10 @@ import lombok.*;
 @EqualsAndHashCode
 @Table(name = "people")
 public class Person implements UserDetails {
+
+    public enum Condition {
+        NONE, MILD, MODERATE, SEVERE
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +52,8 @@ public class Person implements UserDetails {
     private int age;
 
     @Column(name = "person_condition")
-    private String condition;
+    @Enumerated(EnumType.STRING)
+    private Condition condition = Condition.NONE;
 
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
@@ -64,13 +70,13 @@ public class Person implements UserDetails {
     private String authorities;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    @JsonIgnore
     // Ignore the field in both JSON serialization and deserialization
+    @JsonIgnore
     private List<QTicket> queueticket;
 
-    public Person(String firstName, String lastName, String emailId, 
-    int age, String condition, String username, String password, 
-    String authorities) {
+    public Person(String firstName, String lastName, String emailId,
+            int age, Condition condition, String username, String password,
+            String authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
@@ -87,6 +93,55 @@ public class Person implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(authorities));
+    }
+
+    public int getRiskLevel() {
+        /*
+         * - Low Risk: (1)
+         * - Young age with mild conditions.
+         * - Middle-aged with no or mild conditions.
+         * 
+         * - Medium Risk: (2)
+         * - Young age with moderate conditions.
+         * - Middle-aged with moderate conditions.
+         * - Senior age with mild conditions.
+         * 
+         * - High Risk: (3)
+         * - Young or Middle-aged with severe conditions.
+         * - Senior age with moderate or severe conditions.
+         * 
+         *  - Age Groups:
+         * - Young: 0-17
+         * - Middle-aged: 18-59
+         * - Senior: 60+
+         * 
+         * - 0 stands for unknown risk level, tag it as low risk.
+         * 
+         */
+        if (age < 18) {
+            if (condition == Condition.MILD || condition == Condition.NONE) {
+                return 1;
+            } else if (condition == Condition.MODERATE) {
+                return 2;
+            } else if (condition == Condition.SEVERE) {
+                return 3;
+            }
+        } else if (age >= 18 && age < 60) {
+            if (condition == Condition.NONE || condition == Condition.MILD) {
+                return 1;
+            } else if (condition == Condition.MODERATE) {
+                return 2;
+            } else if (condition == Condition.SEVERE) {
+                return 3;
+            }
+        } else if (age >= 60) {
+            if (condition == Condition.NONE || condition == Condition.MILD) {
+                return 2;
+            } else if (condition == Condition.MODERATE || condition == Condition.SEVERE) {
+                return 3;
+            }
+        }
+        return 0;
     }
 
     /*

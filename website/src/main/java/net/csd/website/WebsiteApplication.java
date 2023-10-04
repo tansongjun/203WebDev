@@ -2,17 +2,15 @@ package net.csd.website;
 
 import java.time.LocalDate;
 
+import org.apache.catalina.valves.rewrite.RewriteCond.Condition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import net.csd.website.repository.PatientRepository;
-import net.csd.website.repository.PersonRepository;
-import net.csd.website.service.RoomService;
-import net.csd.website.model.Patient;
-import net.csd.website.model.Person;
-import net.csd.website.model.Room;
+import net.csd.website.repository.*;
+import net.csd.website.service.*;
+import net.csd.website.model.*;
 
 @SpringBootApplication
 public class WebsiteApplication {
@@ -25,10 +23,13 @@ public class WebsiteApplication {
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
         System.out.println("[Add user]: " + users.save(
             new Person("myuser", "mypass", 
-            "eml@my.eml", 60, "extreme", "admin", 
+            "eml@my.eml", 60, net.csd.website.model.Person.Condition.NONE, "admin", 
             encoder.encode("goodpass"), "ROLE_ADMIN")).getUsername()
         );
 
+        /* create Room and timeslot 
+         * 
+         */
         RoomService roomService = ctx.getBean(RoomService.class);
         LocalDate currentDate = LocalDate.now();
         LocalDate lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
@@ -55,5 +56,6 @@ public class WebsiteApplication {
         }
 
         System.out.println("[Rooms created from today until the end of the month]");
+        
 	}
 }

@@ -22,7 +22,7 @@ Authorization: Basic admin goodpass
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
     "age": "1",
-    "condition": "state.condition",
+    "condition": "MILD",
     "username": "username",
     "password": "password",
     "authorities": "ROLE_PATIENT"
@@ -38,7 +38,7 @@ Authorization: Basic admin goodpass
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
     "age": "20",
-    "condition": "state.condition",
+    "condition": "SEVERE",
     "username": "username12",
     "password": "password",
     "authorities": "ROLE_ADMIN"

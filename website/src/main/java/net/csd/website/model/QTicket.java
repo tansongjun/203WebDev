@@ -22,13 +22,13 @@ public class QTicket {
     private long ticketno;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinColumn(name = "datetime_slot_id", nullable = true)
     private DateTimeSlot datetimeSlot;
