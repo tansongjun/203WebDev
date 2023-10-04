@@ -67,7 +67,9 @@ public class QueueService {
         } else {
             // Handle the case where no suitable room or available time slot is found
             // You can throw an exception or return null based on your requirement
-            return null;
+            // return null;
+            throw new RuntimeException("No suitable room or time slot found for patient id: " + patient.getId());
+
         }
     }
 

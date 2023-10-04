@@ -31,14 +31,16 @@ public class RoomController {
         return roomRepository.findAll();
     }
 
-     @PostMapping("/rooms")
-    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
-        try {
-            Room createdRoom = roomService.createRoom(room);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdRoom);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            // You can customize the response or handle the exception based on your requirements
-        }
-    }
+    // Not needed for now
+    
+    //  @PostMapping("/rooms")
+    // public ResponseEntity<Room> createRoom(@RequestBody Room room) {
+    //     try {
+    //         Room createdRoom = roomService.createRoom(room);
+    //         return ResponseEntity.status(HttpStatus.CREATED).body(createdRoom);
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    //         // You can customize the response or handle the exception based on your requirements
+    //     }
+    // }
 }

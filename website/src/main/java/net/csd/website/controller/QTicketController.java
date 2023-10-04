@@ -24,6 +24,7 @@ import net.csd.website.repository.PatientRepository;
 import net.csd.website.repository.PersonRepository;
 import net.csd.website.repository.QTicketRepository;
 import net.csd.website.repository.RoomRepository;
+import net.csd.website.response.QueueResponse;
 import net.csd.website.service.QueueService;
 
 
@@ -53,15 +54,15 @@ public class QTicketController {
 
     // problem with this method/api
     @GetMapping("/patients/{id}/getQ")
-    public QTicket getLatestQTicket(@PathVariable Long id) {
+    public DateTimeSlot getLatestQTicket(@PathVariable Long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
 
-        return queueService.findLatestTicketByPersonId(id);
+        return queueService.findLatestTicketByPersonId(id).getDatetimeSlot();
     }
 
     @PostMapping("/patients/{id}/getnewQ")
-    public QTicket getnewQ(@PathVariable Long id) {
+    public ResponseEntity<QueueResponse> getNewQ(@PathVariable Long id) {
         Person patient = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + id));
 
@@ -74,8 +75,15 @@ public class QTicketController {
         }
 
         // Save the queue ticket to the database
-        return qTicketRepository.save(qTicket);
+        qTicket = qTicketRepository.save(qTicket);
+
+        // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
+        QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
+
+        // Return the QueueResponse object in the response entity
+        return ResponseEntity.ok(queueResponse);
     }
+
 
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
     public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
@@ -101,7 +109,7 @@ public class QTicketController {
     }
 
     @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
-    public ResponseEntity<QTicket> bookNewAppointment(
+    public ResponseEntity<QueueResponse> bookNewAppointment(
             @PathVariable long patientId,
             @PathVariable long dateTimeSlotId) {
 
@@ -123,10 +131,13 @@ public class QTicketController {
         qTicket.setCreatedAt(LocalDateTime.now());
 
         // Save the QTicket in the database
-        QTicket savedTicket = qTicketRepository.save(qTicket);
+        qTicketRepository.save(qTicket);
 
-        // Return the saved QTicket in the response entity
-        return ResponseEntity.status(HttpStatus.OK).body(savedTicket);
+        // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
+        QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
+
+        // Return the QueueResponse object in the response entity
+        return ResponseEntity.ok(queueResponse);
     }
     
 }

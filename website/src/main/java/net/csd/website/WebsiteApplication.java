@@ -1,5 +1,7 @@
 package net.csd.website;
 
+import java.time.LocalDate;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +28,32 @@ public class WebsiteApplication {
             "eml@my.eml", 60, "extreme", "admin", 
             encoder.encode("goodpass"), "ROLE_ADMIN")).getUsername()
         );
-        RoomService room = ctx.getBean(RoomService.class);
-        System.out.println("[Room created]:" + room.createRoom(new Room()));
+
+        RoomService roomService = ctx.getBean(RoomService.class);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+
+        // Create rooms from today until the end of the month
+        while (currentDate.isBefore(lastDayOfMonth) || currentDate.isEqual(lastDayOfMonth)) {
+            // Create room with the room number 1
+            Room room = new Room();
+            room.setRoomNumber(1);
+            roomService.createRoom(room, currentDate);
+
+            // Create room with the room number 2
+            Room room2 = new Room();
+            room2.setRoomNumber(2);
+            roomService.createRoom(room2, currentDate);
+
+            // Create room with the room number 3
+            Room room3 = new Room();
+            room3.setRoomNumber(3);
+            roomService.createRoom(room3, currentDate);
+
+            // Move to the next day
+            currentDate = currentDate.plusDays(1);
+        }
+
+        System.out.println("[Rooms created from today until the end of the month]");
 	}
 }

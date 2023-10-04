@@ -16,6 +16,8 @@ import lombok.*;
 public class Room {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+
     private long roomNumber;
 
     private LocalDate creationDate;

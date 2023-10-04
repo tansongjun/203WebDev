@@ -5,8 +5,8 @@ GET http://localhost:8080/api/v1/people
 Authorization: Basic admin goodpass
 
 ### Get people by id (admin only)
-GET http://localhost:8080/api/v1/people/3
-Authorization: Basic admin password
+GET http://localhost:8080/api/v1/people/2
+Authorization: Basic admin goodpass
 
 ### Delete people by id (admin only)
 DELETE http://localhost:8080/api/v1/people/3
@@ -90,7 +90,7 @@ Authorization: Basic admin goodpass
 
 
 
-################################## Room (For future)########################################
+################################## Room ########################################
 
 ### Get all rooms
 GET http://localhost:8080/api/v1/rooms
@@ -105,10 +105,10 @@ Content-Type: application/json
 
 }
 
-################################## DateTimeSlot (For future) ########################################
+################################## DateTimeSlot ########################################
 
 ### Book new appointment by patientid and datetimeslotid
-POST http://localhost:8080/api/v1/appointment/bookNewAppointment/1/5
+POST http://localhost:8080/api/v1/appointment/bookNewAppointment/2/9
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
@@ -118,7 +118,7 @@ Authorization: Basic admin goodpass
 }
 
 ### Query all available TimeSlot by date
-GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-03
+GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-04
 Authorization: Basic admin goodpass
 
 ### Get all DateTimeSlot 

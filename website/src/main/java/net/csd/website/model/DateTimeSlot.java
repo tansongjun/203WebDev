@@ -20,9 +20,6 @@ public class DateTimeSlot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    // private LocalDate date;
-    // private LocalTime fixedTime;
-
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     
