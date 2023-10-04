@@ -3,10 +3,13 @@ package net.csd.website.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import net.csd.website.exception.ResourceNotFoundException;
+import net.csd.website.exception.InvalidDateException;
 import net.csd.website.model.DateTimeSlot;
 import net.csd.website.model.Patient;
 import net.csd.website.model.Person;
@@ -84,29 +88,116 @@ public class QTicketController {
         return ResponseEntity.ok(queueResponse);
     }
 
+    // @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
+    // public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
+
+    //     // Calculate the date 3 days from today
+    //     LocalDate threeDaysLater = LocalDate.now().plusDays(3);
+
+    //     // Ensure the provided date is within the next 3 days from today
+    //     if (date.isAfter(threeDaysLater)) {
+    //         // Handle the case where the provided date is more than 3 days from today
+    //         throw new InvalidDateException("Invalid date. Please provide a date within the next 3 days from today.");
+    //     }
+
+    //     // Retrieve all available rooms
+    //     List<Room> rooms = roomRepository.findAll();
+
+    //     // Retrieve all time slots
+    //     List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
+
+    //     // Filter time slots for the specified date
+    //     List<DateTimeSlot> availableDateTimeSlots = allDateTimeSlots.stream()
+    //             .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
+    //                     && dateTimeSlot.getQTicket() == null)
+    //             .collect(Collectors.toList());
+
+    //     // Sort available time slots by start time (optional step)
+    //     availableDateTimeSlots.sort(Comparator.comparing(DateTimeSlot::getStartDateTime));
+
+    //     // Limit the number of results (optional step)
+    //     // availableDateTimeSlots = availableDateTimeSlots.stream().limit(10).collect(Collectors.toList());
+
+    //     return availableDateTimeSlots;
+    // }
 
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
     public List<DateTimeSlot> queryAvailableTimeSlot(@PathVariable LocalDate date) {
+        // Calculate the date 3 days from today
+        LocalDate threeDaysLater = LocalDate.now().plusDays(3);
+
+        // Ensure the provided date is within the next 3 days from today
+        if (date.isAfter(threeDaysLater)) {
+            // Handle the case where the provided date is more than 3 days from today
+            throw new InvalidDateException("Invalid date. Please provide a date within the next 3 days from today.");
+        }
+
         // Retrieve all available rooms
         List<Room> rooms = roomRepository.findAll();
 
         // Retrieve all time slots
         List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
 
-        // Filter time slots for the specified date
+        // Filter time slots for the specified date and available slots
         List<DateTimeSlot> availableDateTimeSlots = allDateTimeSlots.stream()
                 .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
                         && dateTimeSlot.getQTicket() == null)
                 .collect(Collectors.toList());
 
-        // Sort available time slots by start time (optional step)
-        availableDateTimeSlots.sort(Comparator.comparing(DateTimeSlot::getStartDateTime));
+        // Create a Map to store the selected slots by LocalTime
+        Map<LocalTime, DateTimeSlot> selectedSlots = new HashMap<>();
 
-        // Limit the number of results (optional step)
-        // availableDateTimeSlots = availableDateTimeSlots.stream().limit(10).collect(Collectors.toList());
+        // Iterate through the available slots and select the earliest room number for each start time
+        for (DateTimeSlot slot : availableDateTimeSlots) {
+            LocalTime startTime = slot.getStartDateTime().toLocalTime();
+            if (!selectedSlots.containsKey(startTime) ||
+                    slot.getRoom().getRoomNumber() < selectedSlots.get(startTime).getRoom().getRoomNumber()) {
+                selectedSlots.put(startTime, slot);
+            }
+        }
 
-        return availableDateTimeSlots;
+        // Convert the selected slots Map to a List
+        List<DateTimeSlot> resultSlots = new ArrayList<>(selectedSlots.values());
+
+        // Sort the result slots by start time (optional step)
+        resultSlots.sort(Comparator.comparing(slot -> slot.getStartDateTime().toLocalTime()));
+
+        return resultSlots;
     }
+
+
+
+    // @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
+    // public ResponseEntity<QueueResponse> bookNewAppointment(
+    //         @PathVariable long patientId,
+    //         @PathVariable long dateTimeSlotId) {
+
+    //     Person patient = personRepository.findById(patientId)
+    //             .orElseThrow(() -> new ResourceNotFoundException("Person not found for id: " + patientId));
+
+    //     DateTimeSlot dateTimeSlot = dateTimeSlotRepository.findById(dateTimeSlotId)
+    //             .orElseThrow(() -> new ResourceNotFoundException("DateTimeSlot not found for id: " + dateTimeSlotId));
+
+    //     // Check if the DateTimeSlot is available (i.e., not occupied)
+    //     if (dateTimeSlot.getQTicket() != null) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    //     }
+
+    //     // Create a new QTicket and set the patient and DateTimeSlot
+    //     QTicket qTicket = new QTicket();
+    //     qTicket.setPerson(patient);
+    //     qTicket.setDatetimeSlot(dateTimeSlot);
+    //     qTicket.setCreatedAt(LocalDateTime.now());
+
+    //     // Save the QTicket in the database
+    //     qTicketRepository.save(qTicket);
+
+    //     // Construct the QueueResponse object with the newly created QTicket and associated DateTimeSlot
+    //     QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
+
+    //     // Return the QueueResponse object in the response entity
+    //     return ResponseEntity.ok(queueResponse);
+    // }
 
     @PostMapping("/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}")
     public ResponseEntity<QueueResponse> bookNewAppointment(
@@ -121,6 +212,12 @@ public class QTicketController {
 
         // Check if the DateTimeSlot is available (i.e., not occupied)
         if (dateTimeSlot.getQTicket() != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        // Check if the startDateTime of the DateTimeSlot is within 3 days from today
+        LocalDateTime threeDaysLater = LocalDateTime.now().plusDays(3);
+        if (dateTimeSlot.getStartDateTime().isAfter(threeDaysLater)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
@@ -139,5 +236,6 @@ public class QTicketController {
         // Return the QueueResponse object in the response entity
         return ResponseEntity.ok(queueResponse);
     }
+
     
 }
