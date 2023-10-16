@@ -1,5 +1,6 @@
 package net.csd.website.service;
 
+import net.csd.website.exception.AllSlotsFilledException;
 import net.csd.website.exception.InvalidDateException;
 import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.DateTimeSlot;
@@ -9,6 +10,7 @@ import net.csd.website.model.Room;
 import net.csd.website.model.WaitingQticket;
 import net.csd.website.repository.DateTimeSlotRepository;
 import net.csd.website.repository.RoomRepository;
+import net.csd.website.repository.WaitingQTicketRepository;
 import net.csd.website.repository.QTicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,27 +35,26 @@ public class QueueService {
     private final QTicketRepository qTicketRepository;
     private final RoomRepository roomRepository;
     private final DateTimeSlotRepository dateTimeSlotRepository;
+    private final WaitingQTicketRepository waitingQTicketRepository;
 
     private int[] queuePattern = { 3, 3, 2, 1 };
     private int queuePatternIndex = 0;
 
+    // management of waiting no.
+    private int currentWaitingNo = 1;
+    private int processedWaitingNo = 0;
+    private LocalDate dateForWaitingNo = LocalDate.now();
+
     @Autowired
     public QueueService(QTicketRepository qTicketRepository, RoomRepository roomRepository,
-            DateTimeSlotRepository dateTimeSlotRepository) {
+            DateTimeSlotRepository dateTimeSlotRepository, WaitingQTicketRepository waitingQTicketRepository) {
         this.qTicketRepository = qTicketRepository;
         this.roomRepository = roomRepository;
         this.dateTimeSlotRepository = dateTimeSlotRepository;
+        this.waitingQTicketRepository = waitingQTicketRepository;
     }
 
     public List<DateTimeSlot> queryAvailableTimeSlot(LocalDate date) {
-        // Calculate the date 3 days from today
-        LocalDate threeDaysLater = LocalDate.now().plusDays(3);
-
-        // Ensure the provided date is within the next 3 days from today
-        if (date.isAfter(threeDaysLater)) {
-            // Handle the case where the provided date is more than 3 days from today
-            throw new InvalidDateException("Invalid date. Please provide a date within the next 3 days from today.");
-        }
 
         // Retrieve all available rooms
         // List<Room> rooms = roomRepository.findAll();
@@ -89,8 +90,28 @@ public class QueueService {
         return resultSlots;
     }
 
+    public Boolean checkEnoughSlotsinWaitingList() {
+        // Retrieve Available time slots for today
+        List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
+
+        // Check if there is any available time slot for today and if there is enough
+        // slots for the waiting queue
+        int waitingListSize = currentWaitingNo - processedWaitingNo - 1;
+        return availableDateTimeSlots.isEmpty() || waitingListSize == availableDateTimeSlots.size();
+
+    }
+
     @Transactional
     public QTicket getNewQueueTicket(Person patient) {
+        try {
+            allocateWaitingQTicket();
+        } catch (AllSlotsFilledException e) {
+            return null;
+        }
+
+        if (checkEnoughSlotsinWaitingList()) {
+            throw new RuntimeException("No available time slot for today");
+        }
         // Check if the patient has already got a queue ticket for today
         List<QTicket> existingTickets = qTicketRepository.findLatestTicketByPersonId(patient.getId());
         if (!existingTickets.isEmpty()) {
@@ -101,6 +122,9 @@ public class QueueService {
             }
         }
 
+        // Retrieve Available time slots for today
+        List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
+
         // Creation of either waitingQTicket or QTicket
         QTicket qTicket = null;
         DateTimeSlot dateTimeSlot = null;
@@ -109,26 +133,74 @@ public class QueueService {
         if (queuePattern[queuePatternIndex] == patient.getRiskLevel()) {
             queuePatternIndex = (queuePatternIndex + 1) % queuePattern.length;
 
-            // Retrieve Available time slots for today
-            List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
-            if (availableDateTimeSlots.isEmpty()) {
-                throw new ResourceNotFoundException("No available time slot for today");
-            }
-
-            dateTimeSlot = availableDateTimeSlots.get(0);
+            dateTimeSlot = availableDateTimeSlots.get(0); // set the dateTimeSlot to the first available slot
             qTicket = new QTicket();
 
-        // else, create a WaitingQTicket
+            // else, create a WaitingQTicket
         } else {
-            qTicket = new WaitingQticket();
+
+            // Reset the no. for the next day
+            if (dateForWaitingNo.isBefore(LocalDate.now())) {
+                dateForWaitingNo = LocalDate.now();
+                currentWaitingNo = 1;
+                processedWaitingNo = 0;
+            }
+            qTicket = new WaitingQticket(currentWaitingNo++);
         }
 
-        //Assign the patient, room, and time slot
+        // Assign the patient, room, and time slot
         qTicket.setPerson(patient);
         qTicket.setDatetimeSlot(dateTimeSlot);
         qTicket.setCreatedAt(LocalDateTime.now());
-
         return qTicketRepository.save(qTicket);
+    }
+
+    public void allocateWaitingQTicket() {
+        // Retrieve all waiting queue tickets
+        List<WaitingQticket> waitingQtickets = waitingQTicketRepository.findAll();
+
+        // Retrieve Available time slots for today
+        List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
+        int availableDateTimeSlotsindex = 0;
+
+        // Check if there is any available time slot for today and if there is enough
+        // slots for the waiting queue
+        int waitingListSize = currentWaitingNo - processedWaitingNo - 1;
+        System.out.println("waitingListSize: " + waitingListSize);
+        System.out.println("availableDateTimeSlots.size(): " + availableDateTimeSlots.size());
+
+        if (availableDateTimeSlots.isEmpty()) {
+            throw new ResourceNotFoundException("No available time slot for today");
+        }
+        boolean allocatedAllWaitingQticket = false;
+        for (WaitingQticket waitingQticket : waitingQtickets) {
+            if (waitingQticket.getDatetimeSlot() == null) {
+                // if the waitingQticket is in the queue pattern, set the time slot
+                if (waitingQticket.getPerson().getRiskLevel() == queuePattern[queuePatternIndex]) {
+
+                    queuePatternIndex = (queuePatternIndex + 1) % queuePattern.length;
+
+                    // Assign the first available time slot to the waiting queue ticket
+                    waitingQticket.setDatetimeSlot(availableDateTimeSlots.get(availableDateTimeSlotsindex++));
+                    processedWaitingNo++;
+
+                    // if the WaitingListsize is equal to the availableDateTimeSlots.size(),
+                    // set the time slot for all the remaining waitingQtickets.
+                } else if (waitingListSize == availableDateTimeSlots.size()) {
+
+                    // Assign the first available time slot to the waiting queue ticket
+                    waitingQticket.setDatetimeSlot(availableDateTimeSlots.get(availableDateTimeSlotsindex++));
+                    processedWaitingNo++;
+                    System.out.println("allocated");
+                    allocatedAllWaitingQticket = true;
+                } else {
+                    return;
+                }
+            }
+        }
+        if (allocatedAllWaitingQticket) {
+            throw new AllSlotsFilledException("All slots are filled");
+        }
     }
 
     public QTicket findLatestTicketByPersonId(Long personId) {

@@ -120,6 +120,14 @@ public class QTicketController {
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
     public List<DateTimeSlot> queryAvailableTimeSlotController(@PathVariable LocalDate date) {
         // Shifted to QueueService
+        // Calculate the date 3 days from today
+        LocalDate threeDaysLater = LocalDate.now().plusDays(3);
+
+        // Ensure the provided date is within the next 3 days from today
+        if (date.isBefore(date)) {
+            // Handle the case where the provided date is more than 3 days from today
+            throw new InvalidDateException("Invalid date. Please provide a date after the next 3 days from today.");
+        }
 
         return queueService.queryAvailableTimeSlot(date);
     }

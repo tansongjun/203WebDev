@@ -19,7 +19,6 @@ import lombok.ToString;
 @EqualsAndHashCode()
 public class WaitingQticket extends QTicket{
     
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int waitingNo;
 
 

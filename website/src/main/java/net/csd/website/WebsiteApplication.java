@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import net.csd.website.repository.*;
 import net.csd.website.service.*;
 import net.csd.website.model.*;
+import net.csd.website.model.Person.Authority;
 
 @SpringBootApplication
 public class WebsiteApplication {
@@ -24,7 +25,12 @@ public class WebsiteApplication {
         System.out.println("[Add user]: " + users.save(
             new Person("myuser", "mypass", 
             "eml@my.eml", 60, net.csd.website.model.Person.Condition.NONE, "admin", 
-            encoder.encode("goodpass"), "ROLE_ADMIN")).getUsername()
+            encoder.encode("goodpass"), Authority.ROLE_ADMIN)).getUsername()
+        );
+        System.out.println("[Add user]: " + users.save(
+            new Person("user2", "mypass", 
+            "eml@my.eml", 60, net.csd.website.model.Person.Condition.SEVERE, "user2", 
+            encoder.encode("goodpass"), Authority.ROLE_PATIENT)).getUsername()
         );
 
         /* create Room and timeslot 
@@ -41,15 +47,15 @@ public class WebsiteApplication {
             room.setRoomNumber(1);
             roomService.createRoom(room, currentDate);
 
-            // Create room with the room number 2
-            Room room2 = new Room();
-            room2.setRoomNumber(2);
-            roomService.createRoom(room2, currentDate);
+            // // Create room with the room number 2
+            // Room room2 = new Room();
+            // room2.setRoomNumber(2);
+            // roomService.createRoom(room2, currentDate);
 
-            // Create room with the room number 3
-            Room room3 = new Room();
-            room3.setRoomNumber(3);
-            roomService.createRoom(room3, currentDate);
+            // // Create room with the room number 3
+            // Room room3 = new Room();
+            // room3.setRoomNumber(3);
+            // roomService.createRoom(room3, currentDate);
 
             // Move to the next day
             currentDate = currentDate.plusDays(1);

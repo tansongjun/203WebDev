@@ -22,7 +22,7 @@ Authorization: Basic admin goodpass
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
     "age": "1",
-    "condition": "MILD",
+    "condition": "MODERATE",
     "username": "username",
     "password": "password",
     "authorities": "ROLE_PATIENT"
@@ -68,7 +68,7 @@ Authorization: Basic admin goodpass
 
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
-POST http://localhost:8080/api/v1/patients/2/getnewQ
+POST http://localhost:8080/api/v1/patients/1/getnewQ
 Authorization: Basic admin goodpass
 Content-Type: application/json
 
@@ -78,7 +78,7 @@ Content-Type: application/json
 
 ### Get Latest Qticket by patient id (Patient /or admin) 
 ### get patient id when during login. 
-GET  http://localhost:8080/api/v1/patients/2/getQ
+GET  http://localhost:8080/api/v1/patients/1/getQ
 Authorization: Basic admin goodpass
 
 ### Get all QTickets (admin only)
@@ -118,7 +118,7 @@ Authorization: Basic admin goodpass
 }
 
 ### Query all available TimeSlot by date
-GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-04
+GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-16
 Authorization: Basic admin goodpass
 
 ### Get all DateTimeSlot 

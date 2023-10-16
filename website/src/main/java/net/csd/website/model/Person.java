@@ -32,6 +32,10 @@ public class Person implements UserDetails {
         NONE, MILD, MODERATE, SEVERE
     }
 
+    public enum Authority {
+        ROLE_ADMIN, ROLE_PATIENT
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -67,7 +71,7 @@ public class Person implements UserDetails {
     private String password;
 
     @Column(name = "authorities")
-    private String authorities;
+    private Authority authorities;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     // Ignore the field in both JSON serialization and deserialization
@@ -76,7 +80,7 @@ public class Person implements UserDetails {
 
     public Person(String firstName, String lastName, String emailId,
             int age, Condition condition, String username, String password,
-            String authorities) {
+            Authority authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
@@ -92,7 +96,8 @@ public class Person implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(authorities));
+        String role = authorities.toString();
+        return Arrays.asList(new SimpleGrantedAuthority(role));
     }
 
     public int getRiskLevel() {
