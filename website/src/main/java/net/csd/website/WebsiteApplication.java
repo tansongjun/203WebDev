@@ -47,15 +47,15 @@ public class WebsiteApplication {
             room.setRoomNumber(1);
             roomService.createRoom(room, currentDate);
 
-            // // Create room with the room number 2
-            // Room room2 = new Room();
-            // room2.setRoomNumber(2);
-            // roomService.createRoom(room2, currentDate);
+            // Create room with the room number 2
+            Room room2 = new Room();
+            room2.setRoomNumber(2);
+            roomService.createRoom(room2, currentDate);
 
-            // // Create room with the room number 3
-            // Room room3 = new Room();
-            // room3.setRoomNumber(3);
-            // roomService.createRoom(room3, currentDate);
+            // Create room with the room number 3
+            Room room3 = new Room();
+            room3.setRoomNumber(3);
+            roomService.createRoom(room3, currentDate);
 
             // Move to the next day
             currentDate = currentDate.plusDays(1);
