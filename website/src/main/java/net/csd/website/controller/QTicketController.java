@@ -124,7 +124,7 @@ public class QTicketController {
         LocalDate threeDaysLater = LocalDate.now().plusDays(3);
 
         // Ensure the provided date is within the next 3 days from today
-        if (date.isBefore(date)) {
+        if (date.isBefore(threeDaysLater)) {
             // Handle the case where the provided date is more than 3 days from today
             throw new InvalidDateException("Invalid date. Please provide a date after the next 3 days from today.");
         }
