@@ -1,0 +1,32 @@
+version: "3"
+name: healthcareapigroup
+services:
+  healthcareapi:
+    build: .
+    image: zhiyun472/healthcareapi
+    ports:
+      - 8080:8080
+    networks:
+      - public_management_system
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/public_management_system?useSSL=false&allowPublicKeyRetrieval=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: "mysql"
+    ports:
+      - 3306:3306
+    networks:
+      - public_management_system
+    environment:
+      MYSQL_DATABASE: public_management_system  
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+
+networks:
+  public_management_system: 
