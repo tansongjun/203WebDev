@@ -1,0 +1,14 @@
+mvnw clean package -Dmaven.test.skip=true <<< build the JAR file without test cases
+
+docker build --tag zhiyun472/healthcareapi:latest . <<< build image based on the dockerfile in the website directory
+
+docker push zhiyun472/healthcareapi:latest <<< push the image to the dockerhub 
+
+Steps to run locally: 
+
+install docker desktop and sign in if needed
+
+cd to root directory/website 
+
+docker compose up <<< will create and run instance
+
