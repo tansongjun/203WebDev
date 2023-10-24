@@ -36,7 +36,6 @@ import net.csd.website.model.Room;
 import net.csd.website.model.WaitingQticket;
 import net.csd.website.model.Person.Condition;
 import net.csd.website.repository.DateTimeSlotRepository;
-import net.csd.website.repository.PatientRepository;
 import net.csd.website.repository.PersonRepository;
 import net.csd.website.repository.QTicketRepository;
 import net.csd.website.repository.RoomRepository;
@@ -49,8 +48,6 @@ public class QueueServiceTest {
     @Mock
     private PersonRepository personRepository;
 
-    @Mock
-    private PatientRepository patientRepository;
 
     @Mock
     private ResourceNotFoundException resourceNotFoundException;

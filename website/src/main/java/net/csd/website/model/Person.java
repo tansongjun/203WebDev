@@ -1,7 +1,7 @@
 package net.csd.website.model;
 
 import java.time.LocalDate;
-// import java.time.Period; // for calculating age
+import java.time.Period;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -12,11 +12,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import lombok.Builder.Default;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -33,8 +46,9 @@ public class Person implements UserDetails {
     }
 
     public enum Authority {
-        ROLE_ADMIN, ROLE_PATIENT
+        ROLE_ADMIN, ROLE_PATIENT, ROLE_PATIENT_UNVERIFIED
     }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,9 +66,6 @@ public class Person implements UserDetails {
     @Column(name = "person_birthday")
     private LocalDate birthDate;
 
-    @Column(name = "person_age")
-    private int age;
-
     @Column(name = "person_condition")
     @Enumerated(EnumType.STRING)
     private Condition condition = Condition.NONE;
@@ -69,9 +80,9 @@ public class Person implements UserDetails {
     @Size(min = 8, message = "Password should be at least 8 characters")
     @Column(name = "password")
     private String password;
-
+    
     @Column(name = "authorities")
-    private Authority authorities;
+    private Authority authorities = Authority.ROLE_PATIENT_UNVERIFIED;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     // Ignore the field in both JSON serialization and deserialization
@@ -79,17 +90,32 @@ public class Person implements UserDetails {
     private List<QTicket> queueticket;
 
     public Person(String firstName, String lastName, String emailId,
-            int age, Condition condition, String username, String password,
+            LocalDate birthDate, Condition condition, String username, String password,
             Authority authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
-        this.age = age;
+        this.birthDate = birthDate;
         this.condition = condition;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
     }
+
+    // for user registration
+    public Person(String firstName, String lastName, String emailId,
+            LocalDate birthDate, Condition condition, String username, String password
+            ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailId = emailId;
+        this.birthDate = birthDate;
+        this.condition = condition;
+        this.username = username;
+        this.password = password;
+        this.authorities = Authority.ROLE_PATIENT;
+    }
+
 
     /*
      * Return a collection of authorities (roles) granted to the user.
@@ -99,6 +125,14 @@ public class Person implements UserDetails {
         String role = authorities.toString();
         return Arrays.asList(new SimpleGrantedAuthority(role));
     }
+
+    /*
+     * Return the age of the user.
+     */
+    public int getAge() {
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
 
     public int getRiskLevel() {
         /*
@@ -123,7 +157,7 @@ public class Person implements UserDetails {
          * - 0 stands for unknown risk level, tag it as low risk.
          * 
          */
-        if (age < 18) {
+        if (getAge() < 18) {
             if (condition == Condition.MILD || condition == Condition.NONE) {
                 return 1;
             } else if (condition == Condition.MODERATE) {
@@ -131,7 +165,7 @@ public class Person implements UserDetails {
             } else if (condition == Condition.SEVERE) {
                 return 3;
             }
-        } else if (age >= 18 && age < 60) {
+        } else if (getAge() >= 18 && getAge() < 60) {
             if (condition == Condition.NONE || condition == Condition.MILD) {
                 return 1;
             } else if (condition == Condition.MODERATE) {
@@ -139,7 +173,7 @@ public class Person implements UserDetails {
             } else if (condition == Condition.SEVERE) {
                 return 3;
             }
-        } else if (age >= 60) {
+        } else if (getAge() >= 60) {
             if (condition == Condition.NONE || condition == Condition.MILD) {
                 return 2;
             } else if (condition == Condition.MODERATE || condition == Condition.SEVERE) {

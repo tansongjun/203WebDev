@@ -91,7 +91,8 @@ public class SecurityConfig {
                         .requestMatchers(mvc.pattern(HttpMethod.POST, "/appointment/bookNewAppointment"))
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_PATIENT")
 
-                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/login/{username}")).hasAuthority("ROLE_PATIENT")
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/login/{username}"))
+                        .hasAnyAuthority("ROLE_PATIENT", "ROLE_PATIENT_UNVERIFIED")
                         .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/v1/admin/login/{username}")).hasAuthority("ROLE_ADMIN")
 
                         .anyRequest().permitAll())

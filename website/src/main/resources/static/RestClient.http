@@ -21,7 +21,7 @@ Authorization: Basic admin goodpass
     "firstName": "firstName",
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
-    "age": "1",
+    "birthDate": "0002-10-16",
     "condition": "MODERATE",
     "username": "username",
     "password": "password",
@@ -37,7 +37,7 @@ Authorization: Basic admin goodpass
     "firstName": "firstName",
     "lastName": "lastName",
     "emailId": "emailId@asd.com",
-    "age": "20",
+    "birthDate": "2003-10-16",
     "condition": "SEVERE",
     "username": "username12",
     "password": "password",
@@ -52,9 +52,8 @@ Authorization: Basic admin goodpass
 ### if 401/404 error, incorrect username or password
 ### if 403 error, user is not a patient
 ### Rmb to keep username, password and id in localstorage/cookies of the frontend
-
-GET http://localhost:8080/api/v1/login/username
-Authorization: Basic username password
+GET http://localhost:8080/api/v1/login/admin
+Authorization: Basic admin goodpass
 
 ### login (admin only)
 ### GET http://localhost:8080/api/v1/admin/login/{username}
@@ -64,11 +63,25 @@ Authorization: Basic username password
 GET http://localhost:8080/api/v1/admin/login/admin
 Authorization: Basic admin goodpass
 
+### Add people (admin only)
+POST http://localhost:8080/api/v1/patient/registration
+Content-Type: application/json
+
+{
+    "firstName": "Jackson",
+    "lastName": "Sim",
+    "emailId": "emailId@asd.com",
+    "birthDate": "1999-02-15",
+    "condition": "MODERATE",
+    "username": "jacksonsim",
+    "password": "password"
+}
+
 ################################## Qticket ########################################
 
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
-POST http://localhost:8080/api/v1/patients/1/getnewQ
+POST http://localhost:8080/api/v1/patients/3/getnewQ
 Authorization: Basic admin goodpass
 Content-Type: application/json
 
@@ -108,7 +121,7 @@ Content-Type: application/json
 ################################## DateTimeSlot ########################################
 
 ### Book new appointment by patientid and datetimeslotid, must be within 3 days from today
-POST http://localhost:8080/api/v1/appointment/bookNewAppointment/2/240
+POST http://localhost:8080/api/v1/appointment/bookNewAppointment/2/5
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
@@ -118,7 +131,7 @@ Authorization: Basic admin goodpass
 }
 
 ### Query all available TimeSlot by date
-GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-19
+GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-16
 Authorization: Basic admin goodpass
 
 ### Get all DateTimeSlot 
