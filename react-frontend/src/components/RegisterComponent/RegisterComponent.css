@@ -61,6 +61,18 @@ input[type="submit"]:hover {
   margin: 10px;
 }
 
-.questionnaire-button {
-  color: #01d28e;
+.cetn_btn {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.cetn_sgn{
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }

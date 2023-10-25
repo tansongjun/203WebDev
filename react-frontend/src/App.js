@@ -1,43 +1,9 @@
-// import './App.css';
-// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import HeaderComponent from './components/HeaderComponent';
-// import FooterComponent from './components/FooterComponent';
-// import LoginComponent from './components/LoginComponent';
-// import ListPeopleComponent from './components/ListPeopleComponent';
-// import CreatePeopleComponent from './components/CreatePeopleComponent';
-// import UpdatePeopleComponent from './components/UpdatePeopleComponent';
-// import ViewPeopleComponent from './components/ViewPeopleComponent';
-
-// function App() {
-//     return (
-//         <div>
-//             <Router>
-//                 <div className="container">
-//                     <HeaderComponent />
-//                     <div className="container">
-//                         <Routes>
-//                             <Route path="/" element={<LoginComponent />} />
-//                             <Route path="/patient" element={<ListPeopleComponent />} />
-//                             <Route path="/add-patient" element={<CreatePeopleComponent />} />
-//                             <Route path="/update-patient/:id" element={<UpdatePeopleComponent />} />
-//                             <Route path="/view-patient/:id" element={<ViewPeopleComponent />} />
-//                         </Routes>
-//                     </div>
-//                     <FooterComponent />
-//                 </div>
-//             </Router>
-//         </div>
-//     );
-// }
-
-// export default App;
-
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import {
     HomePage, WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome,
     WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
-    UpdatePeopleComponent, ViewPeopleComponent
+    UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, Registration
 } from './components';
 import ApptDB from './components/ApptDB/ApptDB';
 
@@ -75,6 +41,11 @@ function App() {
                     <Route path="/add-appointment" element={<CreatePeopleComponent />} />
                     <Route path="/update-appointment/:id" element={<UpdatePeopleComponent />} />
                     <Route path="/view-appointment/:id" element={<ViewPeopleComponent />} />              
+                    
+
+                    <Route path="/walkinHome/questionnaire" element={<Questionnaire/>} />
+                    <Route path="/walkinHome/payment" element={<Payment/>} />
+                    <Route path="/registration" element={<Registration/>} />
                 </Routes>
             </div>
         </Router>

@@ -11,7 +11,6 @@ function WalkInHome() {
     user: sessionStorage.getItem('user'),
     pwd: sessionStorage.getItem('pwd'),
     personId: sessionStorage.getItem('person_id')
-
   });
   const [errorMessages, setErrorMessages] = useState('');
 
@@ -21,13 +20,12 @@ function WalkInHome() {
   const handleAppointmentButtonClick = () => {
     navigate(1);
   };
-  // const handlePaymentButtonClick = () => {
-  //   navigate(1);
-  // };
+  const getQueueButtonClick = () => {
+    navigate(1);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(user, pwd);
     let queryURL = LOGIN_URL + '/patients/'+ auth.personId +'/getnewQ';
     console.log(queryURL);
     console.log(auth.user, auth.pwd);
@@ -47,20 +45,12 @@ function WalkInHome() {
 
           setRandomNumber(resultjson.ticketno);
           setButtonDisabled(true);
-
-          // console.log(authi);
-          // setUser(user);
-          // setPwd(pwd);
-          // window.location.replace('/walkinHome')
         } else {
           console.log(response.status);
         }
       }).catch(function (error) {
         console.log(error);
-        // setErrorMessages(error.response.data.message);
       });
-      
-
   }
 
   return (
@@ -71,23 +61,26 @@ function WalkInHome() {
           ? "Your Queue Number: " + randomNumber
           : "Welcome"}
       </div>
-      <button
-        className="queue-button"
-        onClick={handleSubmit}>
-        Get Queue Number
-      </button>
-      <br></br>
-      <Link to="/appointmentHome">
-        <button className="appointment-button" onClick={handleAppointmentButtonClick}>
-          Book an Appointment 
+      <Link to="/walkinHome/questionnaire">
+        <button
+          className="queue-button" onClick={getQueueButtonClick}>
+          Get Queue Number
         </button>
       </Link>
+      
       <br></br>
-      {/* <Link to="/appointmentHome"> */}
+      <Link to="/appointmentHome">
+        <button className="appointment-button">
+          Book an Appointment 
+        </button>
+        </Link>
+
+      <br></br>
+      <Link to="/walkinHome/payment">
         <button className="payment-button">
           Payment
         </button>
-      {/* </Link> */}
+      </Link>
     </div>
   );
 }

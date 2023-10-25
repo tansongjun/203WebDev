@@ -1,70 +1,102 @@
 import { DatePicker } from "@gsebdev/react-simple-datepicker";
-
-function Example({ data }) {}
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function AppointmentHome() {
-  const onChangeCallback = ({ target }) => {
-    // a callback function when user select a date
-  };
-  <DatePicker
-    id="datepicker-id"
-    name="date-demo"
-    onChange={onChangeCallback}
-    value={"01/02/2023"}
-  />;
-
-  const people = [
+  const [auth, setAuth] = useState({
+    user: sessionStorage.getItem('user'),
+    pwd: sessionStorage.getItem('pwd'),
+    personId: sessionStorage.getItem('person_id')
+  });
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [timeSlots, setTimeSlots] = useState([
     {
-      //er this is a sample haha
-      id: 0, // Used in JSX as a key
-      name: "Creola Katherine Johnson",
-      profession: "mathematician",
-      accomplishment: "spaceflight calculations",
-      imageId: "MK3eW3A",
+      id: 1,
+      startDateTime: "2023-10-11T08:00:00",
+      endDateTime: "2023-10-11T08:20:00",
+      room: {
+        id: 1,
+        roomNumber: 1,
+        creationDate: "2023-10-11",
+      },
+      qticket: null,
     },
-  ];
+    {
+      id: 2,
+      startDateTime: "2023-10-11T08:20:00",
+      endDateTime: "2023-10-11T08:40:00",
+      room: {
+        id: 1,
+        roomNumber: 1,
+        creationDate: "2023-10-11",
+      },
+      qticket: null,
+    },
+    {
+      id: 3,
+      startDateTime: "2023-10-11T08:40:00",
+      endDateTime: "2023-10-11T09:00:00",
+      room: {
+        id: 1,
+        roomNumber: 1,
+        creationDate: "2023-10-11",
+      },
+      qticket: null,
+    },
+  ]);
+  const [errormessagedatepicker, seterrormessagedatepicker] = useState();
 
-  const listItems = people.map((person) => (
-    <li key={person.id}>
-      <p>
-        <b>{person.name}</b>
-        {" " + person.profession + " "}
-        known for {person.accomplishment}
-      </p>
-    </li>
-  ));
 
-  function generateTimeSlots(startTime, endTime, timeInterval) {
-    const timeSlots = [];
-    let currentTime = startTime;
+  // const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  // const listItems = availableTimeSlots.map((dateTimeSlot) => (
+  //   <li key={dateTimeSlot.id}>
+  //     <p>
+  //       <b>{dateTimeSlot.startDateTime}</b>
+  //     </p>
+  //   </li>
+  // ));
 
-    while (currentTime < endTime) {
-      timeSlots.push(currentTime);
-      // Add the interval to the current time
-      currentTime = addMinutes(currentTime, timeInterval);
-    }
+  // Function to fetch time slots from the API
+  const fetchTimeSlots = (date) => {
+    seterrormessagedatepicker(null);
+    console.log("intial:", date);
+    // console.log("date instanceof Date" + date instanceof Date);
+    const querydate = new Date(date).toLocaleDateString("en-CA");
+    console.log("after:", querydate);
+    axios({
+      method: "get",
+      url: `http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/${querydate}`,
+      auth: {
+        // username: auth.user,
+        // password: auth.password,
+        username:"admin",
+        password:"goodpass"
+      },
+    })
+      //GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-14
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("returned data: ", response.data);
+          setTimeSlots(response.data);
+        } else if (response.status === 404) {
+        }
 
-    return timeSlots;
-  }
+        // setTimeSlots(data.timeSlots); // Assuming your API response contains an array of time slots
+      })
+      .catch((error) => {
+        console.error("Failed to fetch time slots from the API");
 
-  function addMinutes(time, minutes) {
-    const date = new Date(time);
-    date.setMinutes(date.getMinutes() + minutes);
-    return date;
-  }
+        console.error("An error occurred while fetching time slots:", error);
+        alert(error.response.data.message);
+        seterrormessagedatepicker(errormessagedatepicker);
+      });
+  };
 
-  const startTime = new Date(2023, 0, 2, 8, 0); // 8:00 AM
-  const endTime = new Date(2023, 0, 2, 11, 0); // 6:00 PM
-  const timeInterval = 30; // 30 minutes interval
-
-  const timeSlotsArray = [
-    new Date(2023, 0, 2, 8, 0), // 8:00 AM
-    new Date(2023, 0, 2, 9, 0), // 9:00 AM
-    new Date(2023, 0, 2, 10, 0), // 10:00 AM
-    new Date(2023, 0, 2, 11, 0), // 11:00 AM
-  ];
-
-  const timeSlots = generateTimeSlots(startTime, endTime, timeInterval);
+  // Use useEffect to fetch time slots when the selected date changes
+  useEffect(() => {
+    // window.confirm("fetching");
+    fetchTimeSlots(selectedDate);
+  }, [selectedDate]);
 
   const handleTimeSlotClick = (timeSlot) => {
     const formattedTime = formatTime(timeSlot);
@@ -73,9 +105,28 @@ function AppointmentHome() {
     );
 
     if (isConfirmed) {
-      // User confirmed the selection, you can proceed with your logic here
-      // For example, you can make an API request to book the appointment.
-      console.log(`Appointment booked for: ${formattedTime}`);
+      console.log(timeSlot.id);
+      // POST http://localhost:8080/api/v1/appointment/bookNewAppointment/{auth.personId}/{timeslot.id}
+      const bookingUrl = `http://localhost:8080/api/v1/appointment/bookNewAppointment/${auth.personId}/${timeSlot.id}`;
+
+    axios
+      .post(bookingUrl, {}, { auth: { username: auth.user, password: auth.pwd } })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(`Appointment booked for: ${formattedTime}`);
+          // You can display a success message to the user
+          alert(`Appointment booked for: ${formattedTime}`);
+        } else {
+          // Handle other response statuses as needed
+          console.error('Failed to book appointment.');
+        }
+      })
+      .catch((error) => {
+        console.error('An error occurred while booking the appointment:', error);
+        // You can display an error message to the user
+        alert('An error occurred while booking the appointment.');
+      });
+      // console.log(`Appointment booked for: ${formattedTime}`);
     } else {
       // User canceled the selection, you can handle this case as needed
       console.log("Appointment selection canceled");
@@ -86,28 +137,48 @@ function AppointmentHome() {
     return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  const handleDateSelection = (e) => {
+    console.log(new Date(e.target.value));
+    setSelectedDate(new Date(e.target.value));
+  };
+
   return (
     <div>
       <h1>APPOINTMENT HOME</h1>
       <br></br>
 
       <h2>Please select a date for your appointment:</h2>
-      <DatePicker></DatePicker>
+      <DatePicker
+        id="datepicker-id"
+        name="date-demo"
+        onChange={handleDateSelection}
+        value={selectedDate}
+      ></DatePicker>
       <br></br>
+      {errormessagedatepicker && <h1>{errormessagedatepicker}</h1>}
 
       <h2>Current available timeslots:</h2>
-      <ul>{listItems}</ul>
-      <br></br>
+      <ul>
+        {timeSlots &&
+          timeSlots.map((timeSlot) => (
+            <li key={timeSlot.id}>
+              <p>
+                <b>{timeSlot.startDateTime.substring(11, 16)}</b>
+              </p>
+            </li>
+          ))}
+      </ul>
 
       <h2>Please select desired timeslot:</h2>
       <ul>
-        {timeSlotsArray.map((timeSlot, index) => (
-          <li key={index}>
-            <button onClick={() => handleTimeSlotClick(timeSlot)}>
-              {formatTime(timeSlot)}
-            </button>
-          </li>
-        ))}
+        {timeSlots &&
+          timeSlots.map((timeSlot) => (
+            <li key={timeSlot.id}>
+              <button onClick={() => handleTimeSlotClick(timeSlot)}>
+                {timeSlot.startDateTime.substring(11, 16)}
+              </button>
+            </li>
+          ))}
       </ul>
     </div>
   );
