@@ -38,7 +38,7 @@ function LoginComponent({handleNavigation, userType}) {
     // if role is patient, go to '/login/username'
     if (userType == 'ROLE_PATIENT') {
       axios.get(
-        LOGIN_URL + '/login/username',
+        LOGIN_URL + '/login/'+user,
         {
           auth: {
             username: `${user}`,
