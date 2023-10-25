@@ -5,6 +5,7 @@ function AppointmentLogin() {
         <div>
             <h1>APPOINTMENT LOGIN</h1>
             <LoginComponent/>
+            <LoginComponent handleNavigation={"/appointmentHome"} userType={"ROLE_PATIENT"}/>
         </div>
     );
 }

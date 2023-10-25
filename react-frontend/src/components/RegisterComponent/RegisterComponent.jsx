@@ -1,15 +1,12 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
-import "./LoginComponent.css";
 import axios from 'axios';
 
-function LoginComponent({handleNavigation, userType}) {
+function RegisterComponent({handleNavigation, userType}) {
   const LOGIN_URL = 'http://localhost:8080/api/v1';
   // user reference set focus for user
   const userRef = useRef();
   const errRef = useRef();
-  const navigate = useNavigate();
 
   // state: render username input
   const [user, setUser] = useState('');
@@ -149,7 +146,7 @@ function LoginComponent({handleNavigation, userType}) {
             <section>
               {/* aria-live: assertive to show error message immediately */}
               <p ref={errRef} className={errorMessages ? "errormessages" : "offscreen"} aria-live="assertive">{errorMessages}</p>
-              <h1>Sign In</h1>
+              <h1>Register here</h1>
               <form onSubmit={handleSubmit}>
                 <label htmlFor='username'>Username:</label><br />
                 <input
@@ -174,13 +171,7 @@ function LoginComponent({handleNavigation, userType}) {
                   // placeholder='enter password'
                   required
                 /><br /><br /><br />
-                <button className="cetn_btn">Sign In</button><br /><br />
-                <p className="cetn_sgn">
-                  <span className="line">
-                    {/* {navigate('/registration')} */}
-                    <a href="#">Register an Account</a>
-                  </span>
-                </p>
+                <button className="cetn_btn">Sign Up</button><br /><br />
               </form>
             </section>
           </div>
@@ -188,7 +179,9 @@ function LoginComponent({handleNavigation, userType}) {
       )}
     </>
   )
+}
 
+export default RegisterComponent;
 
   // // Initialize useNavigate & location
   // const navigate = useNavigate();
@@ -335,6 +328,3 @@ function LoginComponent({handleNavigation, userType}) {
   //     </div>
   //   </div>
   // );
-}
-
-export default LoginComponent;
