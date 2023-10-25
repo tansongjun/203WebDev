@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import QRCode from "qrcode.react";
+// import QRCode from "qrcode.react";
 
 function Payment() {
   // Function to generate a random amount between 0 and 100
@@ -22,7 +22,7 @@ function Payment() {
       <h2>Amount payable($): {amountPayable}</h2>
       {/* <button onClick={regenerateRandomAmount}>Generate New Amount</button> */}
       <div className="centered-qr-code">
-        <QRCode className="qr-code" value={`Payment: $${amountPayable}`} size={256} />
+        {/* <QRCode className="qr-code" value={`Payment: $${amountPayable}`} size={256} /> */}
       </div>
       <Link to="/walkinHome">
         <button className="queue-button">Back</button>
