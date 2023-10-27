@@ -60,8 +60,34 @@ public class WebsiteApplication {
             // Move to the next day
             currentDate = currentDate.plusDays(1);
         }
-
         System.out.println("[Rooms created from today until the end of the month]");
+
+        currentDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth().plus(1), 1);
+        lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+        System.out.println(currentDate.toString());
+
+        // Create rooms from today until the end of the month
+        while (currentDate.isBefore(lastDayOfMonth) || currentDate.isEqual(lastDayOfMonth)) {
+            // Create room with the room number 1
+            Room room = new Room();
+            room.setRoomNumber(1);
+            roomService.createRoom(room, currentDate);
+
+            // Create room with the room number 2
+            Room room2 = new Room();
+            room2.setRoomNumber(2);
+            roomService.createRoom(room2, currentDate);
+
+            // Create room with the room number 3
+            Room room3 = new Room();
+            room3.setRoomNumber(3);
+            roomService.createRoom(room3, currentDate);
+
+            // Move to the next day
+            currentDate = currentDate.plusDays(1);
+        }
+
+        System.out.println("[Rooms created from end of the month until the end of the next month]");
         
 	}
 }

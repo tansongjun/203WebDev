@@ -53,6 +53,7 @@ function AppointmentHome() {
       })
       .catch((error) => {
         console.error("Failed to fetch time slots from the API");
+        setTimeSlots([]);
 
         console.error("An error occurred while fetching time slots:", error);
         alert(error.response.data.message);
@@ -126,7 +127,7 @@ function AppointmentHome() {
       <br></br>
       {errormessagedatepicker && <h1>{errormessagedatepicker}</h1>}
 
-      <h2>Current available timeslots:</h2>
+      {/* <h2>Current available timeslots:</h2>
       <ul>
         {timeSlots &&
           timeSlots.map((timeSlot) => (
@@ -136,7 +137,7 @@ function AppointmentHome() {
               </p>
             </li>
           ))}
-      </ul>
+      </ul> */}
 
       <h2>Please select desired timeslot:</h2>
       <ul>
