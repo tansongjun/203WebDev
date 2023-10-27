@@ -1,5 +1,5 @@
 import { DatePicker } from "@gsebdev/react-simple-datepicker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef, useContext } from "react";
 import axios from "axios";
 
 function AppointmentHome() {
@@ -8,41 +8,9 @@ function AppointmentHome() {
     pwd: sessionStorage.getItem('pwd'),
     personId: sessionStorage.getItem('person_id')
   });
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(new Date().setDate(new Date().getDate() + 3)));
   const [timeSlots, setTimeSlots] = useState([
-    {
-      id: 1,
-      startDateTime: "2023-10-11T08:00:00",
-      endDateTime: "2023-10-11T08:20:00",
-      room: {
-        id: 1,
-        roomNumber: 1,
-        creationDate: "2023-10-11",
-      },
-      qticket: null,
-    },
-    {
-      id: 2,
-      startDateTime: "2023-10-11T08:20:00",
-      endDateTime: "2023-10-11T08:40:00",
-      room: {
-        id: 1,
-        roomNumber: 1,
-        creationDate: "2023-10-11",
-      },
-      qticket: null,
-    },
-    {
-      id: 3,
-      startDateTime: "2023-10-11T08:40:00",
-      endDateTime: "2023-10-11T09:00:00",
-      room: {
-        id: 1,
-        roomNumber: 1,
-        creationDate: "2023-10-11",
-      },
-      qticket: null,
-    },
+
   ]);
   const [errormessagedatepicker, seterrormessagedatepicker] = useState();
 
@@ -62,7 +30,7 @@ function AppointmentHome() {
     console.log("intial:", date);
     // console.log("date instanceof Date" + date instanceof Date);
     const querydate = new Date(date).toLocaleDateString("en-CA");
-    console.log("after:", querydate);
+    // console.log("after:", querydate);
     axios({
       method: "get",
       url: `http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/${querydate}`,
@@ -93,13 +61,13 @@ function AppointmentHome() {
   };
 
   // Use useEffect to fetch time slots when the selected date changes
-  useEffect(() => {
-    // window.confirm("fetching");
-    fetchTimeSlots(selectedDate);
-  }, [selectedDate]);
+  // useEffect(() => {
+  //   // window.confirm("fetching");
+  //   fetchTimeSlots(selectedDate);
+  // }, [selectedDate]);
 
   const handleTimeSlotClick = (timeSlot) => {
-    const formattedTime = formatTime(timeSlot);
+    const formattedTime = formatTime(new Date(timeSlot.startDateTime));
     const isConfirmed = window.confirm(
       `Do you want to confirm the selected time slot: ${formattedTime}?`
     );
@@ -140,6 +108,7 @@ function AppointmentHome() {
   const handleDateSelection = (e) => {
     console.log(new Date(e.target.value));
     setSelectedDate(new Date(e.target.value));
+    fetchTimeSlots(new Date(e.target.value));
   };
 
   return (
