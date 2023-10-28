@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // import QRCode from "qrcode.react";
+import image from './payment.jpg';
 
 function Payment() {
   // Function to generate a random amount between 0 and 100
@@ -20,6 +21,8 @@ function Payment() {
     <div className="payment-container">
       <h1>PAYMENT</h1>
       <h2>Amount payable($): {amountPayable}</h2>
+      <img src={image} alt="Example" />
+
       {/* <button onClick={regenerateRandomAmount}>Generate New Amount</button> */}
       <div className="centered-qr-code">
         {/* <QRCode className="qr-code" value={`Payment: $${amountPayable}`} size={256} /> */}
