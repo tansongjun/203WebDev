@@ -10,7 +10,7 @@ function UpdatePeopleComponent() {
         firstName: '',
         lastName: '',
         emailId: '',
-        age: '',
+        birthDate: '',
         condition: '',
         username: '',
         password: '',
@@ -30,7 +30,7 @@ function UpdatePeopleComponent() {
                 firstName: data.firstName,
                 lastName: data.lastName,
                 emailId: data.emailId,
-                age: data.age,
+                birthDate: data.birthDate,
                 condition: data.condition,
             });
         });
@@ -117,16 +117,16 @@ function UpdatePeopleComponent() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label> Age: </label>
+                                    <label> Birthday: </label>
                                     <input
-                                        placeholder="Age"
-                                        name="age"
+                                        placeholder="yyyy-mm-dd"
+                                        name="birthDate"
                                         className="form-control"
-                                        value={state.age}
+                                        value={state.birthDate}
                                         onChange={(e) =>
                                             setState({
                                                 ...state,
-                                                age: e.target.value
+                                                birthDate: e.target.value
                                             })
                                         }
                                     />

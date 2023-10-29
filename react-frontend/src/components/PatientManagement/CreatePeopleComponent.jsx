@@ -9,7 +9,7 @@ function CreatePeopleComponent() {
         firstName: '',
         lastName: '',
         emailId: '',
-        age: '',
+        birthDate: '',
         condition: '',
         username: '',
         password: '',
@@ -27,7 +27,7 @@ function CreatePeopleComponent() {
             firstName: state.firstName,
             lastName: state.lastName,
             emailId: state.emailId,
-            age: state.age,
+            birthDate: state.birthDate,
             condition: state.condition,
             username: state.username,
             password: state.password,
@@ -102,16 +102,16 @@ function CreatePeopleComponent() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label> Age: </label>
+                                    <label> Birth Date: </label>
                                     <input
-                                        placeholder="Age"
-                                        name="age"
+                                        placeholder="yyyy-mm-dd"
+                                        name="birthDate"
                                         className="form-control"
-                                        value={state.age}
+                                        value={state.birthDate}
                                         onChange={(e) =>
                                             setState({
                                                 ...state,
-                                                age: e.target.value
+                                                birthDate: e.target.value
                                             })
                                         }
                                     />

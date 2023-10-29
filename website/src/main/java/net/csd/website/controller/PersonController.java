@@ -1,12 +1,14 @@
 package net.csd.website.controller;
 
 import java.rmi.NoSuchObjectException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,12 +19,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import net.csd.website.exception.PatientNotVerifiedException;
 import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.LoginForm;
 import net.csd.website.model.Person;
+import net.csd.website.model.Person.Authority;
+import net.csd.website.model.Person.Condition;
 import net.csd.website.repository.PersonRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -79,10 +88,42 @@ public class PersonController {
 		if (!person.isPresent()) {
 			throw new ResourceNotFoundException("Not Found! Contact Admin");
 		}else{
+			Person hasPerson = person.get();
+			if (!hasPerson.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
+				throw new PatientNotVerifiedException("Patient not verified");
+			}
 			return ResponseEntity.ok(person.get());
 		}
 
 		
+	}
+
+	@PostMapping("/patient/registration")
+	public Person registerPatient(
+		@RequestBody
+		@Valid Person person ) {
+
+		person.setAuthorities(Authority.ROLE_PATIENT_UNVERIFIED);
+
+		boolean checkUser = persons.findByUsername(person.getUsername()).isEmpty();
+		if (!checkUser) {
+			throw new ResourceNotFoundException("Username already exists");
+		}
+
+		person.setPassword(encoder.encode(person.getPassword()));
+		return persons.save(person);
+	}
+
+	@PostMapping("/admin/person/verify/{id}")
+	public ResponseEntity<Person> verifyPatient(@PathVariable Long id) {
+
+		Person person = persons.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Person don't exist with id :" + id));
+
+		person.setAuthorities(Authority.ROLE_PATIENT);
+
+		Person updatedPerson = persons.save(person);
+		return ResponseEntity.ok(updatedPerson);
 	}
 
 	@GetMapping("/admin/login/{username}")
@@ -107,7 +148,7 @@ public class PersonController {
 		person.setLastName(personDetails.getLastName());
 		person.setEmailId(personDetails.getEmailId());
 		person.setBirthDate(personDetails.getBirthDate());
-		person.setAge(personDetails.getAge());
+		// person.setAge(personDetails.getAge());
 		person.setCondition(personDetails.getCondition());
 		// person.setUsername(personDetails.getUsername());
 		// person.setPassword(this.encoder.encode(personDetails.getPassword()));
