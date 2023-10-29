@@ -7,6 +7,7 @@ import org.apache.catalina.valves.rewrite.RewriteCond.Condition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import net.csd.website.repository.*;
@@ -15,6 +16,7 @@ import net.csd.website.model.*;
 import net.csd.website.model.Person.Authority;
 
 @SpringBootApplication
+@EnableScheduling
 public class WebsiteApplication {
 
 	public static void main(String[] args) {
@@ -34,61 +36,21 @@ public class WebsiteApplication {
             encoder.encode("goodpass"), Authority.ROLE_PATIENT)).getUsername()
         );
 
-        /* create Room and timeslot 
+        /* create 3 Room for 2 months
          * 
          */
         RoomService roomService = ctx.getBean(RoomService.class);
-        LocalDate currentDate = LocalDate.now();
-        LocalDate lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+        int noOfmonths = 2;
+        int noOfRooms = 3;
+        
+        LocalDate currentDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
 
-        // Create rooms from today until the end of the month
-        while (currentDate.isBefore(lastDayOfMonth) || currentDate.isEqual(lastDayOfMonth)) {
-            // Create room with the room number 1
-            Room room = new Room();
-            room.setRoomNumber(1);
-            roomService.createRoom(room, currentDate);
-
-            // Create room with the room number 2
-            Room room2 = new Room();
-            room2.setRoomNumber(2);
-            roomService.createRoom(room2, currentDate);
-
-            // Create room with the room number 3
-            Room room3 = new Room();
-            room3.setRoomNumber(3);
-            roomService.createRoom(room3, currentDate);
-
-            // Move to the next day
-            currentDate = currentDate.plusDays(1);
-        }
-        System.out.println("[Rooms created from today until the end of the month]");
-
-        currentDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth().plus(1), 1);
-        lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
-        System.out.println(currentDate.toString());
-
-        // Create rooms from today until the end of the month
-        while (currentDate.isBefore(lastDayOfMonth) || currentDate.isEqual(lastDayOfMonth)) {
-            // Create room with the room number 1
-            Room room = new Room();
-            room.setRoomNumber(1);
-            roomService.createRoom(room, currentDate);
-
-            // Create room with the room number 2
-            Room room2 = new Room();
-            room2.setRoomNumber(2);
-            roomService.createRoom(room2, currentDate);
-
-            // Create room with the room number 3
-            Room room3 = new Room();
-            room3.setRoomNumber(3);
-            roomService.createRoom(room3, currentDate);
-
-            // Move to the next day
-            currentDate = currentDate.plusDays(1);
+        for (int i = 0; i < noOfmonths; i++) {
+            roomService.createNewRoomforMonth(noOfRooms, currentDate.plusMonths(i));
         }
 
-        System.out.println("[Rooms created from end of the month until the end of the next month]");
+        System.out.println("Set up complete!");
+       
         
 	}
 }

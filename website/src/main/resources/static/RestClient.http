@@ -1,35 +1,44 @@
+
+@url= http://localhost:8080/api/v1
+
+
+
 ################################ People Management ########################################
 ### Get all people (admin only)
-
-GET http://localhost:8080/api/v1/people
+### GET http://localhost:8080/api/v1/people
+GET {{url}}/people
 Authorization: Basic admin goodpass
 
 ### Get people by id (admin only)
-GET http://localhost:8080/api/v1/people/2
+### GET http://localhost:8080/api/v1/people/{id}
+GET {{url}}/people/2
 Authorization: Basic admin goodpass
 
 ### Delete people by id (admin only)
-DELETE http://localhost:8080/api/v1/people/3
+### DELETE http://localhost:8080/api/v1/people/{id}
+DELETE {{url}}/people/3
 Authorization: Basic admin goodpass
 
 ### Add people (admin only)
-POST http://localhost:8080/api/v1/people
+### POST http://localhost:8080/api/v1/people
+POST {{url}}/people
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
 {
-    "firstName": "firstName",
-    "lastName": "lastName",
-    "emailId": "emailId@asd.com",
-    "birthDate": "0002-10-16",
+    "firstName": "Mason",
+    "lastName": "Stein",
+    "emailId": "masonstein@asd.com",
+    "birthDate": "1978-10-16",
     "condition": "MODERATE",
-    "username": "username",
-    "password": "password",
+    "username": "masonst",
+    "password": "steinspassword",
     "authorities": "ROLE_PATIENT"
 }
 
 ### Update people by id (admin only)
-PUT http://localhost:8080/api/v1/people/2
+### PUT http://localhost:8080/api/v1/people/{id}
+PUT {{url}}/people/2
 Content-Type: application/json
 Authorization: Basic admin goodpass
 
@@ -46,25 +55,22 @@ Authorization: Basic admin goodpass
 // Should create another request to update password and authorities, 
 //username cannot be change
     
+################################## Patient login/registration ########################################
 
 ### login (patient only)
 ### GET http://localhost:8080/api/v1/login/{username}
-### if 401/404 error, incorrect username or password
-### if 403 error, user is not a patient
-### Rmb to keep username, password and id in localstorage/cookies of the frontend
-GET http://localhost:8080/api/v1/login/admin
+
+GET {{url}}/login/admin
 Authorization: Basic admin goodpass
 
 ### login (admin only)
 ### GET http://localhost:8080/api/v1/admin/login/{username}
-### if 401/404 error, incorrect username or password
-### if 403 error, user is not a admin
-### Rmb to keep username, password and id in localstorage/cookies of the frontend
-GET http://localhost:8080/api/v1/admin/login/admin
+
+GET {{url}}/admin/login/admin
 Authorization: Basic admin goodpass
 
-### Add people (admin only)
-POST http://localhost:8080/api/v1/patient/registration
+### Add people (patient only)
+POST {{url}}/patient/registration
 Content-Type: application/json
 
 {
@@ -77,11 +83,62 @@ Content-Type: application/json
     "password": "password"
 }
 
+################################## Kiosk login ########################################
+### login (patient only) (Not Working)
+### GET http://localhost:8080/api/v1/login/{NRIC}
+
+GET {{url}}/login/T1234567A
+
+
 ################################## Qticket ########################################
+### Get Latest Qticket by patient id (Patient /or admin) 
+### get patient id when during login. 
+### GET http://localhost:8080/api/v1/patients/{id}/getQ
+GET {{url}}/patients/3/getQ
+Authorization: Basic admin goodpass
+
+### Get all QTickets (admin only)
+### GET http://localhost:8080/api/v1/getAllQ
+GET {{url}}/getAllQ
+Authorization: Basic admin goodpass
+
+
+################################## WalkIn ########################################
 
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
-POST http://localhost:8080/api/v1/patients/3/getnewQ
+### POST http://localhost:8080/api/v1/patients/{id}/getnewQ
+POST {{url}}/patients/2/getnewQ
+Authorization: Basic user2 goodpass
+Content-Type: application/json
+
+{
+
+}
+
+################################## Appointment ########################################
+
+### Book new appointment by patientid and datetimeslotid, must be within 3 days from today
+### POST 
+### {{url}}/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}
+POST {{url}}/appointment/bookNewAppointment/3/2445
+Authorization: Basic user2 goodpass
+Content-Type: application/json
+
+{
+    
+}
+
+### Query all available TimeSlot by date
+### GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/{date}
+GET {{url}}/appointment/queryAvailableTimeSlot/2023-11-02
+Authorization: Basic admin goodpass
+
+################################## Payment ########################################
+
+### set ticket to be awaiting payment (admin only)
+### PUT http://localhost:8080/api/v1/patient/{id}/setAwaitingPayment/{ticketno}
+PUT {{url}}/patient/2/hasSeenDoctor/2
 Authorization: Basic admin goodpass
 Content-Type: application/json
 
@@ -89,28 +146,31 @@ Content-Type: application/json
 
 }
 
-### Get Latest Qticket by patient id (Patient /or admin) 
-### get patient id when during login. 
-GET  http://localhost:8080/api/v1/patients/1/getQ
+### Confirm payment (Patient /or admin)
+### PUT http://localhost:8080/api/v1/patient/{id}/confirmPayment/{ticketno}
+PUT {{url}}/patient/2/confirmPayment/2
 Authorization: Basic admin goodpass
+Content-Type: application/json
 
-### Get all QTickets (admin only)
-GET http://localhost:8080/api/v1/getAllQ
+{
+
+}
+
+### Get all QTickets awaiting for payment by patient id (Patient /or admin)
+### GET http://localhost:8080/api/v1/patient/{id}/getAwaitingPayment
+GET {{url}}/patient/2/getAwaitingPayment
 Authorization: Basic admin goodpass
-
-
-
-
-
 
 ################################## Room ########################################
 
 ### Get all rooms
-GET http://localhost:8080/api/v1/rooms
+### GET http://localhost:8080/api/v1/rooms
+GET {{url}}/rooms
 Authorization: Basic admin goodpass
 
 ### add room
-POST http://localhost:8080/api/v1/rooms
+### POST http://localhost:8080/api/v1/rooms
+POST {{url}}/rooms
 Authorization: Basic admin goodpass
 Content-Type: application/json
 
@@ -120,69 +180,9 @@ Content-Type: application/json
 
 ################################## DateTimeSlot ########################################
 
-### Book new appointment by patientid and datetimeslotid, must be within 3 days from today
-POST http://localhost:8080/api/v1/appointment/bookNewAppointment/2/5
-Content-Type: application/json
-Authorization: Basic admin goodpass
-{
-    "patientId": 1,
-    "dateTimeSlotId": 5
-}
-
-### Query all available TimeSlot by date
-GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-16
-Authorization: Basic admin goodpass
-
 ### Get all DateTimeSlot 
-GET http://localhost:8080/api/v1/datetimeslot
+GET {{url}}/datetimeslot
 Authorization: Basic admin goodpass
-
-################################ By nicholas ######################################
-### 1 ## Get all people
-GET http://localhost:8080/api/v1/people
-Authorization: Basic admin goodpass
-
-### Get p where id 3
-GET http://localhost:8080/api/v1/people/1
-Authorization: Basic admin goodpass
-
-### 2 ## Delete p where id 2
-DELETE http://localhost:8080/api/v1/people/3
-Authorization: Basic user1 goodpass
-
-### 3 ## Add people
-POST http://localhost:8080/api/v1/people
-Authorization: Basic user1 goodpass
-Content-Type: application/json
-# password: should be at least 8 to 10 characters
-
-{
-    "firstName": "zoo",
-    "lastName": "king",
-    "condition": "critical",
-    "age": "40",
-    "emailId": "zoo@ab.xy",
-    "username": "user1",
-    "password": "goodpass", 
-    "authorities": "ROLE_USER"
-}
-
-### 4 ## Update p where id 1
-PUT http://localhost:8080/api/v1/people/2
-Content-Type: application/json
-Authorization: Basic admin goodpass
-# password: should be at least 8 to 10 characters
-
-{
-    "firstName": "lion",
-    "lastName": "queen",
-    "condition": "mild",
-    "age": "20",
-    "emailId": "zoo@xxx.yy",
-    "username": "user1",
-    "password": "goodpass", 
-    "authorities": "ROLE_ADMIN"
-}
 
 ###########################################################
 

@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http
-                .cors(cors -> cors.disable())
+                .cors(cors -> cors.disable()) // disable Cross-Origin Resource Sharing (CORS
                 .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser-based attacks
                 .formLogin(fg -> fg.disable())
                 .authenticationProvider(authenticationProvider()) // specifies the authentication provider for

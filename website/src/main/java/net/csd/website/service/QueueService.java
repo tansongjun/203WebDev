@@ -8,11 +8,13 @@ import net.csd.website.model.Person;
 import net.csd.website.model.QTicket;
 import net.csd.website.model.Room;
 import net.csd.website.model.WaitingQticket;
+import net.csd.website.model.QTicket.QStatus;
 import net.csd.website.repository.DateTimeSlotRepository;
 import net.csd.website.repository.RoomRepository;
 import net.csd.website.repository.WaitingQTicketRepository;
 import net.csd.website.repository.QTicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -21,6 +23,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -206,6 +210,41 @@ public class QueueService {
     public QTicket findLatestTicketByPersonId(Long personId) {
         List<QTicket> tickets = qTicketRepository.findLatestTicketByPersonId(personId);
         return tickets.isEmpty() ? null : tickets.get(0);
+    }
+
+    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS, initialDelay = 30)
+    public void handlePatientFlow(){
+        handlePatientWaiting();
+
+        handlePatientInProgress();
+        
+        System.out.println("handlePatientFlow() is running");
+    }
+
+    private void handlePatientWaiting(){
+        List<QTicket> qTickets = qTicketRepository.findByQStatus(QStatus.WAITING);
+        for (QTicket qTicket : qTickets) {
+            if (qTicket.getDatetimeSlot().getStartDateTime().isBefore(LocalDateTime.now())) {
+                qTicket.setQStatus(QStatus.IN_PROGRESS);
+                qTicketRepository.save(qTicket);
+                System.out.println("Patient " + qTicket.getPerson().getUsername() + " is now in progress");
+            }
+        }
+    }
+
+    public void handlePatientInProgress(){
+        List<QTicket> qTickets = qTicketRepository.findByQStatus(QStatus.IN_PROGRESS);
+        for (QTicket qTicket : qTickets) {
+            if (qTicket.getDatetimeSlot().getEndDateTime().isBefore(LocalDateTime.now())) {
+                qTicket.setQStatus(QStatus.AWAITINGPAYMENT);
+
+                // generate random amount due
+                double amountDue = new Random().nextDouble() * 100;
+                qTicket.setAmountDue(amountDue);
+                qTicketRepository.save(qTicket);
+                System.out.println("Patient " + qTicket.getPerson().getUsername() + " is now awaiting payment");
+            }
+        }
     }
 
 }

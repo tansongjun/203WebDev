@@ -61,5 +61,32 @@ public class RoomService {
     
         return savedRoom;
     }
+
+    public Room createNewRoom(int roomNumber, LocalDate creationDate) {
+        // Create a new room
+        Room room = new Room();
+        room.setRoomNumber(roomNumber);
+    
+        // Create the room
+        return createRoom(room, creationDate);
+    }
+
+    public void createNewRoomforMonth(int noOfRoom, LocalDate inputDate){
+        LocalDate currentDate = inputDate;
+        LocalDate lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
+
+        for (int roomNo = 1; roomNo <= noOfRoom; roomNo++) {
+            currentDate = inputDate;
+            // Create rooms from today until the end of the month
+            while (currentDate.isBefore(lastDayOfMonth) || currentDate.isEqual(lastDayOfMonth)) {
+                createNewRoom(roomNo, currentDate);
+                // Move to the next day
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+        System.out.println("[Rooms created from "+ inputDate +" until the end of the month]");
+    }
+
+
     
 }
