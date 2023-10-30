@@ -1,6 +1,7 @@
 import { DatePicker } from "@gsebdev/react-simple-datepicker";
 import { useState, useEffect, useCallback, useRef, useContext } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function AppointmentHome() {
   const [auth, setAuth] = useState({
@@ -150,6 +151,9 @@ function AppointmentHome() {
             </li>
           ))}
       </ul>
+      <Link to="/walkinHome">
+        <button className="queue-button">Back</button>
+      </Link>
     </div>
   );
 }
