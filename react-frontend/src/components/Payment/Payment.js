@@ -45,16 +45,14 @@ function Payment() {
         password: "goodpass",
       },
     })
-      //GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/2023-10-14
+      //GET http://localhost:8080/api/v1/patient/2/getAwaitingPayment
       .then((response) => {
         if (response.status === 200) {
           console.log("returned data: ", response.data);
           setBillings(response.data);
         } else if (response.status === 404) {
         }
-
-        // setTimeSlots(data.timeSlots); // Assuming your API response contains an array of time slots
-      })
+    })
       .catch((error) => {
         console.error("Failed to fetch billings from the API");
         setBillings([]);
@@ -94,19 +92,23 @@ function Payment() {
   };
 
   // Function to generate a random amount between 0 and 100
-  const getRandomAmount = () => {
-    console.log('personId: ' + auth.personId);
-    return (Math.random() * 100).toFixed(2); // Generates a random number with 2 decimal places
-  };
+  // const getRandomAmount = () => {
+  //   console.log('personId: ' + auth.personId);
+  //   return (Math.random() * 100).toFixed(2); // Generates a random number with 2 decimal places
+  // };
   
 
   // State to store the random amount
-  const [amountPayable, setAmountPayable] = useState(getRandomAmount());
+  // const [amountPayable, setAmountPayable] = useState(getRandomAmount());
 
   // Function to generate a new random amount when needed
-  const regenerateRandomAmount = () => {
-    setAmountPayable(getRandomAmount());
-  };
+  // const regenerateRandomAmount = () => {
+  //   setAmountPayable(getRandomAmount());
+  // };
+
+  useEffect(() => {
+    fetchBills();
+  })
 
   return (
     <div className="payment-container">
