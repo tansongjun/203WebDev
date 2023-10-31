@@ -11,7 +11,7 @@ Authorization: Basic admin goodpass
 
 ### Get people by id (admin only)
 ### GET http://localhost:8080/api/v1/people/{id}
-GET {{url}}/people/2
+GET {{url}}/people/3
 Authorization: Basic admin goodpass
 
 ### Delete people by id (admin only)
@@ -33,6 +33,21 @@ Authorization: Basic admin goodpass
     "condition": "MODERATE",
     "username": "user4",
     "password": "goodpass",
+    "authorities": "ROLE_PATIENT"
+}
+
+POST {{url}}/people
+Content-Type: application/json
+Authorization: Basic admin goodpass
+
+{
+    "firstName": "Jack",
+    "lastName": "Old",
+    "emailId": "masonstein@asd.com",
+    "birthDate": "1978-10-16",
+    "condition": "SEVERE",
+    "username": "user3",
+    "password": "goodpassw1",
     "authorities": "ROLE_PATIENT"
 }
 
@@ -92,7 +107,6 @@ GET {{url}}/login/T1234567A
 
 ################################## Qticket ########################################
 ### Get Latest Qticket by patient id (Patient /or admin) 
-### get patient id when during login. 
 ### GET http://localhost:8080/api/v1/patients/{id}/getQ
 GET {{url}}/patients/4/getQ
 Authorization: Basic admin goodpass
@@ -108,7 +122,11 @@ Authorization: Basic admin goodpass
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
 ### POST http://localhost:8080/api/v1/patients/{id}/getnewQ
+<<<<<<< Updated upstream
 POST {{url}}/patients/4/getnewQ
+=======
+POST {{url}}/patients/3/getnewQ
+>>>>>>> Stashed changes
 Authorization: Basic user2 goodpass
 Content-Type: application/json
 
@@ -137,8 +155,13 @@ Authorization: Basic admin goodpass
 ################################## Payment ########################################
 
 ### set ticket to be awaiting payment (admin only)
+<<<<<<< Updated upstream
 ### PUT http://localhost:8080/api/v1/patient/{id}/setAwaitingPayment/{ticketno}
 PUT {{url}}/patient/4/hasSeenDoctor/5
+=======
+### PUT http://localhost:8080/api/v1/patient/{personid}/setAwaitingPayment/{ticketno}
+PUT {{url}}/patient/3/hasSeenDoctor/1
+>>>>>>> Stashed changes
 Authorization: Basic admin goodpass
 Content-Type: application/json
 
@@ -147,8 +170,8 @@ Content-Type: application/json
 }
 
 ### Confirm payment (Patient /or admin)
-### PUT http://localhost:8080/api/v1/patient/{id}/confirmPayment/{ticketno}
-PUT {{url}}/patient/2/confirmPayment/2
+### PUT http://localhost:8080/api/v1/patient/{personid}/confirmPayment/{ticketno}
+PUT {{url}}/patient/3/confirmPayment/1
 Authorization: Basic admin goodpass
 Content-Type: application/json
 {
@@ -156,8 +179,8 @@ Content-Type: application/json
 }
 
 ### Get all QTickets awaiting for payment by patient id (Patient /or admin)
-### GET http://localhost:8080/api/v1/patient/{id}/getAwaitingPayment
-GET {{url}}/patient/2/getAwaitingPayment
+### GET http://localhost:8080/api/v1/patient/{personid}/getAwaitingPayment
+GET {{url}}/patient/3/getAwaitingPayment
 Authorization: Basic admin goodpass
 
 ################################## Room ########################################

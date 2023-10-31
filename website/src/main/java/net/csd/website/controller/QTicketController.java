@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -76,9 +77,8 @@ public class QTicketController {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
         QueueResponse queueResponse = new QueueResponse(
-            queueService.findLatestTicketByPersonId(id) , 
-            queueService.findLatestTicketByPersonId(id).getDatetimeSlot()
-        );
+                queueService.findLatestTicketByPersonId(id),
+                queueService.findLatestTicketByPersonId(id).getDatetimeSlot());
         return queueResponse;
     }
 
@@ -119,6 +119,12 @@ public class QTicketController {
 
         // Return the QueueResponse object in the response entity
         return ResponseEntity.ok(queueResponse);
+    }
+
+    @GetMapping("/getWaitingQStatus")
+    public Map<String, Integer> getWaitingQStatus() {
+        
+        return queueService.getWaitingQStatus();
     }
 
     @GetMapping("/appointment/queryAvailableTimeSlot/{date}")
@@ -194,10 +200,12 @@ public class QTicketController {
 
         QTicket qTicket = qTickets.get();
 
-        if (qTicket.getQStatus() == QStatus.WAITING || qTicket.getQStatus() == QStatus.IN_PROGRESS || qTicket.getQStatus() == QStatus.CANCELLED) {
-            throw new InvalidRequestException("Payment cannot be confirmed for ticket " + ticketno +". Please check the status again.");
+        if (qTicket.getQStatus() == QStatus.WAITING || qTicket.getQStatus() == QStatus.IN_PROGRESS
+                || qTicket.getQStatus() == QStatus.CANCELLED) {
+            throw new InvalidRequestException(
+                    "Payment cannot be confirmed for ticket " + ticketno + ". Please check the status again.");
         } else if (qTicket.getQStatus() == QStatus.COMPLETED) {
-            throw new InvalidRequestException("Payment has already been made for ticket " + ticketno +".");
+            throw new InvalidRequestException("Payment has already been made for ticket " + ticketno + ".");
         }
 
         qTicket.setQStatus(QStatus.COMPLETED);
@@ -214,12 +222,18 @@ public class QTicketController {
         QTicket qTicket = qTickets.get();
 
         if (qTicket.getQStatus() == QStatus.COMPLETED || qTicket.getQStatus() == QStatus.CANCELLED) {
-            throw new InvalidRequestException("Invalid Request for ticket " + ticketno +". Please check the status again. Only tickets with status 'Waiting' or 'In Progress' can be updated.");
+            throw new InvalidRequestException("Invalid Request for ticket " + ticketno
+                    + ". Please check the status again. Only tickets with status 'Waiting' or 'In Progress' can be updated.");
         }
 
+        
         qTicket.setQStatus(QStatus.AWAITINGPAYMENT);
+        double amountDue = new Random().nextDouble() * 100;
+        qTicket.setAmountDue(amountDue);
         qTicketRepository.save(qTicket);
-        return ResponseEntity.ok("Patient "+id+" Awaiting payment");
+        return ResponseEntity.ok("Patient " + id + " Awaiting payment");
     }
+
+
 
 }

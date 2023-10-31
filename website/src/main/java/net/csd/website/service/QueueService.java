@@ -58,12 +58,7 @@ public class QueueService {
         this.waitingQTicketRepository = waitingQTicketRepository;
     }
 
-    public List<DateTimeSlot> queryAvailableTimeSlot(LocalDate date) {
-
-        // Retrieve all available rooms
-        // List<Room> rooms = roomRepository.findAll();
-
-        // Retrieve all time slots
+    public List<DateTimeSlot> queryAllAvailableTimeSlot(LocalDate date) {
         List<DateTimeSlot> allDateTimeSlots = dateTimeSlotRepository.findAll();
 
         // Filter time slots for the specified date and available slots
@@ -71,6 +66,16 @@ public class QueueService {
                 .filter(dateTimeSlot -> dateTimeSlot.getStartDateTime().toLocalDate().equals(date)
                         && dateTimeSlot.getQTicket() == null)
                 .collect(Collectors.toList());
+        return availableDateTimeSlots;
+    }
+
+    public List<DateTimeSlot> queryAvailableTimeSlot(LocalDate date) {
+
+        // Retrieve all available rooms
+        // List<Room> rooms = roomRepository.findAll();
+
+        // Retrieve all time slots available for the specified date
+        List<DateTimeSlot> availableDateTimeSlots = queryAllAvailableTimeSlot(date);
 
         // Create a Map to store the selected slots by LocalTime
         Map<LocalTime, DateTimeSlot> selectedSlots = new HashMap<>();
@@ -96,12 +101,12 @@ public class QueueService {
 
     public Boolean checkEnoughSlotsinWaitingList() {
         // Retrieve Available time slots for today
-        List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
+        List<DateTimeSlot> allAvailableTimeSlots = queryAllAvailableTimeSlot(LocalDate.now());
 
         // Check if there is any available time slot for today and if there is enough
         // slots for the waiting queue
         int waitingListSize = currentWaitingNo - processedWaitingNo - 1;
-        return availableDateTimeSlots.isEmpty() || waitingListSize == availableDateTimeSlots.size();
+        return allAvailableTimeSlots.isEmpty() || waitingListSize == allAvailableTimeSlots.size();
 
     }
 
@@ -156,55 +161,66 @@ public class QueueService {
         qTicket.setPerson(patient);
         qTicket.setDatetimeSlot(dateTimeSlot);
         qTicket.setCreatedAt(LocalDateTime.now());
-        return qTicketRepository.save(qTicket);
+        QTicket savedTicket = qTicketRepository.save(qTicket);
+        return savedTicket;
     }
 
+    @Transactional
     public void allocateWaitingQTicket() {
-        // Retrieve all waiting queue tickets
-        List<WaitingQticket> waitingQtickets = waitingQTicketRepository.findAll();
-
-        // Retrieve Available time slots for today
-        List<DateTimeSlot> availableDateTimeSlots = queryAvailableTimeSlot(LocalDate.now());
-        int availableDateTimeSlotsindex = 0;
-
         // Check if there is any available time slot for today and if there is enough
         // slots for the waiting queue
         int waitingListSize = currentWaitingNo - processedWaitingNo - 1;
-        System.out.println("waitingListSize: " + waitingListSize);
-        System.out.println("availableDateTimeSlots.size(): " + availableDateTimeSlots.size());
-
-        if (availableDateTimeSlots.isEmpty()) {
-            throw new ResourceNotFoundException("No available time slot for today");
+        if (waitingListSize == 0) {
+            return;
         }
-        boolean allocatedAllWaitingQticket = false;
+        // Retrieve all waiting queue tickets
+        List<WaitingQticket> waitingQtickets = waitingQTicketRepository.findAll();
+
+        // Size of the remaining available time slots for today
+        int allavailabletimeslotsize = queryAllAvailableTimeSlot(LocalDate.now()).size();
+        // System.out.println("waitingListSize: " + waitingListSize);
+        // System.out.println("availableDateTimeSlots.size(): " +
+        // allavailabletimeslotsize);
+
         for (WaitingQticket waitingQticket : waitingQtickets) {
-            if (waitingQticket.getDatetimeSlot() == null) {
+            waitingListSize = currentWaitingNo - processedWaitingNo - 1;
+            if (waitingQticket.getDatetimeSlot() == null && waitingQticket.getQStatus() != QStatus.CANCELLED) {
                 // if the waitingQticket is in the queue pattern, set the time slot
                 if (waitingQticket.getPerson().getRiskLevel() == queuePattern[queuePatternIndex]) {
 
                     queuePatternIndex = (queuePatternIndex + 1) % queuePattern.length;
 
                     // Assign the first available time slot to the waiting queue ticket
-                    waitingQticket.setDatetimeSlot(availableDateTimeSlots.get(availableDateTimeSlotsindex++));
+                    waitingQticket.setDatetimeSlot(queryAvailableTimeSlot(LocalDate.now()).get(0));
+                    allavailabletimeslotsize--;
                     processedWaitingNo++;
 
                     // if the WaitingListsize is equal to the availableDateTimeSlots.size(),
                     // set the time slot for all the remaining waitingQtickets.
-                } else if (waitingListSize == availableDateTimeSlots.size()) {
+                } else if (allavailabletimeslotsize >= 1 && waitingListSize >= allavailabletimeslotsize) {
 
                     // Assign the first available time slot to the waiting queue ticket
-                    waitingQticket.setDatetimeSlot(availableDateTimeSlots.get(availableDateTimeSlotsindex++));
+
+                    waitingQticket.setDatetimeSlot(queryAvailableTimeSlot(LocalDate.now()).get(0));
+                    allavailabletimeslotsize--;
                     processedWaitingNo++;
                     System.out.println("allocated");
-                    allocatedAllWaitingQticket = true;
+                } else if (allavailabletimeslotsize == 0 && waitingListSize >= 1) {
+                    waitingQticket.setQStatus(QStatus.CANCELLED);
                 } else {
                     return;
                 }
             }
+            waitingQTicketRepository.save(waitingQticket);
         }
-        if (allocatedAllWaitingQticket) {
-            throw new AllSlotsFilledException("All slots are filled");
-        }
+    }
+
+    public Map<String, Integer> getWaitingQStatus() {
+        Map<String, Integer> waitingQStatus = new HashMap<>();
+        waitingQStatus.put("currentWaitingNo", currentWaitingNo);
+        waitingQStatus.put("processedWaitingNo", processedWaitingNo);
+        waitingQStatus.put("waitingListSize", currentWaitingNo - processedWaitingNo - 1);
+        return waitingQStatus;
     }
 
     public QTicket findLatestTicketByPersonId(Long personId) {
@@ -213,18 +229,21 @@ public class QueueService {
     }
 
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS, initialDelay = 30)
-    public void handlePatientFlow(){
+    public void handleScheduledTask() {
         handlePatientWaiting();
 
         handlePatientInProgress();
-        
-        System.out.println("handlePatientFlow() is running");
+
+        allocateWaitingQTicket();
+
+        System.out.println("Scheduled Task running");
     }
 
-    private void handlePatientWaiting(){
+    private void handlePatientWaiting() {
         List<QTicket> qTickets = qTicketRepository.findByQStatus(QStatus.WAITING);
         for (QTicket qTicket : qTickets) {
-            if (qTicket.getDatetimeSlot().getStartDateTime().isBefore(LocalDateTime.now())) {
+            DateTimeSlot dateTimeSlot = qTicket.getDatetimeSlot();
+            if (dateTimeSlot != null && dateTimeSlot.getStartDateTime().isBefore(LocalDateTime.now())) {
                 qTicket.setQStatus(QStatus.IN_PROGRESS);
                 qTicketRepository.save(qTicket);
                 System.out.println("Patient " + qTicket.getPerson().getUsername() + " is now in progress");
@@ -232,10 +251,11 @@ public class QueueService {
         }
     }
 
-    public void handlePatientInProgress(){
+    public void handlePatientInProgress() {
         List<QTicket> qTickets = qTicketRepository.findByQStatus(QStatus.IN_PROGRESS);
         for (QTicket qTicket : qTickets) {
-            if (qTicket.getDatetimeSlot().getEndDateTime().isBefore(LocalDateTime.now())) {
+            DateTimeSlot dateTimeSlot = qTicket.getDatetimeSlot();
+            if (dateTimeSlot != null && dateTimeSlot.getEndDateTime().isBefore(LocalDateTime.now())) {
                 qTicket.setQStatus(QStatus.AWAITINGPAYMENT);
 
                 // generate random amount due
