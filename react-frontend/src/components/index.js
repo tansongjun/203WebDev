@@ -19,3 +19,4 @@ export { default as Questionnaire} from './Questionnaire/Questionnaire';
 export { default as Registration} from './Registration/Registration';
 
 export { default as Payment} from './Payment/Payment';
+export { default as PaymentQRPage} from './PaymentQRPage/PaymentQRPage';

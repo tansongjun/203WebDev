@@ -50,7 +50,5 @@ public class WebsiteApplication {
         }
 
         System.out.println("Set up complete!");
-       
-        
 	}
 }

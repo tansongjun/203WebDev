@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import {
     HomePage, WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome,
     WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
-    UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, Registration
+    UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, Registration, PaymentQRPage
 } from './components';
 import ApptDB from './components/ApptDB/ApptDB';
 
@@ -45,6 +45,7 @@ function App() {
 
                     <Route path="/walkinHome/questionnaire" element={<Questionnaire/>} />
                     <Route path="/walkinHome/payment" element={<Payment/>} />
+                    <Route path="/walkinHome/payment/paymentQR" element={<PaymentQRPage/>} />
                     <Route path="/registration" element={<Registration/>} />
                 </Routes>
             </div>
