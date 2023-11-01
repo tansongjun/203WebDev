@@ -58,29 +58,55 @@ public class QTicketController {
         this.dateTimeSlotRepository = dateTimeSlotRepository;
     }
 
-    // problem with this method/api
     @GetMapping("/getAllQ")
     public List<QueueResponse> getLatestQTickets() {
         List<QueueResponse> queueResponses = new ArrayList<>();
 
         List<QTicket> qTickets = qTicketRepository.findAll();
         for (QTicket qTicket : qTickets) {
+            DateTimeSlot resultDateTimeSlot = null;
+            if (qTicket != null) {
+                resultDateTimeSlot = qTicket.getDatetimeSlot();
+            }
             QueueResponse queueResponse = new QueueResponse(qTicket, qTicket.getDatetimeSlot());
             queueResponses.add(queueResponse);
         }
         return queueResponses;
     }
 
-    // problem with this method/api
     @GetMapping("/patients/{id}/getQ")
     public QueueResponse getLatestQTicket(@PathVariable Long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
-        QueueResponse queueResponse = new QueueResponse(
-                queueService.findLatestTicketByPersonId(id),
-                queueService.findLatestTicketByPersonId(id).getDatetimeSlot());
+        QTicket result = queueService.findLatestTicketByPersonId(id);
+        DateTimeSlot resultDateTimeSlot = null;
+        if (result != null) {
+            resultDateTimeSlot = result.getDatetimeSlot();
+        }
+
+        QueueResponse queueResponse = new QueueResponse(result, resultDateTimeSlot);
         return queueResponse;
     }
+
+    @GetMapping("/patients/{id}/getQtoday")
+    public QueueResponse getLatestQTicketForToday(@PathVariable Long id) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
+        QTicket result = queueService.findLatestTicketByPersonId(id);
+        DateTimeSlot resultDateTimeSlot = null;
+        if (result != null) {
+            resultDateTimeSlot = result.getDatetimeSlot();
+            if (!resultDateTimeSlot.getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+                result = null;
+                resultDateTimeSlot = null;
+            }
+        }
+
+        QueueResponse queueResponse = new QueueResponse(result, resultDateTimeSlot);
+        return queueResponse;
+    }
+
+    
 
     @GetMapping("/getWaitingList")
     public List<QueueResponse> getWaitingList() {
@@ -123,7 +149,7 @@ public class QTicketController {
 
     @GetMapping("/getWaitingQStatus")
     public Map<String, Integer> getWaitingQStatus() {
-        
+
         return queueService.getWaitingQStatus();
     }
 
@@ -226,14 +252,11 @@ public class QTicketController {
                     + ". Please check the status again. Only tickets with status 'Waiting' or 'In Progress' can be updated.");
         }
 
-        
         qTicket.setQStatus(QStatus.AWAITINGPAYMENT);
         double amountDue = new Random().nextDouble() * 100;
         qTicket.setAmountDue(amountDue);
         qTicketRepository.save(qTicket);
         return ResponseEntity.ok("Patient " + id + " Awaiting payment");
     }
-
-
 
 }
