@@ -17,6 +17,8 @@ export { default as WalkInHome } from './WalkInHome/WalkInHome';
 export { default as ApptDB } from './ApptDB/ApptDB';
 export { default as Questionnaire} from './Questionnaire/Questionnaire';
 export { default as Registration} from './Registration/Registration';
+export { default as Qticketpage} from './QTicketPage/QTicketPage';
+
 
 export { default as Payment} from './Payment/Payment';
 export { default as PaymentQRPage} from './PaymentQRPage/PaymentQRPage';
