@@ -178,7 +178,7 @@ function LoginComponent({handleNavigation, userType}) {
                 <p className="cetn_sgn">
                   <span className="line">
                     {/* {navigate('/registration')} */}
-                    <a href="#">Register an Account</a>
+                    <a href="/registration">Register an Account</a>
                   </span>
                 </p>
               </form>

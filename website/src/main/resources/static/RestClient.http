@@ -88,6 +88,7 @@ GET {{url}}/admin/login/admin
 Authorization: Basic admin goodpass
 
 ### Add people (patient only)
+
 POST {{url}}/patient/registration
 Content-Type: application/json
 
@@ -97,7 +98,7 @@ Content-Type: application/json
     "emailId": "emailId@asd.com",
     "birthDate": "1999-02-15",
     "condition": "MODERATE",
-    "username": "jacksonsim",
+    "username": "jacksonim",
     "password": "password"
 }
 
