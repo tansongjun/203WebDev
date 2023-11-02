@@ -1,41 +1,45 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Axios from 'axios';
+import Axios from "axios";
 
-function RegisterComponent({handleNavigation, userType}) {
-  const url = 'http://localhost:8080/api/v1/patient/registration';
+function RegisterComponent({ handleNavigation, userType }) {
+  const url = "http://localhost:8080/api/v1/patient/registration";
   // user reference set focus for user
   const userRef = useRef();
   const errRef = useRef();
 
   // state: render username input
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
   // state: render password input
-  const [pwd, setPwd] = useState('');
+  const [pwd, setPwd] = useState("");
   // state: render Error Messages
-  const [errorMessages, setErrorMessages] = useState('');
+  const [errorMessages, setErrorMessages] = useState("");
   // state: render success to respective uri
-  const [success, setSuccess] = useState('');
-  const [username, setUsername] = useState(''); // Store the username
-  const [password, setPassword] = useState(''); // Store the password
+  const [success, setSuccess] = useState("");
+  const [username, setUsername] = useState(""); // Store the username
+  const [password, setPassword] = useState(""); // Store the password
+  const [emailid, setEmailid] = useState(""); // Store the email id
+  const [birthdate, setBirthdate] = useState(""); // Store the birthday
+  const [condition, setCondition] = useState(""); // Store the condition
+  const [firstname, setFirstname] = useState(""); // Store the firstname
+  const [lastname, setLastname] = useState(""); // Store the lastname
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     createNewPerson();
-  }
+  };
 
   const createNewPerson = async () => {
     const requestData = {
-      firstName: "Jacky",
-      lastName: "SureCan",
-      emailId: "emailId@asd.com",
-      birthDate: "1999-02-15",
-      condition: "MODERATE",
+      firstName: firstname,
+      lastName: lastname,
+      emailId: emailid,
+      birthDate: birthdate,
+      condition: condition,
       username: username,
       password: password,
     };
-  
+
     try {
       const response = await Axios.post(
         `http://localhost:8080/api/v1/patient/registration`,
@@ -50,7 +54,7 @@ function RegisterComponent({handleNavigation, userType}) {
           // },
         }
       );
-        
+
       window.alert("Registration Successful!"); // Display a success message
       console.log("Username:", username); // Log the username
       console.log("Password:", password); // Log the password
@@ -59,8 +63,8 @@ function RegisterComponent({handleNavigation, userType}) {
       // Handle errors here
       console.error("Error creating a new person:");
       if (error.response) {
-        console.log("username:"+ username);
-        console.log("pw:"+ password);
+        console.log("username:" + username);
+        console.log("pw:" + password);
         console.error("Status Code:", error.response.status);
         console.error("Response Data:", error.response.data);
       } else {
@@ -68,54 +72,153 @@ function RegisterComponent({handleNavigation, userType}) {
       }
     }
   };
-  
-  
+
+  const conditionOptions = ["NONE", "MODERATE", "MILD", "SEVERE"];
+
   return (
-    <> {
-      success ? (
+    <>
+      {" "}
+      {success ? (
         <p>success</p>
+      ) : (
         // window.location.replace('/walkinHome')
         // (authy === 'ROLE_PATIENT') ? (window.location.replace('/walkinHome')) : (window.location.replace(''))
-      ) : (
         <div className="app">
           <div className="login-form">
             <section>
               {/* aria-live: assertive to show error message immediately */}
-              <p ref={errRef} className={errorMessages ? "errormessages" : "offscreen"} aria-live="assertive">{errorMessages}</p>
+              <p
+                ref={errRef}
+                className={errorMessages ? "errormessages" : "offscreen"}
+                aria-live="assertive"
+              >
+                {errorMessages}
+              </p>
               <h1>Register here</h1>
               <form onSubmit={handleSubmit}>
-                <label htmlFor='username'>Username:</label><br />
+                <label htmlFor="firstname">First Name:</label>
+                <br />
                 <input
-                  type='text'
-                  id='username'
+                  type="text"
+                  id="firstname"
                   ref={userRef}
                   autoComplete="off"
-                  onChange={(e) => setUsername(e.target.value)
-                  } 
-                  value={username}
-                  // placeholder='enter username'
+                  onChange={(e) => setFirstname(e.target.value)}
+                  value={firstname}
+                  // placeholder=''
                   required
-                /><br /><br />
+                />
+                <br />
 
-                <label htmlFor='password'>Password:</label><br />
+                <label htmlFor="lastname">Last Name:</label>
+                <br />
                 <input
-                  type='password'
-                  id='password'
+                  type="text"
+                  id="lastname"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setLastname(e.target.value)}
+                  value={lastname}
+                  // placeholder='enter password'
+                  required
+                />
+                <br />
+
+                <label htmlFor="emailid">Email id:</label>
+                <br />
+                <input
+                  type="text"
+                  id="emailid"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setEmailid(e.target.value)}
+                  value={emailid}
+                  // placeholder='enter emailid'
+                  required
+                />
+                <br />
+
+                <label htmlFor="birthdate">Birthdate:</label>
+                <br />
+                <input
+                  type="text"
+                  id="birthdate"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setBirthdate(e.target.value)}
+                  value={birthdate}
+                  placeholder="YYYY-MM-DD"
+                  required
+                />
+                <br />
+
+                <label htmlFor="username">Username:</label>
+                <br />
+                <input
+                  type="text"
+                  id="username"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  //  placeholder='YYYY-MM-DD'
+                  required
+                />
+                <br />
+
+                <label htmlFor="password">Password:</label>
+                <br />
+                <input
+                  type="text"
+                  id="password"
                   ref={userRef}
                   autoComplete="off"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
-                  // placeholder='enter password'
+                  //  placeholder='YYYY-MM-DD'
                   required
-                /><br /><br /><br />
-                <button className="cetn_btn">Sign Up</button><br /><br />
+                />
+                <br />
+
+
+                <label htmlFor="condition">Condition:</label>
+                <br />
+                {/* <input
+                  type="text"
+                  id="condition"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setCondition(e.target.value)}
+                  value={condition}
+                  //  placeholder='YYYY-MM-DD'
+                  required
+                /> */}
+                 <select
+                  id="condition"
+                  ref={userRef}
+                  onChange={(e) => setCondition(e.target.value)}
+                  value={condition}
+                  required
+                >
+                  {conditionOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <br />
+                <br />
+                <br />
+                <button className="cetn_btn">Sign Up</button>
+                <br />
+                <br />
               </form>
             </section>
           </div>
         </div>
       )}
     </>
-  )
+  );
 }
 
 export default RegisterComponent;
