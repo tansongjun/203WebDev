@@ -133,7 +133,6 @@ public class Person implements UserDetails {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
-
     public int getRiskLevel() {
         /*
          * - Low Risk: (1)

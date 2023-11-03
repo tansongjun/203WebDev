@@ -16,7 +16,10 @@ import net.csd.website.model.Room;
 @Repository
 public interface DateTimeSlotRepository extends JpaRepository<DateTimeSlot, Long> {
     List<DateTimeSlot> findByRoom(Room room);
-   
+
+    // Add a method signature for custom query to find DateTimeSlots by date
+    @Query("SELECT d FROM DateTimeSlot d WHERE DATE(d.startDateTime) = :date")
+    List<DateTimeSlot> findAllByDate(@Param("date") LocalDate date);
 }
 
 
