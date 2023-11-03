@@ -78,4 +78,27 @@ public class RoomServiceTest {
         }
     }
 
+    @Test
+    void createNewRoomForMonthTest() {
+        // Given
+        LocalDate startDate = LocalDate.of(2023, 11, 1);
+        int noOfRooms = 3;
+
+        // Define mock behavior
+        // Assuming a countRoomsByCreationDate method exists in roomRepository to check room creation limit per day.
+        when(roomRepository.countRoomsByCreationDate(any(LocalDate.class))).thenReturn(0L);
+
+        // When
+        roomService.createNewRoomforMonth(noOfRooms, startDate);
+
+        // Then
+        // Verify roomRepository.save is called the correct number of times.
+        // This number should be the number of rooms times the number of days in the month
+        LocalDate lastDayOfMonth = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        int daysInMonth = lastDayOfMonth.getDayOfMonth() - startDate.getDayOfMonth() + 1;
+        verify(roomRepository, times(noOfRooms * daysInMonth)).save(any(Room.class));
+
+        // You may also verify that countRoomsByCreationDate is called correctly
+        verify(roomRepository, times(noOfRooms * daysInMonth)).countRoomsByCreationDate(any(LocalDate.class));
+    }
 }

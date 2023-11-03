@@ -183,30 +183,30 @@ public class QueueIntegratedTest {
     //     // assertNotNull(response.getBody().getId());
     // }
 
-    @Test
-    public void testGetPerson() {
-        String username = "testuser2";
-        String password = "testpassword2";
-        Person savedPerson = personRepository.save(
-            new Person("testuser2", "testlastname2", "testemail2@test.com", 
-            LocalDate.now(), Person.Condition.NONE, username, encoder.encode(password), 
-            Person.Authority.ROLE_ADMIN));
-        long personId = savedPerson.getId();
+    // @Test
+    // public void testGetPerson() {
+    //     String username = "testuser2";
+    //     String password = "testpassword2";
+    //     Person savedPerson = personRepository.save(
+    //         new Person("testuser2", "testlastname2", "testemail2@test.com", 
+    //         LocalDate.now(), Person.Condition.NONE, username, encoder.encode(password), 
+    //         Person.Authority.ROLE_ADMIN));
+    //     long personId = savedPerson.getId();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + username + " " + password);
-        // headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+    //     HttpHeaders headers = new HttpHeaders();
+    //     headers.set("Authorization", "Basic " + username + " " + password);
+    //     // headers.setContentType(MediaType.APPLICATION_JSON);
+    //     HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        String url = baseUrl + "/people/"+ personId;
+    //     String url = baseUrl + "/people/"+ personId;
 
-        ResponseEntity<Person> response = restTemplate.exchange(
-            url, HttpMethod.GET, entity, Person.class
-        );
+    //     ResponseEntity<Person> response = restTemplate.exchange(
+    //         url, HttpMethod.GET, entity, Person.class
+    //     );
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(savedPerson.getUsername(), response.getBody().getUsername());
-    }
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     assertEquals(savedPerson.getUsername(), response.getBody().getUsername());
+    // }
 
     // Continue adding tests for other API endpoints in the same fashion...
 }

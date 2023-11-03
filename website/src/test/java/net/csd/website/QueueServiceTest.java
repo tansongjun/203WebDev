@@ -209,7 +209,7 @@ public class QueueServiceTest {
         Person patient = new Person(
             "sam", 
             "tom", 
-            "sdds", 
+            "tom@gmail.com", 
             LocalDate.of(1992,Month.APRIL,1), 
             net.csd.website.model.Person.Condition.NONE, 
             "admin", "goodpass", 
@@ -219,7 +219,7 @@ public class QueueServiceTest {
         QTicket newTicket = new QTicket();
         // Set additional properties on newTicket if necessary
         when(qTicketRepository.save(any(QTicket.class))).thenReturn(newTicket);
-        when(queueService).thenReturn(queueService);
+        //when(queueService).thenReturn(queueService);
 
         // Act
         QTicket ticket = queueService.getNewQueueTicket(patient);
