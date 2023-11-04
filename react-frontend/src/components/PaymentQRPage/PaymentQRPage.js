@@ -7,6 +7,7 @@ import axios from "axios";
 function PaymentQRPage() {
   const location = useLocation();
   console.log("Data received in PaymentQRPage:", location.state);
+  const [url, setUrl] = React.useState("https://sgqrcode.com/paynow?mobile=&uen=198702955E43F&editable=1&amount="+ location.state.selectedBill.amountDue+"&expiry=2024%2F02%2F01%2018%3A27&ref_id=NA&company=HealthSing");
 
   // Function to send the PUT request when "Paid" button is clicked
   const confirmPayment = () => {
@@ -59,7 +60,7 @@ function PaymentQRPage() {
           </h2>
         </div>
       )}
-      <img src={image} alt="Image Description" />
+      <img src={url} alt="Image Description" />
       <button className="paid-button" onClick={confirmPayment}>
         Paid
       </button>
