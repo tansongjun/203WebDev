@@ -24,6 +24,12 @@ public class WebsiteApplication {
 		ApplicationContext ctx = SpringApplication.run(WebsiteApplication.class, args);
         PersonRepository users = ctx.getBean(PersonRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+        RoomService roomService = ctx.getBean(RoomService.class);
+        intialSetUp(users, encoder, roomService);
+	}
+
+    public static void intialSetUp(PersonRepository users, BCryptPasswordEncoder encoder, RoomService roomService) {
+
         System.out.println("[Add user]: " + users.save(
             new Person("myuser", "mypass", 
             "eml@my.eml",  LocalDate.of(1992,Month.APRIL,1), net.csd.website.model.Person.Condition.NONE, "admin", 
@@ -38,7 +44,7 @@ public class WebsiteApplication {
         /* create 3 Room for 2 months
          * 
          */
-        RoomService roomService = ctx.getBean(RoomService.class);
+        
         int noOfmonths = 2;
         int noOfRooms = 3;
         
@@ -49,5 +55,7 @@ public class WebsiteApplication {
         }
 
         System.out.println("Set up complete!");
-	}
+    }
+
+    
 }
