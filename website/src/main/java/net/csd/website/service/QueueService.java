@@ -266,7 +266,4 @@ public class QueueService {
             }
         }
     }
-
-    
-
 }

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.lang.reflect.Field;
 
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -257,7 +258,39 @@ public class QueueServiceTest {
         assertEquals(expectedSlots, resultSlots); // Check that the returned list is what was expected
     }
 
+    @Test
+    void whenFindLatestTicketByPersonIdWithNonEmptyList_thenReturnsFirstTicket() {
+        // Arrange
+        Long personId = 1L;
+        QTicket oldestTicket = new QTicket(); // assuming QTicket has a default constructor
+        QTicket latestTicket = new QTicket(); // this should be the ticket returned
+        List<QTicket> ticketList = Arrays.asList(oldestTicket, latestTicket);
 
+        when(qTicketRepository.findLatestTicketByPersonId(personId)).thenReturn(ticketList);
+
+        // Act
+        QTicket result = queueService.findLatestTicketByPersonId(personId);
+
+        // Assert
+        assertEquals(latestTicket, result, "The method should return the first QTicket in the list");
+    }
+
+    @Test
+    void whenFindLatestTicketByPersonIdWithEmptyList_thenReturnsNull() {
+        // Arrange
+        Long personId = 1L;
+        when(qTicketRepository.findLatestTicketByPersonId(personId)).thenReturn(Collections.emptyList());
+
+        // Act
+        QTicket result = queueService.findLatestTicketByPersonId(personId);
+
+        // Assert
+        assertNull(result, "The method should return null when the list is empty");
+    }
+}
+
+
+    
 
     // @Test
     // public void whenGetNewQueueTicket2_thenCreateTicketSuccessfully() {
@@ -312,4 +345,3 @@ public class QueueServiceTest {
     
 
 
-}
