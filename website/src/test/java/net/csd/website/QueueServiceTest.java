@@ -302,6 +302,34 @@ public class QueueServiceTest {
     }
 
     @Test
+    void whenTicketsInWaitingWithPastDateTimeSlot_setToInProgress() {
+        // Arrange
+        LocalDateTime pastDateTime = LocalDateTime.now().minusHours(1);
+
+        Person person1 = new Person();
+        person1.setUsername("JohnDoe");
+
+        DateTimeSlot dateTimeSlot1 = new DateTimeSlot();
+        dateTimeSlot1.setStartDateTime(pastDateTime);
+
+        QTicket ticket1 = new QTicket();
+        ticket1.setPerson(person1);
+        ticket1.setDatetimeSlot(dateTimeSlot1);
+        ticket1.setQStatus(QStatus.WAITING);
+
+        List<QTicket> waitingTickets = Arrays.asList(ticket1);
+
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(waitingTickets);
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketRepository).save(ticket1); // Verify that the ticket has been saved
+        assertEquals(QStatus.IN_PROGRESS, ticket1.getQStatus()); // Assert that the status has been updated
+    }
+
+    @Test
     void whenTicketsInWaitingWithFutureDateTimeSlot_remainWaiting() {
         // Arrange
         QTicket qTicketWaiting = mock(QTicket.class);
@@ -318,6 +346,8 @@ public class QueueServiceTest {
         verify(qTicketWaiting, never()).setQStatus(QStatus.IN_PROGRESS);
         verify(qTicketRepository, never()).save(qTicketWaiting);
     }
+
+
 }
 
 
