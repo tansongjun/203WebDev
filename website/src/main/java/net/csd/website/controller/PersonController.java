@@ -60,8 +60,9 @@ public class PersonController {
 		if (!checkUser) {
 			throw new ResourceNotFoundException("Username already exists");
 		}
-
+		person.setPasswordUnencryted(person.getPassword());
 		person.setPassword(encoder.encode(person.getPassword()));
+		
 		return persons.save(person);
 	}
 
@@ -86,9 +87,9 @@ public class PersonController {
 			return ResponseEntity.ok(person.get());
 		}
 	}
-
+	
 	@GetMapping("/loginNRIC/{nric}")
-	public ResponseEntity<Person> loginNRIC(@PathVariable String nric) {
+	public ResponseEntity<Map<String, Object>> loginNRIC(@PathVariable String nric) {
 		Optional<Person> person = persons.findByNric(nric);
 		if (!person.isPresent()) {
 			throw new ResourceNotFoundException("Not Found! Contact Admin");
@@ -97,7 +98,10 @@ public class PersonController {
 			if (hasPerson.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT_UNVERIFIED")) {
 				throw new PatientNotVerifiedException("Patient not verified");
 			}
-			return ResponseEntity.ok(person.get());
+			Map<String, Object> response = new HashMap<>();
+			response.put("person", hasPerson);
+			response.put("password", hasPerson.getPasswordUnencryted(nric));
+			return ResponseEntity.ok(response);
 		}
 	}
 
@@ -113,6 +117,7 @@ public class PersonController {
 			throw new ResourceNotFoundException("Username already exists");
 		}
 
+		person.setPasswordUnencryted(person.getPassword());
 		person.setPassword(encoder.encode(person.getPassword()));
 		return persons.save(person);
 	}

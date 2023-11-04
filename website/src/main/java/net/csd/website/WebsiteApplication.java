@@ -33,13 +33,13 @@ public class WebsiteApplication {
         System.out.println("[Add user]: " + users.save(
             new Person("myuser", "mypass", 
             "eml@my.eml",  LocalDate.of(1992,Month.APRIL,1), net.csd.website.model.Person.Condition.NONE, "admin", 
-            encoder.encode("goodpass"), "T0012112F", Authority.ROLE_ADMIN
+            encoder.encode("goodpass"), "goodpass","T0012112F", Authority.ROLE_ADMIN
             )).getUsername()
         );
         System.out.println("[Add user]: " + users.save(
             new Person("user2", "mypass", 
             "eml@my.eml", LocalDate.of(1992,Month.APRIL,1), net.csd.website.model.Person.Condition.SEVERE, "user2", 
-            encoder.encode("goodpass"), "T2012112F", Authority.ROLE_PATIENT)).getUsername()
+            encoder.encode("goodpass"),"goodpass", "T2012112F", Authority.ROLE_PATIENT)).getUsername()
         );
 
         /* create 3 Room for 2 months
