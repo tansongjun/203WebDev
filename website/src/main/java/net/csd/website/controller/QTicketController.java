@@ -96,7 +96,7 @@ public class QTicketController {
         DateTimeSlot resultDateTimeSlot = null;
         if (result != null) {
             resultDateTimeSlot = result.getDatetimeSlot();
-            if (!resultDateTimeSlot.getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+            if (resultDateTimeSlot !=null && !resultDateTimeSlot.getStartDateTime().toLocalDate().equals(LocalDate.now())) {
                 result = null;
                 resultDateTimeSlot = null;
             }
