@@ -44,6 +44,7 @@ import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.DateTimeSlot;
 import net.csd.website.model.Person;
 import net.csd.website.model.QTicket;
+import net.csd.website.model.QTicket.QStatus;
 import net.csd.website.model.Room;
 import net.csd.website.model.WaitingQticket;
 import net.csd.website.model.Person.Condition;
@@ -286,6 +287,36 @@ public class QueueServiceTest {
 
         // Assert
         assertNull(result, "The method should return null when the list is empty");
+    }
+
+    @Test
+    void whenNoTicketsInWaiting_nothingHappens() {
+        // Arrange
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(Collections.emptyList());
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketRepository, never()).save(any(QTicket.class));
+    }
+
+    @Test
+    void whenTicketsInWaitingWithFutureDateTimeSlot_remainWaiting() {
+        // Arrange
+        QTicket qTicketWaiting = mock(QTicket.class);
+        DateTimeSlot futureDateTimeSlot = mock(DateTimeSlot.class);
+
+        when(futureDateTimeSlot.getStartDateTime()).thenReturn(LocalDateTime.now().plusHours(1));
+        when(qTicketWaiting.getDatetimeSlot()).thenReturn(futureDateTimeSlot);
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(Arrays.asList(qTicketWaiting));
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketWaiting, never()).setQStatus(QStatus.IN_PROGRESS);
+        verify(qTicketRepository, never()).save(qTicketWaiting);
     }
 }
 
