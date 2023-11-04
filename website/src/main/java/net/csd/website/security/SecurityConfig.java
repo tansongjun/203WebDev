@@ -87,6 +87,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http
                 .cors(cors -> cors.disable()) // allow or restrict web browsers from making requests
+                .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser-based attacks
                 .formLogin(fg -> fg.disable())
                 .authenticationProvider(authenticationProvider()) // specifies HttpSecurity authentication provider
 

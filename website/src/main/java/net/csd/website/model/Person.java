@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +55,11 @@ public class Person implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "nric", unique = true)
+    @Size(min = 9, max = 9, message = "NRIC should be 9 characters")
+    @NotNull(message = "NRIC should not be null")
+    private String nric;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -90,13 +96,14 @@ public class Person implements UserDetails {
     private List<QTicket> queueticket;
 
     public Person(String firstName, String lastName, String emailId,
-            LocalDate birthDate, Condition condition, String username, String password,
+            LocalDate birthDate, Condition condition, String username, String password, String nric,
             Authority authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.birthDate = birthDate;
         this.condition = condition;
+        this.nric = nric;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -104,13 +111,14 @@ public class Person implements UserDetails {
 
     // for user registration
     public Person(String firstName, String lastName, String emailId,
-            LocalDate birthDate, Condition condition, String username, String password
+            LocalDate birthDate, Condition condition, String username, String password, String nric
             ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.birthDate = birthDate;
         this.condition = condition;
+        this.nric = nric;
         this.username = username;
         this.password = password;
         this.authorities = Authority.ROLE_PATIENT;
