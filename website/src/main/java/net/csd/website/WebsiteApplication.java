@@ -3,7 +3,6 @@ package net.csd.website;
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.apache.catalina.valves.rewrite.RewriteCond.Condition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
