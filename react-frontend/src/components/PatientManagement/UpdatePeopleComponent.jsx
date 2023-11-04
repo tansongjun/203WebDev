@@ -12,6 +12,7 @@ function UpdatePeopleComponent() {
         emailId: '',
         birthDate: '',
         condition: '',
+        nric: '',
         username: '',
         password: '',
         authorities: ''
@@ -32,6 +33,7 @@ function UpdatePeopleComponent() {
                 emailId: data.emailId,
                 birthDate: data.birthDate,
                 condition: data.condition,
+                nric: data.nric,
             });
         });
     }, [id]);
@@ -44,6 +46,7 @@ function UpdatePeopleComponent() {
             emailId: state.emailId,
             age: state.age,
             condition: state.condition,
+            nric: state.nric,
             username: 'Somefield',
             password: 'SomeField',
             authorities: 'ROLE_PATIENT'
