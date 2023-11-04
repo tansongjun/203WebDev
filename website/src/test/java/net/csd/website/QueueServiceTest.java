@@ -347,7 +347,37 @@ public class QueueServiceTest {
         verify(qTicketRepository, never()).save(qTicketWaiting);
     }
 
+    @Test
+    void handlePatientInProgress_ShouldUpdateStatusToAwaitingPaymentAndSetAmountDue() {
+        // Arrange
+        QTicket inProgressTicket = new QTicket();
+        inProgressTicket.setQStatus(QStatus.IN_PROGRESS);
+        DateTimeSlot pastDateTimeSlot = new DateTimeSlot();
+        pastDateTimeSlot.setEndDateTime(LocalDateTime.now().minusHours(1)); // assuming a past end date
+        inProgressTicket.setDatetimeSlot(pastDateTimeSlot);
 
+        Person person = new Person();
+        person.setUsername("JohnDoe");
+        inProgressTicket.setPerson(person);
+
+        List<QTicket> inProgressTickets = Collections.singletonList(inProgressTicket);
+
+        when(qTicketRepository.findByQStatus(QStatus.IN_PROGRESS)).thenReturn(inProgressTickets);
+
+        // Act
+        queueService.handlePatientInProgress();
+
+        // Assert
+        // Verify that save was called on the repository
+        verify(qTicketRepository, times(1)).save(inProgressTicket);
+
+        // Assert the QStatus was changed
+        assertEquals(QStatus.AWAITINGPAYMENT, inProgressTicket.getQStatus());
+
+        // Since the amount is random, you can't assert a specific value, but you can assert it's within a range
+        assertTrue(inProgressTicket.getAmountDue() >= 0 && inProgressTicket.getAmountDue() <= 100);
+
+    }
 }
 
 
