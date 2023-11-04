@@ -240,6 +240,25 @@ public class QueueServiceTest {
         assertNull(ticket.getDatetimeSlot(), "A new QTicket should be created without exception");
     }
 
+    @Test
+    void whenQueryAllAvailableTimeSlot_thenSuccess() {
+        // Arrange
+        LocalDate date = LocalDate.now();
+        List<DateTimeSlot> expectedSlots = new ArrayList<>(); // Populate with expected DateTimeSlot objects
+
+        when(dateTimeSlotRepository.findAll()).thenReturn(expectedSlots);
+
+        // Act
+        List<DateTimeSlot> resultSlots = queueService.queryAllAvailableTimeSlot(date);
+
+        // Assert
+        verify(dateTimeSlotRepository).findAll(); // Verify repository was called
+        assertNotNull(resultSlots); // Check that the result is not null
+        assertEquals(expectedSlots, resultSlots); // Check that the returned list is what was expected
+    }
+
+
+
     // @Test
     // public void whenGetNewQueueTicket2_thenCreateTicketSuccessfully() {
     //     // Arrange
