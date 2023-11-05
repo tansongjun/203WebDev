@@ -7,7 +7,7 @@ function StaffHome() {
     <div>
       <h1>STAFF HOME</h1>
       <ListPeopleComponent />
-      <ApptDB></ApptDB>
+      {/* <ApptDB></ApptDB> */}
 
       <Link to="/">
         <button className="payment-button">Log out</button>
