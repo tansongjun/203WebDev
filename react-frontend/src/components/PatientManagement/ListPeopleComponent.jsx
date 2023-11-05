@@ -28,7 +28,7 @@ const ListPeopleComponentInner = () => {
 
     const verifyPeople = (id) => {
         // Send a POST request to the verification endpoint
-        axios.post(`${LOGIN_URL}admin/person/verify/${id}`, null, {
+        axios.post(`${LOGIN_URL}/admin/person/verify/${id}`, null, {
             auth: {
                 username: auth.user,
                 password: auth.pwd,

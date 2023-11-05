@@ -188,7 +188,7 @@ function RegisterComponent({ handleNavigation, userType }) {
                 <label htmlFor="password">Password:</label>
                 <br />
                 <input
-                  type="text"
+                  type="password"
                   id="password"
                   ref={userRef}
                   autoComplete="off"
