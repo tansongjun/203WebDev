@@ -81,6 +81,15 @@ function WalkInHome() {
           Payment
         </button>
       </Link>
+      <br></br>
+
+      <Link to="/">
+        <button className="payment-button">
+          Log out
+        </button>
+      </Link>
+      <br></br>
+
     </div>
   );
 }

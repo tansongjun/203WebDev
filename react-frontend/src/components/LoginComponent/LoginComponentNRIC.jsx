@@ -54,7 +54,7 @@ function LoginComponentNRIC({ handleNavigation, userType }) {
         console.log(authi);
         console.log(response.data);
 
-        alert('Login successful!');
+        // alert('Login successful!');
         // setUser(user);
         // setPwd(pwd);
         window.location.replace('/walkinHome')
@@ -117,7 +117,7 @@ function LoginComponentNRIC({ handleNavigation, userType }) {
                 />
                 <br /><br /><br />
 
-                <button className="cetn_btn">Enter</button><br /><br />
+                <button style={{ border: '2px solid #000' }} className="cetn_btn">Enter</button><br /><br />
                 <p className="cetn_sgn">
                   {/* <span className="line">
                     {/* {navigate('/registration')} 

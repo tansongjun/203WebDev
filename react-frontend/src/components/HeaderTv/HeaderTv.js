@@ -74,8 +74,9 @@ function HeaderTv() {
   return (
     <div >
       <p>Waiting No: {waitingData.processedWaitingNo}</p>
-      <p>If your waiting number is showed or passed, 
-        please proceed to kiosk to retrieve your latest Queue number and Room</p> 
+      <p>
+      If your number has been shown or skipped, 
+      please proceed to the kiosk for your new queue number and room assignment.</p> 
       {/* <p>Current Waiting No: {waitingData.currentWaitingNo}</p> */}
       <p>Number of people waiting: {waitingData.waitingListSize}</p>
     </div>

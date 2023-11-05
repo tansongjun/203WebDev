@@ -175,7 +175,8 @@ function LoginComponent({handleNavigation, userType}) {
                   // placeholder='enter password'
                   required
                 /><br /><br /><br />
-                <button className="cetn_btn">Sign In</button><br /><br />
+                <button style={{ border: '2px solid #000' }} 
+                className="cetn_btn">Sign In</button><br /><br />
                 <p className="cetn_sgn">
                   <span className="line">
                     {/* {navigate('/registration')} */}

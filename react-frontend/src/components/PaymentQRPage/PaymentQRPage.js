@@ -6,8 +6,13 @@ import axios from "axios";
 
 function PaymentQRPage() {
   const location = useLocation();
+  const { query } = location.state;
   console.log("Data received in PaymentQRPage:", location.state);
-  const [url, setUrl] = React.useState("https://sgqrcode.com/paynow?mobile=&uen=198702955E43F&editable=1&amount="+ location.state.selectedBill.amountDue+"&expiry=2024%2F02%2F01%2018%3A27&ref_id=NA&company=HealthSing");
+  const [url, setUrl] = React.useState(
+    "https://sgqrcode.com/paynow?mobile=&uen=198702955E43F&editable=1&amount=" +
+      location.state.selectedBill.amountDue +
+      "&expiry=2024%2F02%2F01%2018%3A27&ref_id=NA&company=HealthSing"
+  );
 
   // Function to send the PUT request when "Paid" button is clicked
   const confirmPayment = () => {
@@ -29,22 +34,22 @@ function PaymentQRPage() {
       .put(apiUrl, data, {
         auth: auth,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
         if (response.status === 200) {
           // Payment confirmation was successful
-          alert('Payment confirmed successfully');
+          alert("Payment confirmed successfully");
         } else {
           // Handle other response statuses as needed
-          alert('Failed to confirm payment');
+          alert("Failed to confirm payment");
         }
       })
       .catch((error) => {
         // Handle the error and display an error message
-        console.error('An error occurred while confirming payment:', error);
-        alert('Error confirming payment');
+        console.error("An error occurred while confirming payment:", error);
+        alert("Error confirming payment");
       });
   };
 
@@ -64,7 +69,7 @@ function PaymentQRPage() {
       <button className="paid-button" onClick={confirmPayment}>
         Paid
       </button>
-      <Link to="/walkinHome/payment">
+      <Link to="/walkinHome/payment" state={{ query }}>
         <button className="queue-button">Back</button>
       </Link>
     </div>

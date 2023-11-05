@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import image from "./payment.jpg";
 import axios from "axios";
 
 function Payment() {
@@ -99,6 +98,7 @@ function Payment() {
     navigate("/walkinHome/payment/paymentQR", {
       state: {
         selectedBill: selectedBill,
+        query: query
       },
     });
   };

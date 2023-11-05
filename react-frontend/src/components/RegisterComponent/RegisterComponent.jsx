@@ -227,7 +227,8 @@ function RegisterComponent({ handleNavigation, userType }) {
                 <br />
                 <br />
                 <br />
-                <button className="cetn_btn">Sign Up</button>
+                <button style={{ border: '2px solid #000' }}
+                 className="cetn_btn">Sign Up</button>
                 <br />
                 <br />
               </form>

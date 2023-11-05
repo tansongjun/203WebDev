@@ -15,8 +15,13 @@ function OnlineWebsite() {
       </Link>
 
       <br></br>
-      <Link to={{pathname: `/walkinHome/payment`}} state={{ query:backURL }}>
+      <Link to={{pathname: `/walkinHome/payment`}}  state={{ query:backURL }}>
         <button className="payment-button">Payment</button>
+      </Link>
+
+      <br></br>
+      <Link to="/">
+        <button className="payment-button">Log out</button>
       </Link>
     </div>
   );

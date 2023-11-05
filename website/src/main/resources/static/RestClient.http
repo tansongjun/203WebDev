@@ -138,10 +138,9 @@ Authorization: Basic admin goodpass
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
 ### POST http://localhost:8080/api/v1/patients/{id}/getnewQ
-POST {{url}}/patients/2/getnewQ
+POST {{url}}/patients/3/getnewQ
 Authorization: Basic admin goodpass
 Content-Type: application/json
-
 {
 
 }
