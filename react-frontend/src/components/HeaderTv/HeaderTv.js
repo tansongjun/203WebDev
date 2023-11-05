@@ -14,7 +14,7 @@ function HeaderTv() {
   });
 
   const fetchWaitingQStatus = (date) => {
-    console.log("intial:", date);
+    // console.log("intial:", date);
     // console.log("date instanceof Date" + date instanceof Date);
     const querydate = new Date(date).toLocaleDateString("en-CA");
     axios({
@@ -30,7 +30,7 @@ function HeaderTv() {
       //GET http://localhost:8080/api/v1/patient/2/getAwaitingPayment
       .then((response) => {
         if (response.status === 200) {
-          console.log("Fetched JSON: ", response.data);
+          // console.log("Fetched JSON: ", response.data);
           //   console.log("Amount due: ", response.data[0].amountDue);
           const { processedWaitingNo, currentWaitingNo, waitingListSize } =
             response.data;

@@ -64,7 +64,7 @@ const ListPeopleComponentInner = () => {
 
     return (
         <div>
-            <h2 className="text-center">Patient List</h2>
+            <h2 className="text-center">User List</h2>
             <div className="row">
                 <button className="btn btn-primary" onClick={addPeople} style={{ marginTop: "50px", marginLeft: "75px" }}>Add Patient</button>
             </div>
@@ -72,9 +72,10 @@ const ListPeopleComponentInner = () => {
                 <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
                     <thead>
                         <tr>
-                            <th style={{ width: "20%" }}>Patient First Name</th>
-                            <th style={{ width: "20%" }}>Patient Last Name</th>
-                            <th style={{ width: "25%" }}>Patient Email id</th>
+                            <th style={{ width: "20%" }}>Person First Name</th>
+                            <th style={{ width: "20%" }}>Person Last Name</th>
+                            <th style={{ width: "25%" }}>Person Email id</th>
+                            <th style={{ width: "25%" }}>Person role</th>
                             <th style={{ width: "25%" }}>Actions</th>
                         </tr>
                     </thead>
@@ -86,12 +87,14 @@ const ListPeopleComponentInner = () => {
                                         <td>{people.firstName}</td>
                                         <td>{people.lastName}</td>
                                         <td>{people.emailId}</td>
+                                        <td>{people.authorities[0].authority}</td>
                                         <td>
                                             <button onClick={() => editPeople(people.id)} className="btn btn-info">Update </button>
                                             <button style={{ marginLeft: "10px" }} onClick={() => deletePeople(people.id)} className="btn btn-danger">Delete </button>
                                             <button style={{ marginLeft: "10px" }} onClick={() => viewPeople(people.id)} className="btn btn-info">View </button>
-                                            <button style={{ marginLeft: "10px" }} onClick={() => verifyPeople(people.id)} className="btn btn-verify">Verify </button>
-
+                                            {people.authorities[0].authority == "ROLE_PATIENT_UNVERIFIED" && 
+                                                <button style={{ marginLeft: "10px" }} onClick={() => verifyPeople(people.id)} className="btn btn-verify">Verify </button>
+                                            }
                                         </td>
                                     </tr>
                             )
