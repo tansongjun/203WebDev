@@ -11,9 +11,9 @@ function HomePage() {
       navigate(1); 
     };
 
-    const handleAppointmentButtonClick = () => {
-      navigate(1);
-    };
+    // const handleAppointmentButtonClick = () => {
+    //   navigate(1);
+    // };
 
     return (
         <div>
@@ -30,9 +30,9 @@ function HomePage() {
                 </button>
             </Link>
             <br/>
-            <Link to="/appointmentLogin">
-                <button className="appointment-button" onClick={handleAppointmentButtonClick}>
-                  Remote Appointment Making
+            <Link to="/OnlineWebsiteLogin">
+                <button className="appointment-button" >
+                Online Website
                 </button>
             </Link>
         </div>

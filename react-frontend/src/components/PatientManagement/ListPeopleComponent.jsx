@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import PeopleService from '../../services/PeopleService';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 const ListPeopleComponentInner = () => {
     const navigate = useNavigate();
 
@@ -23,6 +23,23 @@ const ListPeopleComponentInner = () => {
 
     const viewPeople = (id) => {
         navigate(`/view-patient/${id}`);
+    }
+
+    const verifyPeople = (id) => {
+        // Send a POST request to the verification endpoint
+        axios.post(`http://localhost:8080/api/v1/admin/person/verify/${id}`, null, {
+            auth: {
+                username: auth.user,
+                password: auth.pwd,
+            },
+        }).then(res => {
+            if (res.status === 200) {
+                alert('Patient verified successfully.');
+                window.location.reload();
+            }
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     const editPeople = (id) => {
@@ -73,6 +90,8 @@ const ListPeopleComponentInner = () => {
                                             <button onClick={() => editPeople(people.id)} className="btn btn-info">Update </button>
                                             <button style={{ marginLeft: "10px" }} onClick={() => deletePeople(people.id)} className="btn btn-danger">Delete </button>
                                             <button style={{ marginLeft: "10px" }} onClick={() => viewPeople(people.id)} className="btn btn-info">View </button>
+                                            <button style={{ marginLeft: "10px" }} onClick={() => verifyPeople(people.id)} className="btn btn-verify">Verify </button>
+
                                         </td>
                                     </tr>
                             )

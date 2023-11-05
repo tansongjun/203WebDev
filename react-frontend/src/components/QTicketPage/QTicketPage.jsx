@@ -30,7 +30,7 @@ function QTicketPage() {
         response.data.dateTimeSlot &&
         response.data.dateTimeSlot.qticket
       ) {
-        setQueueNumber(response.data.dateTimeSlot.qticket.ticketno);
+        setQueueNumber(response.data.dateTimeSlot.id);
       }
 
       console.log("Queue Number:", response.data);

@@ -65,7 +65,13 @@ function Payment() {
       .then((response) => {
         if (response.status === 200) {
           console.log("returned data: ", response.data);
+          console.log("Amount due: ", response.data[0].amountDue);
+
+          // if (response.data) {
+            // parseFloat(response.data[0].amountDue).toFixed(2)
+          // }
           setBillings(response.data);
+          // setBillings(parseFloat(response.data[0].amountDue).toFixed(2));
         } else if (response.status === 404) {
         }
       })
@@ -74,7 +80,7 @@ function Payment() {
         setBillings([]);
 
         console.error("An error occurred while fetching billings:", error);
-        alert(error.response.data.message);
+        // alert(error.response.data.message);
       });
   };
 
@@ -83,6 +89,7 @@ function Payment() {
   useEffect(() => {
     fetchBills();
   });
+
   const navigate = useNavigate();
   const sendBill = (selectedBill) => {
     navigate("/walkinHome/payment/paymentQR", {
@@ -105,7 +112,7 @@ function Payment() {
                 Date: {bill.date}, Description: {bill.description},
                 <strong>Amount ($): {bill.amountDue}</strong>
               </h2>
-
+              
               <Link
                 to={{
                   pathname: "/walkinHome/payment/paymentQR",
