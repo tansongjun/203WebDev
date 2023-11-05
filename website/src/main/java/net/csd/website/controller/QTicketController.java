@@ -215,6 +215,15 @@ public class QTicketController {
             throw new InvalidRequestException("Invalid date. Please provide a date after the next 3 days from today.");
         }
 
+        // Check if there is qTicket with the same date
+        List<QTicket> qTickets = qTicketRepository.findByPerson(patient);
+        for (QTicket qTicket : qTickets) {
+            if (qTicket.getDatetimeSlot() != null
+                    && qTicket.getDatetimeSlot().getStartDateTime().toLocalDate().equals(dateTimeSlot.getStartDateTime().toLocalDate())) {
+                throw new InvalidRequestException("You already have an appointment on " + dateTimeSlot.getStartDateTime().toLocalDate() + ".");
+            }
+        }
+
         // Create a new QTicket and set the patient and DateTimeSlot
         QTicket qTicket = new QTicket();
         qTicket.setPerson(patient);

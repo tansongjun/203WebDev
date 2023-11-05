@@ -93,6 +93,7 @@ function AppointmentHome() {
           console.log(`Appointment booked for: ${formattedTime}`);
           // You can display a success message to the user
           alert(`Appointment booked for: ${formattedTime}`);
+          window.location.href = backURL;
         } else {
           // Handle other response statuses as needed
           console.error('Failed to book appointment.');
@@ -101,7 +102,7 @@ function AppointmentHome() {
       .catch((error) => {
         console.error('An error occurred while booking the appointment:', error);
         // You can display an error message to the user
-        alert('An error occurred while booking the appointment.');
+        alert(error.response.data.message);
       });
       // console.log(`Appointment booked for: ${formattedTime}`);
     } else {
