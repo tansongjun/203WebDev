@@ -116,4 +116,18 @@ public class RoomServiceTest {
     // Assert
     verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
     }
+
+    @Test
+    public void testCreateRoom_ThrowsExceptionOnNullRoomInput() {
+        // Arrange
+        LocalDate currentDate = LocalDate.now();
+
+        // Act & Assert
+        try {
+            roomService.createRoom(null, currentDate);
+            fail("Creating a room with null should throw an exception.");
+        } catch (NullPointerException e) {
+            // Expected exception
+        }
+    }
 }
