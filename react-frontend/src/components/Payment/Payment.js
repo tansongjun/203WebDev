@@ -4,6 +4,8 @@ import axios from "axios";
 
 function Payment() {
   const location = useLocation();
+  const LOGIN_URL = localStorage.getItem('url');
+
   const { query } = location.state
   const [backURL, setBackUrl] = useState("/");
   const [auth, setAuth] = useState({

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function PaymentQRPage() {
+  const LOGIN_URL = localStorage.getItem('url');
   const location = useLocation();
   const { query } = location.state;
   console.log("Data received in PaymentQRPage:", location.state);
