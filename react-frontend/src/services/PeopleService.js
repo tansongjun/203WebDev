@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 
 function PeopleService() {
-    const PEOPLE_API_BASE_URL = "http://localhost:8080/api/v1/people";
+    const LOGIN_URL = localStorage.getItem('url') + "/people";
+    const PEOPLE_API_BASE_URL = LOGIN_URL;
 
     const getPeople = (auth) => {
         console.log(auth.user, auth.pwd);

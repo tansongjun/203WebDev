@@ -7,6 +7,8 @@ function Registration() {
     const [selectedButton2, setSelectedButton2] = useState(null);
     const [selectedButton3, setSelectedButton3] = useState(null);
     const navigate = useNavigate();
+    const LOGIN_URL = localStorage.getItem('url');
+
     const [auth, setAuth] = useState({
         user: sessionStorage.getItem("user"),
         pwd: sessionStorage.getItem("pwd"),

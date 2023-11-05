@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const ListPeopleComponentInner = () => {
     const navigate = useNavigate();
+    const LOGIN_URL = localStorage.getItem('url');
 
     const [people, setPeople] = React.useState([]);
     const [auth, setAuth] = React.useState({
@@ -27,7 +28,7 @@ const ListPeopleComponentInner = () => {
 
     const verifyPeople = (id) => {
         // Send a POST request to the verification endpoint
-        axios.post(`http://localhost:8080/api/v1/admin/person/verify/${id}`, null, {
+        axios.post(`${LOGIN_URL}admin/person/verify/${id}`, null, {
             auth: {
                 username: auth.user,
                 password: auth.pwd,
@@ -83,6 +84,7 @@ const ListPeopleComponentInner = () => {
                         {
                             people.map(
                                 people =>
+                                    people.authorities[0].authority !== "ROLE_ADMIN" &&
                                     <tr key={people.id}>
                                         <td>{people.firstName}</td>
                                         <td>{people.lastName}</td>

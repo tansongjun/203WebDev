@@ -5,7 +5,7 @@ import "./LoginComponent.css";
 import axios from 'axios';
 
 function LoginComponent({handleNavigation, userType}) {
-  const LOGIN_URL = 'http://localhost:8080/api/v1';
+  const LOGIN_URL = localStorage.getItem('url');
   // user reference set focus for user
   const userRef = useRef();
   const errRef = useRef();

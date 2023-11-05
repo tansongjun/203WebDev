@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function WalkInHome() {
   const backURL = "/walkinHome";
+    const LOGIN_URL = localStorage.getItem('url');
+
   const [randomNumber, setRandomNumber] = useState(null);
   const [generatedNumbers, setGeneratedNumbers] = useState([]);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -14,7 +16,7 @@ function WalkInHome() {
   });
   const [errorMessages, setErrorMessages] = useState('');
 
-  const LOGIN_URL = 'http://localhost:8080/api/v1';
+  // const LOGIN_URL = 'http://localhost:8080/api/v1';
 
   const navigate = useNavigate();
   const handleAppointmentButtonClick = () => {

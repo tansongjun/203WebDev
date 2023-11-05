@@ -11,6 +11,7 @@ function QTicketPage() {
   const [queueNumber, setQueueNumber] = useState(null);
   const [roomNo, setRoomNo] = useState(0);
   const [isWaiting, setIsWaiting] = useState(false);
+  const LOGIN_URL = localStorage.getItem('url');
 
   const getQueueNumber = async () => {
     try {

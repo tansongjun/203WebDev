@@ -8,6 +8,7 @@ function RegisterComponent({ handleNavigation, userType }) {
   const userRef = useRef();
   const errRef = useRef();
   const navigate = useNavigate();
+  const LOGIN_URL = localStorage.getItem('url');
 
   // state: render username input
   const [user, setUser] = useState("");
