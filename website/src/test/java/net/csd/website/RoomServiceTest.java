@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -197,5 +198,26 @@ public class RoomServiceTest {
 
         // Assert
         assertEquals(creationDate, savedRoom.getCreationDate(), "Creation date should be set correctly in the saved room");
+    }
+
+    @Test
+    public void testCreateTimeSlotsForRoom_CheckSlotDuration() {
+        // Arrange
+        Room room = new Room();
+        room.setRoomNumber(101);
+        LocalDate creationDate = LocalDate.now();
+
+        when(roomRepository.save(any(Room.class))).thenReturn(room);
+
+        // Act
+        roomService.createRoom(room, creationDate);
+
+        // Assert
+        ArgumentCaptor<DateTimeSlot> slotCaptor = ArgumentCaptor.forClass(DateTimeSlot.class);
+        verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(slotCaptor.capture());
+        for (DateTimeSlot capturedSlot : slotCaptor.getAllValues()) {
+            Duration slotDuration = Duration.between(capturedSlot.getStartDateTime(), capturedSlot.getEndDateTime());
+            assertEquals(Duration.ofMinutes(20), slotDuration, "Each time slot should be exactly 20 minutes long");
+        }
     }
 }
