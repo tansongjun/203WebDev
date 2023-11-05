@@ -258,9 +258,10 @@ public class QueueService {
             if (dateTimeSlot != null && dateTimeSlot.getEndDateTime().isBefore(LocalDateTime.now())) {
                 qTicket.setQStatus(QStatus.AWAITINGPAYMENT);
 
-                // generate random amount due
-                double amountDue = new Random().nextDouble() * 100;
-                qTicket.setAmountDue(amountDue);
+                // generate random amount round to 2 decimal places
+                double amountDue = new Random().nextDouble() *100 ;
+                
+                qTicket.setAmountDue(Math.floor(amountDue * 100) / 100.0);
                 qTicketRepository.save(qTicket);
                 System.out.println("Patient " + qTicket.getPerson().getUsername() + " is now awaiting payment");
             }
