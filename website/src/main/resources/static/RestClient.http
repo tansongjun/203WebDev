@@ -19,7 +19,7 @@ Authorization: Basic admin goodpass
 DELETE {{url}}/people/3
 Authorization: Basic admin goodpass
 
-### Add people (admin only)
+### Add people (admin only)a
 ### POST http://localhost:8080/api/v1/people
 POST {{url}}/people
 Content-Type: application/json

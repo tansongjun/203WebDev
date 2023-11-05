@@ -17,8 +17,13 @@ function App() {
                     {/* <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
                     <HeaderTv/> */}
                     <div className="header-container">
-                        <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
-                        <HeaderTv />
+                        
+                        
+                        <h1 style={{flex: 5 }} ><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                        <div style={{flex: 1 }} >
+                            <HeaderTv />
+                        </div>
+                        
                     </div>
                 </div>
 

@@ -72,10 +72,12 @@ function HeaderTv() {
   }, []);
 
   return (
-    <div>
-      <p>Processed Waiting No: {waitingData.processedWaitingNo}</p>
-      <p>Current Waiting No: {waitingData.currentWaitingNo}</p>
-      <p>Waiting List Size: {waitingData.waitingListSize}</p>
+    <div >
+      <p>Waiting No: {waitingData.processedWaitingNo}</p>
+      <p>If your waiting number is showed or passed, 
+        please proceed to kiosk to retrieve your latest Queue number and Room</p> 
+      {/* <p>Current Waiting No: {waitingData.currentWaitingNo}</p> */}
+      <p>Number of people waiting: {waitingData.waitingListSize}</p>
     </div>
   );
 }
