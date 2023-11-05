@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PeopleService from '../../services/PeopleService';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 function ViewPeopleComponent() {
     const { id } = useParams();
@@ -29,7 +29,7 @@ function ViewPeopleComponent() {
         //     }
         //   }
     ]);
-    const [pastAppts, setPastappts] = useState([]);
+    const [todayAppts, setTodayAppts] = useState();
 
     const [people, setPeople] = useState({
         firstName: '',
@@ -48,7 +48,7 @@ function ViewPeopleComponent() {
 
     useEffect(() => {
         const futureAppts = () => {
-            fetch( LOGIN_URL+ '/patients/'+id+'/getFutureappt', {
+            fetch(LOGIN_URL + `/patients/${id}/getFutureappt`, {
                 method: 'GET',
                 headers: {
                     authorization: 'Basic ' + btoa(auth.user + ':' + auth.pwd)
@@ -61,9 +61,9 @@ function ViewPeopleComponent() {
                 })
                 .catch(console.log);
         }
-        
-        const pastAppts = () => {
-            fetch(LOGIN_URL+ 'patients/{id}/getPastappt', {
+
+        const gettodaytic = () => {
+            fetch(LOGIN_URL + `/patients/${id}/getQtoday`, {
                 method: 'GET',
                 headers: {
                     authorization: 'Basic ' + btoa(auth.user + ':' + auth.pwd)
@@ -72,12 +72,12 @@ function ViewPeopleComponent() {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
-                    // setPastappts(data);
+                    setTodayAppts(data);
                 })
                 .catch(console.log);
         }
 
-        
+
 
         PeopleService.getPeopleById(id, auth).then(res => {
             // console.log(res.data)
@@ -85,6 +85,7 @@ function ViewPeopleComponent() {
             data.authorities = data.authorities[0].authority;
             setPeople(data);
             futureAppts();
+            gettodaytic();
         });
 
     }, [id]);
@@ -97,102 +98,129 @@ function ViewPeopleComponent() {
                 <h3 className="text-center"> Patient Details</h3>
                 <div className="card-body">
                     <div className="row">
-                        <label> Patient First Name: </label>
+                        <label>NRIC: </label>
+                        <div> {people.nric}</div>
+                    </div>
+                    <div className="row">
+                        <label>First Name: </label>
                         <div> {people.firstName}</div>
                     </div>
                     <div className="row">
-                        <label> Patient Last Name: </label>
+                        <label>Last Name: </label>
                         <div> {people.lastName}</div>
                     </div>
                     <div className="row">
-                        <label> Patient Email ID: </label>
+                        <label>Email: </label>
                         <div> {people.emailId}</div>
                     </div>
                     <div className="row">
-                        <label> Patient Age: </label>
+                        <label>Age: </label>
                         <div> {people.age}</div>
                     </div>
                     <div className="row">
-                        <label> Patient Condition: </label>
+                        <label>Condition: </label>
                         <div> {people.condition}</div>
                     </div>
                     <div className="row">
-                        <label> Username: </label>
+                        <label>Risk Level: </label>
+                        <div> {people.riskLevel}</div>
+                    </div>
+                    <div className="row">
+                        <label>Username: </label>
                         <div> {people.username}</div>
                     </div>
                     <div className="row">
-                        <label> Authorities: </label>
+                        <label>Authorities: </label>
                         <div> {people.authorities}</div>
                     </div>
-                    <br />
-                    <h3 className="text-center">Upcoming Appointments</h3>
-                    
+                    {
+                        todayAppts && todayAppts.dateTimeSlot == null && todayAppts.qTicket != null ?
+                        <div>
+                            <br />
+                            <h3 className="text-center">Today's Appointment</h3>
+                            <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: "20%" }}>Waiting number</th>
+                                        <th style={{ width: "25%" }}>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{todayAppts.qTicket.waitingNo}</td>
+                                        <td>{todayAppts.qTicket.qstatus}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        : todayAppts && todayAppts.dateTimeSlot != null ?
+                        <div>
+                            <br />
+                            <h3 className="text-center">Today's Appointment</h3>
+                            <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: "20%" }}>Start time</th>
+                                        <th style={{ width: "25%" }}>End time</th>
+                                        <th style={{ width: "25%" }}>Room Number</th>
+                                        <th style={{ width: "25%" }}>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{todayAppts.dateTimeSlot.startDateTime.substring(11)}</td>
+                                        <td>{todayAppts.dateTimeSlot.endDateTime.substring(11)}</td>
+                                        <td>{todayAppts.dateTimeSlot.room.roomNumber}</td>
 
-                    <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
-                        <thead>
-                            <tr>
-                                <th style={{ width: "20%" }}>Date</th>
-                                <th style={{ width: "20%" }}>Start time</th>
-                                <th style={{ width: "25%" }}>End time</th>
-                                <th style={{ width: "25%" }}>Room Number</th>
-                                <th style={{ width: "25%" }}>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                futureAppts.map(
-                                    appt =>
-                                        <tr key={appt.qTicket.ticketno}>
-                                            <td>{appt.dateTimeSlot.startDateTime.substring(0, 10)}</td>
-                                            <td>{appt.dateTimeSlot.startDateTime.substring(11)}</td>
-                                            <td>{appt.dateTimeSlot.endDateTime.substring(11)}</td>
-                                            <td>{appt.dateTimeSlot.room.roomNumber}</td>
-                                            
-                                            <td>
-                                                {appt.qTicket.qstatus}
-                                            </td>
-                                        </tr>
-                                )
-                            }
-                        </tbody>
-                    </table>
+                                        <td>
+                                            {todayAppts.qTicket.qstatus}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        : null
+                    }
 
-                    {/* 
-                    <br />
-                    <h4 className="text-center"> Past Appointments</h4>
-                    <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
-                        <thead>
-                            <tr>
-                                <th style={{ width: "20%" }}>Person First Name</th>
-                                <th style={{ width: "20%" }}>Person Last Name</th>
-                                <th style={{ width: "25%" }}>Person Email id</th>
-                                <th style={{ width: "25%" }}>Person role</th>
-                                <th style={{ width: "25%" }}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                pastAppts.map(
-                                    people =>
-                                        <tr key={people.id}>
-                                            <td>{people.firstName}</td>
-                                            <td>{people.lastName}</td>
-                                            <td>{people.emailId}</td>
-                                            <td>{people.authorities[0].authority}</td>
-                                            <td>
-                                                <button onClick={() => editPeople(people.id)} className="btn btn-info">Update </button>
-                                                <button style={{ marginLeft: "10px" }} onClick={() => deletePeople(people.id)} className="btn btn-danger">Delete </button>
-                                                <button style={{ marginLeft: "10px" }} onClick={() => viewPeople(people.id)} className="btn btn-info">View </button>
-                                                {people.authorities[0].authority == "ROLE_PATIENT_UNVERIFIED" &&
-                                                    <button style={{ marginLeft: "10px" }} onClick={() => verifyPeople(people.id)} className="btn btn-verify">Verify </button>
-                                                }
-                                            </td>
-                                        </tr>
-                                )
-                            }
-                        </tbody>
-                    </table> */}
                 </div>
+            </div>
+
+
+            <br />
+            <h3 className="text-center">Upcoming Appointments</h3>
+            <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
+                <thead>
+                    <tr>
+                        <th style={{ width: "20%" }}>Date</th>
+                        <th style={{ width: "20%" }}>Start time</th>
+                        <th style={{ width: "25%" }}>End time</th>
+                        <th style={{ width: "25%" }}>Room Number</th>
+                        <th style={{ width: "25%" }}>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        futureAppts.map(
+                            appt =>
+                                <tr key={appt.qTicket.ticketno}>
+                                    <td>{appt.dateTimeSlot.startDateTime.substring(0, 10)}</td>
+                                    <td>{appt.dateTimeSlot.startDateTime.substring(11)}</td>
+                                    <td>{appt.dateTimeSlot.endDateTime.substring(11)}</td>
+                                    <td>{appt.dateTimeSlot.room.roomNumber}</td>
+
+                                    <td>
+                                        {appt.qTicket.qstatus}
+                                    </td>
+                                </tr>
+                        )
+                    }
+                </tbody>
+            </table>
+
+            <div >
+                <Link to="/StaffHome">
+                    <button className="payment-button">Back</button>
+                </Link>
             </div>
         </div>
     );

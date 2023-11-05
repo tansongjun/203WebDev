@@ -15,44 +15,43 @@ function Payment() {
   });
 
   const [billings, setBillings] = useState([
-    {
-      ticketno: 2,
-      amountDue: 75.83973365214874,
-      createdAt: "2023-10-31T20:08:14.875616",
-      person: {
-        id: 2,
-        firstName: "user2",
-        lastName: "mypass",
-        emailId: "eml@my.eml",
-        birthDate: "1992-04-01",
-        condition: "SEVERE",
-        username: "user2",
-        password:
-          "$2a$10$1VVm.Q50swe6T9Io89DhseX3C6yGZosVYBndvh4sC1bkVIc47Zzkq",
-        authorities: [
-          {
-            authority: "ROLE_PATIENT",
-          },
-        ],
-        enabled: true,
-        riskLevel: 3,
-        accountNonExpired: true,
-        credentialsNonExpired: true,
-        age: 31,
-        accountNonLocked: true,
-      },
-      qstatus: "AWAITINGPAYMENT",
-    },
-    {
-      id: 2,
-      date: "2023-10-16",
-      amountDue: 75.5,
-      description: "Dummy Bill 2",
-    },
+    // {
+    //   ticketno: 2,
+    //   amountDue: 75.83973365214874,
+    //   createdAt: "2023-10-31T20:08:14.875616",
+    //   person: {
+    //     id: 2,
+    //     firstName: "user2",
+    //     lastName: "mypass",
+    //     emailId: "eml@my.eml",
+    //     birthDate: "1992-04-01",
+    //     condition: "SEVERE",
+    //     username: "user2",
+    //     password:
+    //       "$2a$10$1VVm.Q50swe6T9Io89DhseX3C6yGZosVYBndvh4sC1bkVIc47Zzkq",
+    //     authorities: [
+    //       {
+    //         authority: "ROLE_PATIENT",
+    //       },
+    //     ],
+    //     enabled: true,
+    //     riskLevel: 3,
+    //     accountNonExpired: true,
+    //     credentialsNonExpired: true,
+    //     age: 31,
+    //     accountNonLocked: true,
+    //   },
+    //   qstatus: "AWAITINGPAYMENT",
+    // },
+    // {
+    //   id: 2,
+    //   date: "2023-10-16",
+    //   amountDue: 75.5,
+    //   description: "Dummy Bill 2",
+    // },
   ]);
 
   const fetchBills = (date) => {
-    console.log("intial:", date);
     // console.log("date instanceof Date" + date instanceof Date);
     const querydate = new Date(date).toLocaleDateString("en-CA");
     axios({
@@ -68,8 +67,7 @@ function Payment() {
       //GET http://localhost:8080/api/v1/patient/2/getAwaitingPayment
       .then((response) => {
         if (response.status === 200) {
-          console.log("returned data: ", response.data);
-          console.log("Amount due: ", response.data[0].amountDue);
+          // console.log("returned data: ", response.data);
 
           // if (response.data) {
             // parseFloat(response.data[0].amountDue).toFixed(2)

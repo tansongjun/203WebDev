@@ -73,10 +73,12 @@ const ListPeopleComponentInner = () => {
                 <table className="table table-striped table-bordered" style={{ marginTop: "10px", marginLeft: "75px", width: "90%" }}>
                     <thead>
                         <tr>
-                            <th style={{ width: "20%" }}>Person First Name</th>
-                            <th style={{ width: "20%" }}>Person Last Name</th>
-                            <th style={{ width: "25%" }}>Person Email id</th>
-                            <th style={{ width: "25%" }}>Person role</th>
+                            <th style={{ width: "20%" }}>NRIC</th>
+                            <th style={{ width: "20%" }}>Username</th>
+                            <th style={{ width: "20%" }}>First Name</th>
+                            <th style={{ width: "20%" }}>Last Name</th>
+                            <th style={{ width: "25%" }}>Email</th>
+                            <th style={{ width: "25%" }}>Role</th>
                             <th style={{ width: "25%" }}>Actions</th>
                         </tr>
                     </thead>
@@ -86,6 +88,8 @@ const ListPeopleComponentInner = () => {
                                 people =>
                                     people.authorities[0].authority !== "ROLE_ADMIN" &&
                                     <tr key={people.id}>
+                                        <td>{people.nric}</td>
+                                        <td>{people.username}</td>
                                         <td>{people.firstName}</td>
                                         <td>{people.lastName}</td>
                                         <td>{people.emailId}</td>

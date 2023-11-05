@@ -45,7 +45,7 @@ function UpdatePeopleComponent() {
       firstName: state.firstName,
       lastName: state.lastName,
       emailId: state.emailId,
-      age: state.age,
+      birthDate: state.birthDate,
       condition: state.condition,
       nric: state.nric,
       username: "Somefield",
