@@ -101,4 +101,19 @@ public class RoomServiceTest {
         // You may also verify that countRoomsByCreationDate is called correctly
         verify(roomRepository, times(noOfRooms * daysInMonth)).countRoomsByCreationDate(any(LocalDate.class));
     }
+
+    @Test
+    public void testCreateRoom_GeneratesCorrectNumberOfTimeSlots() {
+    // Arrange
+    Room room = new Room();
+    room.setRoomNumber(101);
+    LocalDate creationDate = LocalDate.now();
+    when(roomRepository.save(any(Room.class))).thenReturn(room);
+
+    // Act
+    Room createdRoom = roomService.createRoom(room, creationDate);
+
+    // Assert
+    verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
+    }
 }
