@@ -9,6 +9,8 @@ function QTicketPage() {
   });
 
   const [queueNumber, setQueueNumber] = useState(null);
+  const [roomNo, setRoomNo] = useState(0);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const getQueueNumber = async () => {
     try {
@@ -24,20 +26,30 @@ function QTicketPage() {
           },
         }
       );
+      // console.log("Response:", response.data);
+      const dateTimeSlot = response.data.dateTimeSlot;
+      const qTicket = response.data.qTicket;
 
       if (
         response.data &&
-        response.data.dateTimeSlot &&
-        response.data.dateTimeSlot.qticket
+        dateTimeSlot
       ) {
-        setQueueNumber(response.data.dateTimeSlot.id);
+        setQueueNumber(dateTimeSlot.id);
+        setRoomNo(dateTimeSlot.room.roomNumber);
+        setIsWaiting(false);
+      } else if (
+        response.data &&
+        qTicket.waitingNo !== null
+      ){
+        setQueueNumber(qTicket.waitingNo);
+        setIsWaiting(true);
       }
 
       console.log("Queue Number:", response.data);
     } catch (error) {
       // Handle errors here
       // createNewTicket();
-      console.error("Error getting queue number:", error.response.data);
+      console.error("Error getting queue number:", error);
     }
   };
 
@@ -106,9 +118,14 @@ function QTicketPage() {
       <div style={{ textAlign: "center", fontSize: "50px", marginTop: "20px" }}>
         {/* <h1>Queue ticket number is {queueNumber}</h1> */}
         {/* <h1>Queue ticket number is </h1> */}
-        {queueNumber !== null ? (
+        {queueNumber !== null && !isWaiting ? (<div>
           <h1>Queue ticket number is {queueNumber}</h1>
-        ) : (
+          <h2>Please proceed to room {roomNo}.</h2>
+        </div>) : queueNumber !== null && isWaiting ? 
+        (<div>
+          <h1>Waiting ticket number is {queueNumber}</h1>
+          <h2>Please wait at the reception area and wait for waitingNo to be processed.</h2>
+        </div>) : (
           <h1>Loading...</h1>
         )}
       </div>
