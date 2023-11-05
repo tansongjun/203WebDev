@@ -60,7 +60,8 @@ function LoginComponent({handleNavigation, userType}) {
 
             // setUser(user);
             // setPwd(pwd);
-            window.location.replace('/walkinHome')
+            // window.location.replace('/walkinHome')
+            window.location.replace(handleNavigation)
           } else {
             console.log(response.status);
           }

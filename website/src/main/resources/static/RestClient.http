@@ -108,6 +108,11 @@ Content-Type: application/json
 
 GET {{url}}/login/T1234567A
 
+### Verify patient (admin only)
+### POST http://localhost:8080/api/v1/patient/verify/{id}
+POST {{url}}/admin/person/verify/3
+Authorization: Basic admin goodpass
+
 
 ################################## Qticket ########################################
 ### Get Latest Qticket by patient id (Patient /or admin) 

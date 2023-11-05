@@ -4,7 +4,7 @@ import {
     HomePage, WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome,
     WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
     UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, 
-    Registration, PaymentQRPage, Qticketpage, HeaderTv
+    Registration, PaymentQRPage, Qticketpage, HeaderTv, OnlineWebsite, OnlineWebsiteLogin
 } from './components';
 import ApptDB from './components/ApptDB/ApptDB';
 
@@ -29,7 +29,9 @@ function App() {
                 /* Login Pages */
                     <Route path="/staffLogin" element={<StaffLogin />} />
                     <Route path="/walkinLogin" element={<WalkInLogin />} />
-                    <Route path="/appointmentLogin" element={<AppointmentLogin />} />
+                    <Route path="/OnlineWebsite" element={<OnlineWebsite />} />
+                    <Route path="/OnlineWebsiteLogin" element={<OnlineWebsiteLogin />} />
+
 
                 /* Home Pages */
                     <Route path="/appointmentHome" element={<AppointmentHome />} />

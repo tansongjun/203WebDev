@@ -11,7 +11,9 @@ export { default as ViewPeopleComponent} from './PatientManagement/ViewPeopleCom
 export { default as StaffLogin } from './StaffLogin/StaffLogin';
 export { default as StaffHome } from './StaffHome/StaffHome';
 export { default as WalkInLogin } from './WalkInLogin/WalkInLogin';
-export { default as AppointmentLogin } from './AppointmentLogin/AppointmentLogin';
+export { default as OnlineWebsite } from './OnlineWebsite/OnlineWebsite';
+export { default as  OnlineWebsiteLogin} from './OnlineWebsiteLogin/OnlineWebsiteLogin';
+
 export { default as AppointmentHome } from './AppointmentHome/AppointmentHome';
 export { default as WalkInHome } from './WalkInHome/WalkInHome';
 export { default as ApptDB } from './ApptDB/ApptDB';
