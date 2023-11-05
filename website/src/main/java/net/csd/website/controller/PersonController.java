@@ -60,8 +60,9 @@ public class PersonController {
 		if (!checkUser) {
 			throw new ResourceNotFoundException("Username already exists");
 		}
-
+		person.setPasswordUnencryted(person.getPassword());
 		person.setPassword(encoder.encode(person.getPassword()));
+		
 		return persons.save(person);
 	}
 
@@ -75,15 +76,6 @@ public class PersonController {
 
 	@GetMapping("/login/{username}")
 	public ResponseEntity<Person> login(@PathVariable String username) {
-		// Person person = persons.findByUsername(username)
-		// 		.orElseThrow(() -> new ResourceNotFoundException("Incorrect Username/Password"));
-
-		// if (person.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT")) {
-		// 	return ResponseEntity.ok(person);
-		// } else {
-		// 	return ResponseEntity.status(403).build();
-		// }
-
 		Optional<Person> person = persons.findByUsername(username);
 		if (!person.isPresent()) {
 			throw new ResourceNotFoundException("Not Found! Contact Admin");
@@ -94,8 +86,23 @@ public class PersonController {
 			}
 			return ResponseEntity.ok(person.get());
 		}
-
-		
+	}
+	
+	@GetMapping("/loginNRIC/{nric}")
+	public ResponseEntity<Map<String, Object>> loginNRIC(@PathVariable String nric) {
+		Optional<Person> person = persons.findByNric(nric);
+		if (!person.isPresent()) {
+			throw new ResourceNotFoundException("Not Found! Contact Admin");
+		}else{
+			Person hasPerson = person.get();
+			if (hasPerson.getAuthorities().iterator().next().toString().equals("ROLE_PATIENT_UNVERIFIED")) {
+				throw new PatientNotVerifiedException("Patient not verified");
+			}
+			Map<String, Object> response = new HashMap<>();
+			response.put("person", hasPerson);
+			response.put("password", hasPerson.getPasswordUnencryted(nric));
+			return ResponseEntity.ok(response);
+		}
 	}
 
 	@PostMapping("/patient/registration")
@@ -110,6 +117,7 @@ public class PersonController {
 			throw new ResourceNotFoundException("Username already exists");
 		}
 
+		person.setPasswordUnencryted(person.getPassword());
 		person.setPassword(encoder.encode(person.getPassword()));
 		return persons.save(person);
 	}

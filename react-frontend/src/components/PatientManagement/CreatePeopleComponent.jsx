@@ -11,6 +11,7 @@ function CreatePeopleComponent() {
         emailId: '',
         birthDate: '',
         condition: '',
+        nric: '',
         username: '',
         password: '',
         authorities: 'ROLE_PATIENT'
@@ -29,6 +30,7 @@ function CreatePeopleComponent() {
             emailId: state.emailId,
             birthDate: state.birthDate,
             condition: state.condition,
+            nric: state.nric,
             username: state.username,
             password: state.password,
             authorities: state.authorities
@@ -112,6 +114,21 @@ function CreatePeopleComponent() {
                                             setState({
                                                 ...state,
                                                 birthDate: e.target.value
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label> NRIC: </label>
+                                    <input
+                                        placeholder="SXXXXXXXA"
+                                        name="nric"
+                                        className="form-control"
+                                        value={state.nric}
+                                        onChange={(e) =>
+                                            setState({
+                                                ...state,
+                                                nric: e.target.value
                                             })
                                         }
                                     />

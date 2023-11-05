@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.lang.reflect.Field;
 
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,7 @@ import net.csd.website.exception.ResourceNotFoundException;
 import net.csd.website.model.DateTimeSlot;
 import net.csd.website.model.Person;
 import net.csd.website.model.QTicket;
+import net.csd.website.model.QTicket.QStatus;
 import net.csd.website.model.Room;
 import net.csd.website.model.WaitingQticket;
 import net.csd.website.model.Person.Condition;
@@ -257,7 +259,129 @@ public class QueueServiceTest {
         assertEquals(expectedSlots, resultSlots); // Check that the returned list is what was expected
     }
 
+    @Test
+    void whenFindLatestTicketByPersonIdWithNonEmptyList_thenReturnsFirstTicket() {
+        // Arrange
+        Long personId = 1L;
+        QTicket oldestTicket = new QTicket(); // assuming QTicket has a default constructor
+        QTicket latestTicket = new QTicket(); // this should be the ticket returned
+        List<QTicket> ticketList = Arrays.asList(oldestTicket, latestTicket);
 
+        when(qTicketRepository.findLatestTicketByPersonId(personId)).thenReturn(ticketList);
+
+        // Act
+        QTicket result = queueService.findLatestTicketByPersonId(personId);
+
+        // Assert
+        assertEquals(latestTicket, result, "The method should return the first QTicket in the list");
+    }
+
+    @Test
+    void whenFindLatestTicketByPersonIdWithEmptyList_thenReturnsNull() {
+        // Arrange
+        Long personId = 1L;
+        when(qTicketRepository.findLatestTicketByPersonId(personId)).thenReturn(Collections.emptyList());
+
+        // Act
+        QTicket result = queueService.findLatestTicketByPersonId(personId);
+
+        // Assert
+        assertNull(result, "The method should return null when the list is empty");
+    }
+
+    @Test
+    void whenNoTicketsInWaiting_nothingHappens() {
+        // Arrange
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(Collections.emptyList());
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketRepository, never()).save(any(QTicket.class));
+    }
+
+    @Test
+    void whenTicketsInWaitingWithPastDateTimeSlot_setToInProgress() {
+        // Arrange
+        LocalDateTime pastDateTime = LocalDateTime.now().minusHours(1);
+
+        Person person1 = new Person();
+        person1.setUsername("JohnDoe");
+
+        DateTimeSlot dateTimeSlot1 = new DateTimeSlot();
+        dateTimeSlot1.setStartDateTime(pastDateTime);
+
+        QTicket ticket1 = new QTicket();
+        ticket1.setPerson(person1);
+        ticket1.setDatetimeSlot(dateTimeSlot1);
+        ticket1.setQStatus(QStatus.WAITING);
+
+        List<QTicket> waitingTickets = Arrays.asList(ticket1);
+
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(waitingTickets);
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketRepository).save(ticket1); // Verify that the ticket has been saved
+        assertEquals(QStatus.IN_PROGRESS, ticket1.getQStatus()); // Assert that the status has been updated
+    }
+
+    @Test
+    void whenTicketsInWaitingWithFutureDateTimeSlot_remainWaiting() {
+        // Arrange
+        QTicket qTicketWaiting = mock(QTicket.class);
+        DateTimeSlot futureDateTimeSlot = mock(DateTimeSlot.class);
+
+        when(futureDateTimeSlot.getStartDateTime()).thenReturn(LocalDateTime.now().plusHours(1));
+        when(qTicketWaiting.getDatetimeSlot()).thenReturn(futureDateTimeSlot);
+        when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(Arrays.asList(qTicketWaiting));
+
+        // Act
+        queueService.handlePatientWaiting();
+
+        // Assert
+        verify(qTicketWaiting, never()).setQStatus(QStatus.IN_PROGRESS);
+        verify(qTicketRepository, never()).save(qTicketWaiting);
+    }
+
+    @Test
+    void handlePatientInProgress_ShouldUpdateStatusToAwaitingPaymentAndSetAmountDue() {
+        // Arrange
+        QTicket inProgressTicket = new QTicket();
+        inProgressTicket.setQStatus(QStatus.IN_PROGRESS);
+        DateTimeSlot pastDateTimeSlot = new DateTimeSlot();
+        pastDateTimeSlot.setEndDateTime(LocalDateTime.now().minusHours(1)); // assuming a past end date
+        inProgressTicket.setDatetimeSlot(pastDateTimeSlot);
+
+        Person person = new Person();
+        person.setUsername("JohnDoe");
+        inProgressTicket.setPerson(person);
+
+        List<QTicket> inProgressTickets = Collections.singletonList(inProgressTicket);
+
+        when(qTicketRepository.findByQStatus(QStatus.IN_PROGRESS)).thenReturn(inProgressTickets);
+
+        // Act
+        queueService.handlePatientInProgress();
+
+        // Assert
+        // Verify that save was called on the repository
+        verify(qTicketRepository, times(1)).save(inProgressTicket);
+
+        // Assert the QStatus was changed
+        assertEquals(QStatus.AWAITINGPAYMENT, inProgressTicket.getQStatus());
+
+        // Since the amount is random, you can't assert a specific value, but you can assert it's within a range
+        assertTrue(inProgressTicket.getAmountDue() >= 0 && inProgressTicket.getAmountDue() <= 100);
+
+    }
+}
+
+
+    
 
     // @Test
     // public void whenGetNewQueueTicket2_thenCreateTicketSuccessfully() {
@@ -312,4 +436,3 @@ public class QueueServiceTest {
     
 
 
-}

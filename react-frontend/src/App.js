@@ -9,6 +9,7 @@ import {
 import ApptDB from './components/ApptDB/ApptDB';
 
 function App() {
+    localStorage.setItem('url', 'http://localhost:8080/api/v1');
     return (
         <Router>
             <div>

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,6 +56,11 @@ public class Person implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "nric", unique = true)
+    @Size(min = 9, max = 9, message = "NRIC should be 9 characters")
+    @NotNull(message = "NRIC should not be null")
+    private String nric;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -80,6 +87,10 @@ public class Person implements UserDetails {
     @Size(min = 8, message = "Password should be at least 8 characters")
     @Column(name = "password")
     private String password;
+
+    @Column(name = "passwordUnencryted")
+    @Getter(AccessLevel.NONE)
+    private String passwordUnencryted;
     
     @Column(name = "authorities")
     private Authority authorities = Authority.ROLE_PATIENT_UNVERIFIED;
@@ -89,14 +100,31 @@ public class Person implements UserDetails {
     @JsonIgnore
     private List<QTicket> queueticket;
 
+    // for websiteapplication
     public Person(String firstName, String lastName, String emailId,
-            LocalDate birthDate, Condition condition, String username, String password,
+            LocalDate birthDate, Condition condition, String username, String password, String passwordUnencrypted, String nric,
             Authority authorities) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.birthDate = birthDate;
         this.condition = condition;
+        this.nric = nric;
+        this.username = username;
+        this.password = password;
+        this.passwordUnencryted = passwordUnencrypted;
+        this.authorities = authorities;
+    }
+
+    public Person(String firstName, String lastName, String emailId,
+            LocalDate birthDate, Condition condition, String username, String password, String nric,
+            Authority authorities) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailId = emailId;
+        this.birthDate = birthDate;
+        this.condition = condition;
+        this.nric = nric;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -104,13 +132,14 @@ public class Person implements UserDetails {
 
     // for user registration
     public Person(String firstName, String lastName, String emailId,
-            LocalDate birthDate, Condition condition, String username, String password
+            LocalDate birthDate, Condition condition, String username, String password, String nric
             ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.birthDate = birthDate;
         this.condition = condition;
+        this.nric = nric;
         this.username = username;
         this.password = password;
         this.authorities = Authority.ROLE_PATIENT;
@@ -131,6 +160,13 @@ public class Person implements UserDetails {
      */
     public int getAge() {
         return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    public String getPasswordUnencryted(String nric) {
+        if (nric.equals(this.nric)) {
+            return passwordUnencryted;
+        }
+        return null;
     }
 
     public int getRiskLevel() {

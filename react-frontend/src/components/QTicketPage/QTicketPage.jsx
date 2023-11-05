@@ -37,7 +37,7 @@ function QTicketPage() {
     } catch (error) {
       // Handle errors here
       // createNewTicket();
-      console.error("Error getting queue number:", error);
+      console.error("Error getting queue number:", error.response.data);
     }
   };
 

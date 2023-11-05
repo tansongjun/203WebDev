@@ -18,7 +18,7 @@ function Registration() {
         //     alert('Please head to the front desk immediately');
         //     navigate('/walkinHome');
         // }else{
-            navigate('/walkinHome');
+            navigate('/');
         // }
     };
 

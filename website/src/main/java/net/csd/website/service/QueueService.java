@@ -239,7 +239,7 @@ public class QueueService {
         System.out.println("Scheduled Task running");
     }
 
-    private void handlePatientWaiting() {
+    public void handlePatientWaiting() {
         List<QTicket> qTickets = qTicketRepository.findByQStatus(QStatus.WAITING);
         for (QTicket qTicket : qTickets) {
             DateTimeSlot dateTimeSlot = qTicket.getDatetimeSlot();
@@ -266,7 +266,4 @@ public class QueueService {
             }
         }
     }
-
-    
-
 }

@@ -7,6 +7,7 @@ function RegisterComponent({ handleNavigation, userType }) {
   // user reference set focus for user
   const userRef = useRef();
   const errRef = useRef();
+  const navigate = useNavigate();
 
   // state: render username input
   const [user, setUser] = useState("");
@@ -23,6 +24,7 @@ function RegisterComponent({ handleNavigation, userType }) {
   const [condition, setCondition] = useState(""); // Store the condition
   const [firstname, setFirstname] = useState(""); // Store the firstname
   const [lastname, setLastname] = useState(""); // Store the lastname
+  const [nric, setNric] = useState(""); // Store the nric
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ function RegisterComponent({ handleNavigation, userType }) {
       emailId: emailid,
       birthDate: birthdate,
       condition: condition,
+      nric: nric,
       username: username,
       password: password,
     };
@@ -59,6 +62,7 @@ function RegisterComponent({ handleNavigation, userType }) {
       console.log("Username:", username); // Log the username
       console.log("Password:", password); // Log the password
       console.log("New Person Created:", response.data);
+      navigate('/');
     } catch (error) {
       // Handle errors here
       console.error("Error creating a new person:");
@@ -148,6 +152,20 @@ function RegisterComponent({ handleNavigation, userType }) {
                   onChange={(e) => setBirthdate(e.target.value)}
                   value={birthdate}
                   placeholder="YYYY-MM-DD"
+                  required
+                />
+                <br />
+
+                <label htmlFor="nric">NRIC:</label>
+                <br />
+                <input
+                  type="text"
+                  id="nric"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={(e) => setNric(e.target.value)}
+                  value={nric}
+                  placeholder='SXXXXXXXA'
                   required
                 />
                 <br />

@@ -11,4 +11,5 @@ import net.csd.website.model.Person;
 public interface PersonRepository extends JpaRepository<Person, Long>{
     // define a derived query to find user by username
     Optional<Person> findByUsername(String username);
+    Optional<Person> findByNric(String nric);
 }

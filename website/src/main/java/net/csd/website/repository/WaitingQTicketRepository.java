@@ -8,5 +8,5 @@ import net.csd.website.model.WaitingQticket;
 
 @Repository
 public interface WaitingQTicketRepository extends JpaRepository<WaitingQticket, Long>{
-
+    
 }
