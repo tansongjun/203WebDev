@@ -112,7 +112,7 @@ POST {{url}}/admin/person/verify/4
 Authorization: Basic admin goodpass
 
 ################################## Kiosk login ########################################
-### Kiosk login (Patient/Admin) asdasd
+### Kiosk login (Patient/Admin)
 ### GET http://localhost:8080/api/v1/loginNRIC/{nric}
 GET {{url}}/loginNRIC/T2012112F
 
