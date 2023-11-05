@@ -58,7 +58,6 @@ import net.csd.website.service.QueueService;
 import net.csd.website.service.RoomService;
 import net.csd.website.model.Person.Authority;
 
-
 @ExtendWith(MockitoExtension.class)
 public class QueueServiceTest {
 
@@ -67,7 +66,7 @@ public class QueueServiceTest {
 
     @Mock
     private ResourceNotFoundException resourceNotFoundException;
-    
+
     @Mock
     private QTicketRepository qTicketRepository;
 
@@ -85,7 +84,7 @@ public class QueueServiceTest {
 
     @InjectMocks
     private RoomService roomService;
-    
+
     @InjectMocks
     private QTicketController qTicketController;
 
@@ -120,7 +119,8 @@ public class QueueServiceTest {
         // Assert
         assertFalse(resultSlots.isEmpty(), "The available time slots should not be empty.");
         assertEquals(1, resultSlots.size(), "There should be only one available time slot.");
-        assertNull(resultSlots.get(0).getQTicket(), "The available time slot should not have a ticket associated with it.");
+        assertNull(resultSlots.get(0).getQTicket(),
+                "The available time slot should not have a ticket associated with it.");
     }
 
     @Test
@@ -141,24 +141,25 @@ public class QueueServiceTest {
         // Arrange
         LocalDate date = LocalDate.now();
         List<DateTimeSlot> mockSlots = IntStream.range(0, 10) // assume 10 time slots for simplicity
-            .mapToObj(i -> {
-                DateTimeSlot slot = new DateTimeSlot();
-                slot.setStartDateTime(date.atStartOfDay().plusHours(i)); // sets the slot start time
-                slot.setEndDateTime(date.atStartOfDay().plusHours(i + 1)); // sets the slot end time
-                slot.setQTicket(new QTicket()); // Assume a new QTicket indicates a booked slot
-                // ... set other necessary properties of DateTimeSlot, like Room
-                return slot;
-            })
-            .collect(Collectors.toList());
-    
+                .mapToObj(i -> {
+                    DateTimeSlot slot = new DateTimeSlot();
+                    slot.setStartDateTime(date.atStartOfDay().plusHours(i)); // sets the slot start time
+                    slot.setEndDateTime(date.atStartOfDay().plusHours(i + 1)); // sets the slot end time
+                    slot.setQTicket(new QTicket()); // Assume a new QTicket indicates a booked slot
+                    // ... set other necessary properties of DateTimeSlot, like Room
+                    return slot;
+                })
+                .collect(Collectors.toList());
+
         DateTimeSlotRepository dateTimeSlotRepository = Mockito.mock(DateTimeSlotRepository.class);
-        // QueueService queueService = new QueueService(dateTimeSlotRepository); // Assuming QueueService takes a DateTimeSlotRepository in its constructor
-    
+        // QueueService queueService = new QueueService(dateTimeSlotRepository); //
+        // Assuming QueueService takes a DateTimeSlotRepository in its constructor
+
         lenient().when(dateTimeSlotRepository.findAllByDate(date)).thenReturn(mockSlots);
-    
+
         // Act
         List<DateTimeSlot> resultSlots = queueService.queryAvailableTimeSlot(date);
-    
+
         // Assert
         assertTrue(resultSlots.isEmpty(), "The list of available time slots should be empty.");
     }
@@ -169,11 +170,15 @@ public class QueueServiceTest {
         LocalDate testDate = LocalDate.now().plusDays(1); // Specify a date within the next 3 days from today
         List<DateTimeSlot> mockDateTimeSlots = new ArrayList<>();
 
-        // Create mock DateTimeSlots from 8am to 5pm (26 time slots) with 20 minutes interval
+        // Create mock DateTimeSlots from 8am to 5pm (26 time slots) with 20 minutes
+        // interval
         LocalTime startTime = LocalTime.of(8, 0);
         for (int i = 0; i < 26; i++) {
             DateTimeSlot mockDateTimeSlot = new DateTimeSlot();
-            mockDateTimeSlot.setStartDateTime(LocalDateTime.of(testDate, startTime.plusMinutes(i * 20))); // Set start times with 20 minutes interval
+            mockDateTimeSlot.setStartDateTime(LocalDateTime.of(testDate, startTime.plusMinutes(i * 20))); // Set start
+                                                                                                          // times with
+                                                                                                          // 20 minutes
+                                                                                                          // interval
             mockDateTimeSlot.setQTicket(null); // No assigned QTicket, indicating it's available
             mockDateTimeSlots.add(mockDateTimeSlot);
         }
@@ -184,7 +189,8 @@ public class QueueServiceTest {
         List<DateTimeSlot> availableSlots = queueService.queryAvailableTimeSlot(testDate);
 
         // Assert
-        assertEquals(EXPECTED_NUMBER_OF_TIME_SLOTS, availableSlots.size()); // Expecting 26 available slots from 8am to 5pm with 20 minutes interval
+        assertEquals(EXPECTED_NUMBER_OF_TIME_SLOTS, availableSlots.size()); // Expecting 26 available slots from 8am to
+                                                                            // 5pm with 20 minutes interval
         // Additional assertions based on your specific logic
     }
 
@@ -209,19 +215,20 @@ public class QueueServiceTest {
         when(dateTimeSlotRepository.findAll()).thenReturn(mockDateTimeSlots);
 
         Person patient = new Person(
-            "sam", 
-            "tom", 
-            "tom@gmail.com", 
-            LocalDate.of(1992,Month.APRIL,1), 
-            net.csd.website.model.Person.Condition.NONE, 
-            "admin", "goodpass", 
-            Authority.ROLE_ADMIN);
+                "sam",
+                "tom",
+                "tom@gmail.com",
+                LocalDate.of(1992, Month.APRIL, 1),
+                net.csd.website.model.Person.Condition.NONE,
+                "admin", "goodpass", 
+                "goodpass", "T2232232F",
+                Authority.ROLE_ADMIN);
         patient.setId(1L);
-        
+
         QTicket newTicket = new QTicket();
         // Set additional properties on newTicket if necessary
         when(qTicketRepository.save(any(QTicket.class))).thenReturn(newTicket);
-        //when(queueService).thenReturn(queueService);
+        // when(queueService).thenReturn(queueService);
 
         // Act
         QTicket ticket = queueService.getNewQueueTicket(patient);
@@ -237,7 +244,7 @@ public class QueueServiceTest {
         } else {
             System.out.println("Appointment ticket");
         }
-        
+
         assertNotNull(ticket, "A new QTicket should be created without exception");
         assertNull(ticket.getDatetimeSlot(), "A new QTicket should be created without exception");
     }
@@ -374,65 +381,65 @@ public class QueueServiceTest {
         // Assert the QStatus was changed
         assertEquals(QStatus.AWAITINGPAYMENT, inProgressTicket.getQStatus());
 
-        // Since the amount is random, you can't assert a specific value, but you can assert it's within a range
+        // Since the amount is random, you can't assert a specific value, but you can
+        // assert it's within a range
         assertTrue(inProgressTicket.getAmountDue() >= 0 && inProgressTicket.getAmountDue() <= 100);
 
     }
 }
 
+// @Test
+// public void whenGetNewQueueTicket2_thenCreateTicketSuccessfully() {
+// // Arrange
+// LocalDate testDate = LocalDate.now(); // Specify a date within the next 3
+// days from today
+// List<DateTimeSlot> mockDateTimeSlots = new ArrayList<>();
 
-    
+// // Create mock DateTimeSlots from 8am to 5pm with 20 minutes interval
+// LocalTime startTime = LocalTime.of(8, 0);
+// for (int i = 0; i < 26; i++) {
+// DateTimeSlot mockDateTimeSlot = new DateTimeSlot();
+// LocalDateTime slotTime = LocalDateTime.of(testDate, startTime).plusMinutes(i
+// * 20);
+// mockDateTimeSlot.setStartDateTime(slotTime); // Set start time with 20
+// minutes interval
+// mockDateTimeSlot.setEndDateTime(slotTime.plusMinutes(20)); // End time is 20
+// minutes after start time
+// mockDateTimeSlot.setQTicket(null); // No assigned QTicket, indicating it's
+// available
+// mockDateTimeSlots.add(mockDateTimeSlot);
+// }
 
-    // @Test
-    // public void whenGetNewQueueTicket2_thenCreateTicketSuccessfully() {
-    //     // Arrange
-    //     LocalDate testDate = LocalDate.now(); // Specify a date within the next 3 days from today
-    //     List<DateTimeSlot> mockDateTimeSlots = new ArrayList<>();
+// // Mock the repository call to return these available slots
+// when(dateTimeSlotRepository.findAll()).thenReturn(mockDateTimeSlots);
+// Person patient = new Person(
+// "sam",
+// "tom",
+// "sdds",
+// LocalDate.of(1950,Month.APRIL,1),
+// net.csd.website.model.Person.Condition.SEVERE,
+// "admin", "goodpass",
+// Authority.ROLE_ADMIN);
+// when(personRepository.findById(anyLong())).thenReturn(Optional.of(patient));
+// when(waitingQTicketRepository.findAll()).thenReturn(Collections.emptyList());
 
-    //     // Create mock DateTimeSlots from 8am to 5pm with 20 minutes interval
-    //     LocalTime startTime = LocalTime.of(8, 0);
-    //     for (int i = 0; i < 26; i++) {
-    //         DateTimeSlot mockDateTimeSlot = new DateTimeSlot();
-    //         LocalDateTime slotTime = LocalDateTime.of(testDate, startTime).plusMinutes(i * 20);
-    //         mockDateTimeSlot.setStartDateTime(slotTime); // Set start time with 20 minutes interval
-    //         mockDateTimeSlot.setEndDateTime(slotTime.plusMinutes(20)); // End time is 20 minutes after start time
-    //         mockDateTimeSlot.setQTicket(null); // No assigned QTicket, indicating it's available
-    //         mockDateTimeSlots.add(mockDateTimeSlot);
-    //     }
+// WaitingQticket newWaitingQticket = new WaitingQticket();
+// when(waitingQTicketRepository.save(any(WaitingQticket.class))).thenReturn(newWaitingQticket);
 
-    //     // Mock the repository call to return these available slots
-    //     when(dateTimeSlotRepository.findAll()).thenReturn(mockDateTimeSlots);
-    //     Person patient = new Person(
-    //         "sam", 
-    //         "tom", 
-    //         "sdds", 
-    //         LocalDate.of(1950,Month.APRIL,1), 
-    //         net.csd.website.model.Person.Condition.SEVERE, 
-    //         "admin", "goodpass", 
-    //         Authority.ROLE_ADMIN);
-    //     when(personRepository.findById(anyLong())).thenReturn(Optional.of(patient));
-    //     when(waitingQTicketRepository.findAll()).thenReturn(Collections.emptyList());
-        
-    //     WaitingQticket newWaitingQticket = new WaitingQticket();
-    //     when(waitingQTicketRepository.save(any(WaitingQticket.class))).thenReturn(newWaitingQticket);
-        
-    //     when(qTicketRepository.findLatestTicketByPersonId(anyLong())).thenReturn(Collections.emptyList());
+// when(qTicketRepository.findLatestTicketByPersonId(anyLong())).thenReturn(Collections.emptyList());
 
-    //     QTicket newTicket = new QTicket();
-    //     // Set additional properties on newTicket if necessary
-    //     when(qTicketRepository.save(any(QTicket.class))).thenReturn(newTicket);
-        
-    //     // Act
-    //     ResponseEntity<QueueResponse> response = qTicketController.getNewQ(patient.getId());
-    //     QTicket ticket = response.getBody().getqTicket();
-    //     DateTimeSlot slot = response.getBody().getDateTimeSlot();
+// QTicket newTicket = new QTicket();
+// // Set additional properties on newTicket if necessary
+// when(qTicketRepository.save(any(QTicket.class))).thenReturn(newTicket);
 
+// // Act
+// ResponseEntity<QueueResponse> response =
+// qTicketController.getNewQ(patient.getId());
+// QTicket ticket = response.getBody().getqTicket();
+// DateTimeSlot slot = response.getBody().getDateTimeSlot();
 
-    //     // Assert
-    //     assertNotNull(ticket, "A new QTicket should be created without exception");
-    //     assertNotNull(slot, "A new QTicket should be created without exception");
-    //     // assertEquals(ticket.getTicketno(), 1, "The queue ticket no. should be 1");
-    // }
-    
-
-
+// // Assert
+// assertNotNull(ticket, "A new QTicket should be created without exception");
+// assertNotNull(slot, "A new QTicket should be created without exception");
+// // assertEquals(ticket.getTicketno(), 1, "The queue ticket no. should be 1");
+// }
