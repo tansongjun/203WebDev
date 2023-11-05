@@ -3,6 +3,7 @@ package net.csd.website;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -171,5 +172,16 @@ public class RoomServiceTest {
 
         // Assert
         verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
+    }
+
+    @Test
+    public void testCreateRoom_RejectsExcessRoomCreationOnSameDay() {
+        // Arrange
+        LocalDate creationDate = LocalDate.now();
+        when(roomRepository.countRoomsByCreationDate(creationDate)).thenReturn(3L);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> roomService.createRoom(new Room(), creationDate),
+                    "Should throw an exception when trying to create more than 3 rooms on the same day");
     }
 }
