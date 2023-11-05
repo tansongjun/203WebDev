@@ -39,7 +39,8 @@ function AppointmentHome() {
     // console.log("after:", querydate);
     axios({
       method: "get",
-      url: `http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/${querydate}`,
+        
+      url: `${LOGIN_URL}/appointment/queryAvailableTimeSlot/${querydate}`,
       auth: {
         // username: auth.user,
         // password: auth.password,
