@@ -10,7 +10,7 @@ function StaffLogin() {
       <h1>STAFF LOGIN</h1>
       <LoginComponent handleNavigation={"/StaffHome"} userType={"ROLE_ADMIN"} />
       <Link to="/">
-        <button style={buttonStyle}  className="payment-button">Log out</button>
+        <button style={buttonStyle}  className="payment-button">Back</button>
       </Link>
 
     </div>

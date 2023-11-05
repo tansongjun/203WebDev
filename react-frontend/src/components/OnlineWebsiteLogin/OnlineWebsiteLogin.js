@@ -14,7 +14,7 @@ function OnlineWebsiteLogin() {
         userType={"ROLE_PATIENT"}
       />
       <Link to="/">
-        <button style={buttonStyle} className="payment-button">Log out</button>
+        <button style={buttonStyle} className="payment-button">Back</button>
       </Link>
     </div>
   );

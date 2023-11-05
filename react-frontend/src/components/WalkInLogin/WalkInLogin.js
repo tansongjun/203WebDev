@@ -10,7 +10,7 @@ function WalkInLogin() {
         userType={"ROLE_PATIENT"}
       />
       <Link to="/">
-        <button className="payment-button">Log out</button>
+        <button className="payment-button">Back</button>
       </Link>
     </div>
   );
