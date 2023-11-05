@@ -184,4 +184,18 @@ public class RoomServiceTest {
         assertThrows(RuntimeException.class, () -> roomService.createRoom(new Room(), creationDate),
                     "Should throw an exception when trying to create more than 3 rooms on the same day");
     }
+
+    @Test
+    public void testCreateRoom_SetsCorrectCreationDate() {
+        // Arrange
+        Room room = new Room();
+        LocalDate creationDate = LocalDate.now();
+        when(roomRepository.save(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Room savedRoom = roomService.createRoom(room, creationDate);
+
+        // Assert
+        assertEquals(creationDate, savedRoom.getCreationDate(), "Creation date should be set correctly in the saved room");
+    }
 }
