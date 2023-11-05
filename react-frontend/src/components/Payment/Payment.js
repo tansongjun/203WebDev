@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import image from "./payment.jpg";
 import axios from "axios";
 
 function Payment() {
+  const location = useLocation();
+  const { query } = location.state
+  const [backURL, setBackUrl] = useState("/");
   const [auth, setAuth] = useState({
     user: sessionStorage.getItem("user"),
     pwd: sessionStorage.getItem("pwd"),
@@ -88,6 +91,7 @@ function Payment() {
 
   useEffect(() => {
     fetchBills();
+    setBackUrl(query);
   });
 
   const navigate = useNavigate();
@@ -132,7 +136,7 @@ function Payment() {
       </ul>
       {/* <button className="queue-button">Pay All Bills</button> */}
       <br></br>
-      <Link to="/walkinHome">
+      <Link to={backURL}>
         <button className="queue-button">Back</button>
       </Link>
     </div>

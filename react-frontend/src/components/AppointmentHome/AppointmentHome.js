@@ -1,9 +1,12 @@
 import { DatePicker } from "@gsebdev/react-simple-datepicker";
 import { useState, useEffect, useCallback, useRef, useContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link , useLocation} from "react-router-dom";
 
 function AppointmentHome() {
+  const location = useLocation();
+  const { query } = location.state
+  const [backURL, setBackUrl] = useState("/");
   const [auth, setAuth] = useState({
     user: sessionStorage.getItem('user'),
     pwd: sessionStorage.getItem('pwd'),
@@ -63,10 +66,11 @@ function AppointmentHome() {
   };
 
   // Use useEffect to fetch time slots when the selected date changes
-  // useEffect(() => {
-  //   // window.confirm("fetching");
-  //   fetchTimeSlots(selectedDate);
-  // }, [selectedDate]);
+  useEffect(() => {
+    // window.confirm("fetching");
+    // fetchTimeSlots(selectedDate);
+    setBackUrl(query)
+  }, [query]);
 
   const handleTimeSlotClick = (timeSlot) => {
     const formattedTime = formatTime(new Date(timeSlot.startDateTime));
@@ -151,7 +155,7 @@ function AppointmentHome() {
             </li>
           ))}
       </ul>
-      <Link to="/walkinHome">
+      <Link to={backURL}>
         <button className="queue-button">Back</button>
       </Link>
     </div>

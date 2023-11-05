@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 function WalkInHome() {
-
+  const backURL = "/walkinHome";
   const [randomNumber, setRandomNumber] = useState(null);
   const [generatedNumbers, setGeneratedNumbers] = useState([]);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -69,14 +69,14 @@ function WalkInHome() {
       </Link>
       
       <br></br>
-      <Link to="/appointmentHome">
+      <Link to="/appointmentHome" state={{ query:backURL }}>
         <button className="appointment-button">
           Book an Appointment 
         </button>
         </Link>
 
       <br></br>
-      <Link to="/walkinHome/payment">
+      <Link to="/walkinHome/payment" state={{ query:backURL }}>
         <button className="payment-button">
           Payment
         </button>
