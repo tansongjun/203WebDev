@@ -3,7 +3,8 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import {
     HomePage, WalkInLogin, StaffLogin, AppointmentLogin, AppointmentHome,
     WalkInHome, StaffHome, ListPeopleComponent, CreatePeopleComponent,
-    UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, Registration, PaymentQRPage, Qticketpage
+    UpdatePeopleComponent, ViewPeopleComponent, Questionnaire, Payment, 
+    Registration, PaymentQRPage, Qticketpage, HeaderTv
 } from './components';
 import ApptDB from './components/ApptDB/ApptDB';
 
@@ -12,7 +13,12 @@ function App() {
         <Router>
             <div>
                 <div className='user-login-page'>
-                    <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                    {/* <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                    <HeaderTv/> */}
+                    <div className="header-container">
+                        <h1><center> SINGHEALTH POLYCLINIC TICKETING & BOOKING SYSTEM</center></h1>
+                        <HeaderTv />
+                    </div>
                 </div>
 
                 <Routes>

@@ -19,6 +19,7 @@ export { default as Questionnaire} from './Questionnaire/Questionnaire';
 export { default as Registration} from './Registration/Registration';
 export { default as Qticketpage} from './QTicketPage/QTicketPage';
 
+export { default as HeaderTv} from './HeaderTv/HeaderTv';
 
 export { default as Payment} from './Payment/Payment';
 export { default as PaymentQRPage} from './PaymentQRPage/PaymentQRPage';

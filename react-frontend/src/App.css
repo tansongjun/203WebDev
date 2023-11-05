@@ -193,3 +193,17 @@
   margin-bottom: 25px;
 
 }
+
+.header-container {
+  display: flex; /* Make children side by side */
+  align-items: center; /* Vertically center children */
+  justify-content: space-between; /* Create space between children */
+  padding: 20px; /* Add some padding */
+  background-color: #333; /* Background color */
+  color: white; /* Text color */
+}
+
+.header-container h1 {
+  margin: 0; /* Remove default margin from h1 */
+  font-size: 24px; /* Adjust the font size */
+}
