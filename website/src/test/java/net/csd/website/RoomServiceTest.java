@@ -48,7 +48,7 @@ public class RoomServiceTest {
     private static final int EXPECTED_NUMBER_OF_TIME_SLOTS = 26;
 
     @Test
-    public void testCreateRoom_Success() {
+    public void shouldSaveRoomAndGenerateTimeSlots_WhenRoomIsCreated() {
         // Arrange
         Room room = new Room();
         LocalDate currentDate = LocalDate.now();
@@ -64,7 +64,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom_RoomCreationLimitReached() {
+    public void shouldThrowException_WhenRoomCreationExceedsDailyLimit() {
         // Arrange
         Room room = new Room();
         LocalDate currentDate = LocalDate.now();
@@ -82,7 +82,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    void createNewRoomForMonthTest() {
+    void shouldCreateRoomsForEveryDayInMonth_WhenNewRoomsForMonthRequested() {
         // Given
         LocalDate startDate = LocalDate.of(2023, 11, 1);
         int noOfRooms = 3;
