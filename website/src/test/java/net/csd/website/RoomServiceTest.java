@@ -3,6 +3,7 @@ package net.csd.website;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
@@ -128,6 +129,32 @@ public class RoomServiceTest {
             fail("Creating a room with null should throw an exception.");
         } catch (NullPointerException e) {
             // Expected exception
+        }
+    }
+
+    @Test
+    public void testCreateRoom_TimeSlotsHaveCorrectStartAndEndTimes() {
+        // Arrange
+        Room room = new Room();
+        LocalDate creationDate = LocalDate.now();
+        LocalTime expectedStartTime = LocalTime.of(8, 0); // Start time of first slot
+        LocalTime expectedEndTime = LocalTime.of(17, 0); // End time should be before this
+        List<DateTimeSlot> savedTimeSlots = new ArrayList<>();
+
+        when(roomRepository.save(any(Room.class))).thenReturn(room);
+        when(dateTimeSlotRepository.save(any(DateTimeSlot.class))).then(invocation -> {
+            DateTimeSlot slot = invocation.getArgument(0);
+            savedTimeSlots.add(slot);
+            return slot;
+        });
+
+        // Act
+        roomService.createRoom(room, creationDate);
+
+        // Assert
+        for (DateTimeSlot slot : savedTimeSlots) {
+            assertTrue(slot.getStartDateTime().toLocalTime().isAfter(expectedStartTime.minusMinutes(1)));
+            assertTrue(slot.getEndDateTime().toLocalTime().isBefore(expectedEndTime.plusMinutes(1)));
         }
     }
 }
