@@ -157,4 +157,19 @@ public class RoomServiceTest {
             assertTrue(slot.getEndDateTime().toLocalTime().isBefore(expectedEndTime.plusMinutes(1)));
         }
     }
+
+    @Test
+    public void testCreateRoom_TimeSlotsForSingleRoomCreated() {
+        // Arrange
+        Room room = new Room();
+        LocalDate creationDate = LocalDate.now();
+
+        when(roomRepository.save(any(Room.class))).thenReturn(room);
+
+        // Act
+        roomService.createRoom(room, creationDate);
+
+        // Assert
+        verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
+    }
 }
