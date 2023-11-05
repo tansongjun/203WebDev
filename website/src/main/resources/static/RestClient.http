@@ -119,7 +119,7 @@ GET {{url}}/loginNRIC/T2012112F
 ################################## Qticket ########################################
 ### Get Latest Qticket by patient id (Patient /or admin) 
 ### GET http://localhost:8080/api/v1/patients/{id}/getQ
-GET {{url}}/patients/2/getQ
+GET {{url}}/patients/3/getQ
 Authorization: Basic admin goodpass
 
 ### Get all QTickets (admin only)
@@ -129,7 +129,12 @@ Authorization: Basic admin goodpass
 
 ### Get Latest Qticket for today by patient id (Patient /or admin) 
 ### GET http://localhost:8080/api/v1/patients/{id}/getQtoday
-GET {{url}}/patients/2/getQtoday
+GET {{url}}/patients/3/getQtoday
+Authorization: Basic admin goodpass
+
+### Get Future appointment
+### GET http://localhost:8080/api/v1/patients/{id}/getFutureappt
+GET {{url}}/patients/3/getFutureappt
 Authorization: Basic admin goodpass
 
 
@@ -155,7 +160,7 @@ GET {{url}}/getWaitingQStatus
 ### Book new appointment by patientid and datetimeslotid, must be within 3 days from today
 ### POST 
 ### {{url}}/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}
-POST {{url}}/appointment/bookNewAppointment/3/2498
+POST {{url}}/appointment/bookNewAppointment/3/235
 Authorization: Basic user2 goodpass
 Content-Type: application/json
 
@@ -165,7 +170,7 @@ Content-Type: application/json
 
 ### Query all available TimeSlot by date
 ### GET http://localhost:8080/api/v1/appointment/queryAvailableTimeSlot/{date}
-GET {{url}}/appointment/queryAvailableTimeSlot/2023-11-04
+GET {{url}}/appointment/queryAvailableTimeSlot/2023-11-10
 Authorization: Basic admin goodpass
 
 ################################## Payment ########################################

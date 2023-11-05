@@ -92,21 +92,44 @@ public class QTicketController {
     public QueueResponse getLatestQTicketForToday(@PathVariable Long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
-        QTicket result = queueService.findLatestTicketByPersonId(id);
-        DateTimeSlot resultDateTimeSlot = null;
-        if (result != null) {
-            resultDateTimeSlot = result.getDatetimeSlot();
-            if (resultDateTimeSlot !=null && !resultDateTimeSlot.getStartDateTime().toLocalDate().equals(LocalDate.now())) {
-                result = null;
-                resultDateTimeSlot = null;
+        List<QTicket> result = qTicketRepository.findByPerson(person);
+        for (QTicket qTicket : result) {
+            if (qTicket.getDatetimeSlot() != null
+                    && qTicket.getDatetimeSlot().getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+                return new QueueResponse(qTicket, qTicket.getDatetimeSlot());
+            } else if (qTicket.getCreatedAt().toLocalDate().equals(LocalDate.now()) && qTicket.getDatetimeSlot() == null) {
+                return new QueueResponse(qTicket, null);
             }
         }
+        return new QueueResponse(null, null);
+        // DateTimeSlot resultDateTimeSlot = null;
+        // if (result != null) {
+        //     resultDateTimeSlot = result.getDatetimeSlot();
+        //     if (resultDateTimeSlot != null
+        //             && !resultDateTimeSlot.getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+        //         result = null;
+        //         resultDateTimeSlot = null;
+        //     }
+        // }
 
-        QueueResponse queueResponse = new QueueResponse(result, resultDateTimeSlot);
-        return queueResponse;
+        // QueueResponse queueResponse = new QueueResponse(result, resultDateTimeSlot);
+        // return queueResponse;
     }
 
-    
+    @GetMapping("/patients/{id}/getFutureappt")
+    public List<QueueResponse> getFutureAppt(@PathVariable Long id) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found for id: " + id));
+        List<QTicket> result = qTicketRepository.findByPerson(person);
+        List<QueueResponse> queueResponses = new ArrayList<>();
+        for (QTicket qTicket : result) {
+            if (qTicket.getDatetimeSlot() != null
+                    && qTicket.getDatetimeSlot().getStartDateTime().toLocalDate().isAfter(LocalDate.now())) {
+                queueResponses.add(new QueueResponse(qTicket, qTicket.getDatetimeSlot()));
+            }
+        }
+        return queueResponses;
+    }
 
     @GetMapping("/getWaitingList")
     public List<QueueResponse> getWaitingList() {
