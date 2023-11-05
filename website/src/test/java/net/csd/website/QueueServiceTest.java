@@ -165,7 +165,7 @@ public class QueueServiceTest {
     }
 
     @Test
-    void testQueryAvailableTimeSlot() {
+    void QueryAvailableTimeSlot_returnsAvailableTimeSlots() {
         // Arrange
         LocalDate testDate = LocalDate.now().plusDays(1); // Specify a date within the next 3 days from today
         List<DateTimeSlot> mockDateTimeSlots = new ArrayList<>();
