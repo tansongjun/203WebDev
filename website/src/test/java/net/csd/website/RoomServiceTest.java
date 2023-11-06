@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
@@ -48,7 +49,7 @@ public class RoomServiceTest {
     private static final int EXPECTED_NUMBER_OF_TIME_SLOTS = 26;
 
     @Test
-    public void shouldSaveRoomAndGenerateTimeSlots_WhenRoomIsCreated() {
+    void createRoom_WhenRoomIsCreated_SavesRoomAndGeneratesTimeSlots() {
         // Arrange
         Room room = new Room();
         LocalDate currentDate = LocalDate.now();
@@ -64,7 +65,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void shouldThrowException_WhenRoomCreationExceedsDailyLimit() {
+    void createRoom_ExceedsDailyLimit_ThrowsRuntimeException() {
         // Arrange
         Room room = new Room();
         LocalDate currentDate = LocalDate.now();
@@ -82,46 +83,22 @@ public class RoomServiceTest {
     }
 
     @Test
-    void shouldCreateRoomsForEveryDayInMonth_WhenNewRoomsForMonthRequested() {
-        // Given
-        LocalDate startDate = LocalDate.of(2023, 11, 1);
-        int noOfRooms = 3;
+    void createRoom_WithNewRoom_GeneratesExpectedNumberOfTimeSlots() {
+        // Arrange
+        Room room = new Room();
+        room.setRoomNumber(101);
+        LocalDate creationDate = LocalDate.now();
+        when(roomRepository.save(any(Room.class))).thenReturn(room);
 
-        // Define mock behavior
-        // Assuming a countRoomsByCreationDate method exists in roomRepository to check room creation limit per day.
-        when(roomRepository.countRoomsByCreationDate(any(LocalDate.class))).thenReturn(0L);
+        // Act
+        Room createdRoom = roomService.createRoom(room, creationDate);
 
-        // When
-        roomService.createNewRoomforMonth(noOfRooms, startDate);
-
-        // Then
-        // Verify roomRepository.save is called the correct number of times.
-        // This number should be the number of rooms times the number of days in the month
-        LocalDate lastDayOfMonth = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        int daysInMonth = lastDayOfMonth.getDayOfMonth() - startDate.getDayOfMonth() + 1;
-        verify(roomRepository, times(noOfRooms * daysInMonth)).save(any(Room.class));
-
-        // You may also verify that countRoomsByCreationDate is called correctly
-        verify(roomRepository, times(noOfRooms * daysInMonth)).countRoomsByCreationDate(any(LocalDate.class));
+        // Assert
+        verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
     }
 
     @Test
-    public void testCreateRoom_GeneratesCorrectNumberOfTimeSlots() {
-    // Arrange
-    Room room = new Room();
-    room.setRoomNumber(101);
-    LocalDate creationDate = LocalDate.now();
-    when(roomRepository.save(any(Room.class))).thenReturn(room);
-
-    // Act
-    Room createdRoom = roomService.createRoom(room, creationDate);
-
-    // Assert
-    verify(dateTimeSlotRepository, times(EXPECTED_NUMBER_OF_TIME_SLOTS)).save(any(DateTimeSlot.class));
-    }
-
-    @Test
-    public void testCreateRoom_ThrowsExceptionOnNullRoomInput() {
+    void createRoom_NullRoomInput_ThrowsNullPointerException() {
         // Arrange
         LocalDate currentDate = LocalDate.now();
 
@@ -135,7 +112,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom_TimeSlotsHaveCorrectStartAndEndTimes() {
+    void createRoom_RoomCreation_ChecksTimeSlotStartAndEndTimes() {
         // Arrange
         Room room = new Room();
         LocalDate creationDate = LocalDate.now();
@@ -161,7 +138,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom_TimeSlotsForSingleRoomCreated() {
+    void createRoom_SingleRoomCreation_CreatesExpectedNumberOfTimeSlots() {
         // Arrange
         Room room = new Room();
         LocalDate creationDate = LocalDate.now();
@@ -176,7 +153,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom_RejectsExcessRoomCreationOnSameDay() {
+    void createRoom_ExcessRoomCreationOnSameDay_ThrowsRuntimeException() {
         // Arrange
         LocalDate creationDate = LocalDate.now();
         when(roomRepository.countRoomsByCreationDate(creationDate)).thenReturn(3L);
@@ -187,7 +164,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom_SetsCorrectCreationDate() {
+    void createRoom_WithCreationDate_SetsCorrectCreationDateInRoom() {
         // Arrange
         Room room = new Room();
         LocalDate creationDate = LocalDate.now();
@@ -201,7 +178,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateTimeSlotsForRoom_CheckSlotDuration() {
+    void createRoom_OnRoomCreation_VerifiesTimeSlotDurations() {
         // Arrange
         Room room = new Room();
         room.setRoomNumber(101);
@@ -220,4 +197,68 @@ public class RoomServiceTest {
             assertEquals(Duration.ofMinutes(20), slotDuration, "Each time slot should be exactly 20 minutes long");
         }
     }
+
+    @Test
+    void createNewRoom_SuccessfulCreation_CreatesRoomWithGivenNumber() {
+        LocalDate creationDate = LocalDate.now();
+        int roomNumber = 101;
+
+        when(roomRepository.countRoomsByCreationDate(creationDate)).thenReturn(2L); // Assuming the limit is 3
+        when(roomRepository.save(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Room createdRoom = roomService.createNewRoom(roomNumber, creationDate);
+
+        assertNotNull(createdRoom);
+        assertEquals(roomNumber, createdRoom.getRoomNumber(), "Room should have the correct number");
+        assertEquals(creationDate, createdRoom.getCreationDate(), "Room should have the correct creation date");
+        verify(roomRepository).save(any(Room.class));
+    }
+
+    @Test
+    void createNewRoom_ExceedsDailyLimit_ThrowsException() {
+        LocalDate creationDate = LocalDate.now();
+        int roomNumber = 102;
+
+        when(roomRepository.countRoomsByCreationDate(creationDate)).thenReturn(3L); // Limit is reached
+
+        assertThrows(RuntimeException.class, () -> roomService.createNewRoom(roomNumber, creationDate),
+                    "Should throw an exception when trying to exceed daily room creation limit");
+    }
+
+    @Test
+    void createNewRoomforMonth_MultipleRoomsEachDay_SavesRoomsForEntireMonth() {
+        // Given
+        LocalDate startDate = LocalDate.of(2023, 11, 1);
+        int noOfRooms = 3;
+
+        // Define mock behavior
+        // Assuming a countRoomsByCreationDate method exists in roomRepository to check room creation limit per day.
+        when(roomRepository.countRoomsByCreationDate(any(LocalDate.class))).thenReturn(0L);
+
+        // When
+        roomService.createNewRoomforMonth(noOfRooms, startDate);
+
+        // Then
+        // Verify roomRepository.save is called the correct number of times.
+        // This number should be the number of rooms times the number of days in the month
+        LocalDate lastDayOfMonth = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        int daysInMonth = lastDayOfMonth.getDayOfMonth() - startDate.getDayOfMonth() + 1;
+        verify(roomRepository, times(noOfRooms * daysInMonth)).save(any(Room.class));
+
+        // You may also verify that countRoomsByCreationDate is called correctly
+        verify(roomRepository, times(noOfRooms * daysInMonth)).countRoomsByCreationDate(any(LocalDate.class));
+    }
+
+    @Test
+    void createNewRoomforMonth_ExceedsDailyLimit_ThrowsException() {
+        LocalDate startDate = LocalDate.of(2023, 11, 1);
+        int noOfRooms = 4; // Assuming the daily limit is 3
+
+        when(roomRepository.countRoomsByCreationDate(any(LocalDate.class))).thenReturn(4L);
+
+        assertThrows(RuntimeException.class, () -> {
+            roomService.createNewRoomforMonth(noOfRooms, startDate);
+        }, "Should throw an exception when daily limit is exceeded");
+    }
+
 }
