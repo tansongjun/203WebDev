@@ -46,7 +46,7 @@ function RegisterComponent({ handleNavigation, userType }) {
 
     try {
       const response = await Axios.post(
-        `http://localhost:8080/api/v1/patient/registration`,
+        `${LOGIN_URL}/patient/registration`,
         requestData,
         {
           headers: {

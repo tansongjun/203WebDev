@@ -84,7 +84,7 @@ function AppointmentHome() {
     if (isConfirmed) {
       console.log(timeSlot.id);
       // POST http://localhost:8080/api/v1/appointment/bookNewAppointment/{auth.personId}/{timeslot.id}
-      const bookingUrl = `http://localhost:8080/api/v1/appointment/bookNewAppointment/${auth.personId}/${timeSlot.id}`;
+      const bookingUrl = `${LOGIN_URL}/appointment/bookNewAppointment/${auth.personId}/${timeSlot.id}`;
 
     axios
       .post(bookingUrl, {}, { auth: { username: auth.user, password: auth.pwd } })

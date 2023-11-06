@@ -22,7 +22,7 @@ function PaymentQRPage() {
     const personId = selectedBill.person.id;
     const ticketNo = selectedBill.ticketno;
 
-    const apiUrl = `http://localhost:8080/api/v1/patient/${personId}/confirmPayment/${ticketNo}`;
+    const apiUrl = `${LOGIN_URL}/patient/${personId}/confirmPayment/${ticketNo}`;
 
     const auth = {
       username: "admin",

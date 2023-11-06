@@ -6,6 +6,8 @@ function HeaderTv() {
     pwd: sessionStorage.getItem("pwd"),
     personId: sessionStorage.getItem("person_id"),
   });
+  const LOGIN_URL = localStorage.getItem('url');
+
 
   const [waitingData, setWaitingData] = useState({
     processedWaitingNo: 0,
@@ -19,7 +21,7 @@ function HeaderTv() {
     const querydate = new Date(date).toLocaleDateString("en-CA");
     axios({
       method: "get",
-      url: `http://localhost:8080/api/v1/getWaitingQStatus`,
+      url: `${LOGIN_URL}/getWaitingQStatus`,
       auth: {
         // username: auth.user,
         // password: auth.password,

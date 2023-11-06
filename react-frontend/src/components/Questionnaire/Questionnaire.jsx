@@ -46,7 +46,7 @@ function Registration() {
     const getQueueNumber = async () => {
       try {
         const response = await Axios.get(
-          `http://localhost:8080/api/v1/patients/${auth.personId}/getQtoday`,
+          `${LOGIN_URL}/patients/${auth.personId}/getQtoday`,
           {
             headers: {
               "Content-Type": "application/json",

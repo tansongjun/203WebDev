@@ -56,7 +56,7 @@ function Payment() {
     const querydate = new Date(date).toLocaleDateString("en-CA");
     axios({
       method: "get",
-      url: `http://localhost:8080/api/v1/patient/${auth.personId}/getAwaitingPayment`,
+      url: `${LOGIN_URL}/patient/${auth.personId}/getAwaitingPayment`,
       auth: {
         // username: auth.user,
         // password: auth.password,
