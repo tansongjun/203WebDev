@@ -118,6 +118,10 @@ function ViewPeopleComponent() {
                         <div> {people.age}</div>
                     </div>
                     <div className="row">
+                        <label>Birthday: </label>
+                        <div> {people.birthDate}</div>
+                    </div>
+                    <div className="row">
                         <label>Condition: </label>
                         <div> {people.condition}</div>
                     </div>
