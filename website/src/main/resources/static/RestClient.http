@@ -208,6 +208,7 @@ Content-Type: application/json
 PUT {{url}}/patient/3/confirmPayment/1
 Authorization: Basic admin goodpass
 Content-Type: application/json
+
 {
 
 }
