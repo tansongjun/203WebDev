@@ -10,6 +10,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +43,26 @@ import net.csd.website.repository.PersonRepository;
 public class PersonController {
 	@Autowired
 	private PersonRepository persons;
+    @Autowired
 	private BCryptPasswordEncoder encoder;
+    @Autowired
+    private JwtService jwtService; 
 
 	public PersonController(PersonRepository persons, BCryptPasswordEncoder encoder) {
 		this.persons = persons;
 		this.encoder = encoder;
 	}
+
+	
+    @PostMapping("/generateToken") 
+    public String authenticateAndGetToken(@RequestBody Person person) { 
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())); 
+        if (authentication.isAuthenticated()) { 
+            return jwtService.generateToken(person.getUsername()); 
+        } else { 
+            throw new UsernameNotFoundException("invalid user request !"); 
+        } 
+    } 
 
 	// API: GET(Read) ALL
 	@GetMapping("/people")
