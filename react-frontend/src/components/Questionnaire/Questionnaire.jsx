@@ -89,7 +89,7 @@ function Registration() {
   const createNewTicket = async () => {
     try {
       const response = await Axios.post(
-        `http://localhost:8080/api/v1/patients/${auth.personId}/getnewQ`,
+        `${LOGIN_URL}/patients/${auth.personId}/getnewQ`,
         null, // You can pass data as the second argument if needed
         {
           headers: {
