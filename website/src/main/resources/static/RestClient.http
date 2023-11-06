@@ -160,9 +160,10 @@ Authorization: Basic admin goodpass
 ### Get new QTicket no with patientId (Patient /or admin)
 ### (get patient id when during login.)
 ### POST http://localhost:8080/api/v1/patients/{id}/getnewQ
-POST {{url}}/patients/2/getnewQ
+POST {{url}}/patients/3/getnewQ
 Authorization: Basic admin goodpass
 Content-Type: application/json
+
 {
 
 }
@@ -177,8 +178,8 @@ GET {{url}}/getWaitingQStatus
 ### Book new appointment by patientid and datetimeslotid, must be within 3 days from today
 ### POST 
 ### {{url}}/appointment/bookNewAppointment/{patientId}/{dateTimeSlotId}
-POST {{url}}/appointment/bookNewAppointment/3/235
-Authorization: Basic user2 goodpass
+POST {{url}}/appointment/bookNewAppointment/2/1015
+Authorization: Basic admin goodpass
 Content-Type: application/json
 
 {

@@ -9,7 +9,7 @@ import {
 import ApptDB from './components/ApptDB/ApptDB';
 
 function App() {
-    localStorage.setItem('url', 'http://healthcareapismu.ghcba8bbfgfyg2bd.southeastasia.azurecontainer.io:8080/api/v1');
+    localStorage.setItem('url', 'http://healthcarefinalapi.axameyc3bhachzeh.southeastasia.azurecontainer.io:8080/api/v1');
     return (
         <Router>
             <div>
