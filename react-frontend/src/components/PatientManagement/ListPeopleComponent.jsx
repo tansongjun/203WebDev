@@ -14,12 +14,16 @@ const ListPeopleComponentInner = () => {
     })
 
     const deletePeople = (id) => {
-        PeopleService.deletePeople(id,auth).then(res => {
-            if (res.status === 200){
-                alert('Patient deleted successfully.');
-                window.location.reload();
-            }
-        });
+        const confirmDelete = window.confirm('Are you sure you want to delete this patient?');
+    
+        if (confirmDelete) {
+            PeopleService.deletePeople(id, auth).then(res => {
+                if (res.status === 200) {
+                    alert('Patient deleted successfully.');
+                    window.location.reload();
+                }
+            });
+        }
     }
 
     const viewPeople = (id) => {
