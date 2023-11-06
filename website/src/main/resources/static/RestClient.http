@@ -37,6 +37,24 @@ Authorization: Basic admin goodpass
     "authorities": "ROLE_PATIENT"
 }
 
+### Add people (admin only) scene 1
+
+POST {{url}}/people
+Content-Type: application/json
+Authorization: Basic admin goodpass
+
+{
+    "firstName": "jessica",
+    "lastName": "tan",
+    "emailId": "jessicat@asd.com",
+    "birthDate": "2000-10-16",
+    "condition": "MODERATE",
+    "username": "jessica",
+    "password": "goodpass",
+    "nric":"T0001234R",
+    "authorities": "ROLE_PATIENT"
+}
+
 ### Add people (admin only) 2nd guy
 ### POST http://localhost:8080/api/v1/people
 

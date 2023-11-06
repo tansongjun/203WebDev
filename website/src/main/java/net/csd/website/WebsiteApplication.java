@@ -37,8 +37,8 @@ public class WebsiteApplication {
             )).getUsername()
         );
         System.out.println("[Add user]: " + users.save(
-            new Person("user2", "mypass", 
-            "eml@my.eml", LocalDate.of(1992,Month.APRIL,1), net.csd.website.model.Person.Condition.SEVERE, "user2", 
+            new Person("Johnny", "Tan", 
+            "johnny@smu.sg", LocalDate.of(1992,Month.APRIL,1), net.csd.website.model.Person.Condition.SEVERE, "johnt", 
             encoder.encode("goodpass"),"goodpass", "T2012112F", Authority.ROLE_PATIENT)).getUsername()
         );
 
