@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-<p align="center">![Alt text](image.png) <br> https://203-web-dev.vercel.app/<br></p>
+<p align="center"> <img src="./image.png" <br> https://203-web-dev.vercel.app/<br></p>
 ## Available Scripts
 
 In the project directory, you can run:
