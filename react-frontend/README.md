@@ -1,9 +1,9 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). <br>
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 https://203-web-dev.vercel.app/
-![Alt text](image.png)
+![Alt text](image.png) <br> <br>
 ## Available Scripts
 
 In the project directory, you can run:
