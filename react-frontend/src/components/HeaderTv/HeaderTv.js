@@ -73,8 +73,15 @@ function HeaderTv() {
     };
   }, []);
 
+  const blueBoxStyle = {
+    backgroundColor: "transparent", // Set background color to transparent
+    border: "10px solid #FFFFFF",  // Set border to create an outline
+    color: "white", // Set text color
+    padding: "10px", // Add padding for spacing inside the box
+  };
+
   return (
-    <div >
+    <div style={blueBoxStyle}>
       <p>Waiting No: {waitingData.processedWaitingNo}</p>
       <p>
       If your number has been shown or skipped, 
