@@ -43,7 +43,7 @@ Content-Type: application/json
 Authorization: Basic admin goodpass
 
 {
-    "firstName": "jessica",
+    "firstName": "Jessica",
     "lastName": "tan",
     "emailId": "jessicat@asd.com",
     "birthDate": "2000-10-16",
@@ -65,8 +65,8 @@ Authorization: Basic admin goodpass
     "firstName": "Jack",
     "lastName": "Old",
     "emailId": "masonstein@asd.com",
-    "birthDate": "1978-10-16",
-    "condition": "SEVERE",
+    "birthDate": "1958-10-16",
+    "condition": "MODERATE",
     "username": "user3",
     "password": "goodpassw1",
     "nric":"S9220322R",
