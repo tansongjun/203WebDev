@@ -11,6 +11,7 @@ function QTicketPage() {
   const [queueNumber, setQueueNumber] = useState(null);
   const [roomNo, setRoomNo] = useState(0);
   const [isWaiting, setIsWaiting] = useState(false);
+  const [startTime, setStartTime] = useState(null);
   const LOGIN_URL = localStorage.getItem('url');
 
   const getQueueNumber = async () => {
@@ -37,6 +38,7 @@ function QTicketPage() {
       ) {
         setQueueNumber(dateTimeSlot.id);
         setRoomNo(dateTimeSlot.room.roomNumber);
+        setStartTime(dateTimeSlot.startDateTime.substring(11, 16));
         setIsWaiting(false);
       } else if (
         response.data &&
@@ -121,6 +123,8 @@ function QTicketPage() {
         {/* <h1>Queue ticket number is </h1> */}
         {queueNumber !== null && !isWaiting ? (<div>
           <h1>Queue ticket number is {queueNumber}</h1>
+          <h2>Appointment timing: {startTime}</h2>
+          <br></br>
           <h2>Please proceed to room {roomNo}.</h2>
         </div>) : queueNumber !== null && isWaiting ? 
         (<div>
