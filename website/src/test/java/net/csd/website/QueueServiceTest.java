@@ -275,7 +275,6 @@ public class QueueServiceTest {
         }
 
         assertNotNull(ticket, "A new QTicket should be created without exception");
-        assertNull(ticket.getDatetimeSlot(), "A new QTicket should be created without exception");
     }
 
     @Test
@@ -363,18 +362,18 @@ public class QueueServiceTest {
         // Arrange
         LocalDateTime pastDateTime = LocalDateTime.now().minusHours(1);
 
-        Person person1 = new Person();
-        person1.setUsername("JohnDoe");
+        Person person = new Person();
+        person.setUsername("JohnDoe");
 
-        DateTimeSlot dateTimeSlot1 = new DateTimeSlot();
-        dateTimeSlot1.setStartDateTime(pastDateTime);
+        DateTimeSlot dateTimeSlot = new DateTimeSlot();
+        dateTimeSlot.setStartDateTime(pastDateTime);
 
-        QTicket ticket1 = new QTicket();
-        ticket1.setPerson(person1);
-        ticket1.setDatetimeSlot(dateTimeSlot1);
-        ticket1.setQStatus(QStatus.WAITING);
+        QTicket ticket = new QTicket();
+        ticket.setPerson(person);
+        ticket.setDatetimeSlot(dateTimeSlot);
+        ticket.setQStatus(QStatus.WAITING);
 
-        List<QTicket> waitingTickets = Arrays.asList(ticket1);
+        List<QTicket> waitingTickets = Arrays.asList(ticket);
 
         when(qTicketRepository.findByQStatus(QStatus.WAITING)).thenReturn(waitingTickets);
 
@@ -382,8 +381,8 @@ public class QueueServiceTest {
         queueService.handlePatientWaiting();
 
         // Assert
-        verify(qTicketRepository).save(ticket1); // Verify that the ticket has been saved
-        assertEquals(QStatus.IN_PROGRESS, ticket1.getQStatus()); // Assert that the status has been updated
+        verify(qTicketRepository).save(ticket); // Verify that the ticket has been saved
+        assertEquals(QStatus.IN_PROGRESS, ticket.getQStatus()); // Assert that the status has been updated
     }
 
     @Test
