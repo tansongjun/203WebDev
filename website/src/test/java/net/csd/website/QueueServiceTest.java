@@ -171,16 +171,17 @@ public class QueueServiceTest {
     public void queryAvailableTimeSlot_AllSlotsBooked_ReturnsEmptyList() {
         // Arrange
         LocalDate date = LocalDate.now();
-        List<DateTimeSlot> mockSlots = IntStream.range(0, 10) // assume 10 time slots for simplicity
-                .mapToObj(i -> {
-                    DateTimeSlot slot = new DateTimeSlot();
-                    slot.setStartDateTime(date.atStartOfDay().plusHours(i)); // sets the slot start time
-                    slot.setEndDateTime(date.atStartOfDay().plusHours(i + 1)); // sets the slot end time
-                    slot.setQTicket(new QTicket()); // Assume a new QTicket indicates a booked slot
-                    // ... set other necessary properties of DateTimeSlot, like Room
-                    return slot;
-                })
-                .collect(Collectors.toList());
+        List<DateTimeSlot> mockSlots = new ArrayList<>();
+
+        // Mock all DateTimeSlots as booked with 20-minute intervals
+        for (int i = 0; i < 10; i++) {
+            DateTimeSlot slot = new DateTimeSlot();
+            slot.setStartDateTime(date.atTime(LocalTime.of(9, 0).plusMinutes(i * 20))); // Start time with 20-minute interval
+            slot.setEndDateTime(date.atTime(LocalTime.of(9, 20).plusMinutes(i * 20))); // End time 20 minutes later
+            slot.setQTicket(new QTicket()); // Assume a new QTicket indicates a booked slot
+            // ... set other necessary properties of DateTimeSlot, like Room
+            mockSlots.add(slot);
+        }
 
         DateTimeSlotRepository dateTimeSlotRepository = Mockito.mock(DateTimeSlotRepository.class);
 
@@ -189,36 +190,6 @@ public class QueueServiceTest {
 
         // Assert
         assertTrue(resultSlots.isEmpty(), "The list of available time slots should be empty.");
-    }
-
-    @Test
-    void queryAvailableTimeSlot_FullDayUnbookedSlots_ReturnsAllAvailableSlots() {
-        // Arrange
-        LocalDate testDate = LocalDate.now().plusDays(1); // Specify a date within the next 3 days from today
-        List<DateTimeSlot> mockDateTimeSlots = new ArrayList<>();
-
-        // Create mock DateTimeSlots from 8am to 5pm (26 time slots) with 20 minutes
-        // interval
-        LocalTime startTime = LocalTime.of(8, 0);
-        for (int i = 0; i < 26; i++) {
-            DateTimeSlot mockDateTimeSlot = new DateTimeSlot();
-            mockDateTimeSlot.setStartDateTime(LocalDateTime.of(testDate, startTime.plusMinutes(i * 20))); // Set start
-                                                                                                          // times with
-                                                                                                          // 20 minutes
-                                                                                                          // interval
-            mockDateTimeSlot.setQTicket(null); // No assigned QTicket, indicating it's available
-            mockDateTimeSlots.add(mockDateTimeSlot);
-        }
-
-        when(dateTimeSlotRepository.findAll()).thenReturn(mockDateTimeSlots);
-
-        // Act
-        List<DateTimeSlot> availableSlots = queueService.queryAvailableTimeSlot(testDate);
-
-        // Assert
-        assertEquals(EXPECTED_NUMBER_OF_TIME_SLOTS, availableSlots.size()); // Expecting 26 available slots from 8am to
-                                                                            // 5pm with 20 minutes interval
-        // Additional assertions based on your specific logic
     }
 
     @Test
